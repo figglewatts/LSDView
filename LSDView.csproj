@@ -88,5 +88,11 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libLSD\libLSD\libLSD.csproj">
+      <Project>{e72e41f2-66c0-4d18-9c4b-6df5abddd858}</Project>
+      <Name>libLSD</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
