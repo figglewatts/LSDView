@@ -232,20 +232,5 @@ namespace LSDView.view
         }
 
         #endregion
-
-        private void redButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void greenButton_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void blueButton_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

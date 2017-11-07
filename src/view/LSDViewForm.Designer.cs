@@ -28,78 +28,92 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.redButton = new System.Windows.Forms.Button();
-            this.greenButton = new System.Windows.Forms.Button();
-            this.blueButton = new System.Windows.Forms.Button();
             this.viewingWindow = new OpenTK.GLControl();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // redButton
-            // 
-            this.redButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.redButton.Location = new System.Drawing.Point(639, 13);
-            this.redButton.Name = "redButton";
-            this.redButton.Size = new System.Drawing.Size(133, 23);
-            this.redButton.TabIndex = 1;
-            this.redButton.Text = "Red";
-            this.redButton.UseVisualStyleBackColor = true;
-            this.redButton.Click += new System.EventHandler(this.redButton_Click);
-            // 
-            // greenButton
-            // 
-            this.greenButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.greenButton.Location = new System.Drawing.Point(639, 43);
-            this.greenButton.Name = "greenButton";
-            this.greenButton.Size = new System.Drawing.Size(133, 23);
-            this.greenButton.TabIndex = 2;
-            this.greenButton.Text = "Green";
-            this.greenButton.UseVisualStyleBackColor = true;
-            this.greenButton.Click += new System.EventHandler(this.greenButton_Click);
-            // 
-            // blueButton
-            // 
-            this.blueButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.blueButton.Location = new System.Drawing.Point(639, 73);
-            this.blueButton.Name = "blueButton";
-            this.blueButton.Size = new System.Drawing.Size(133, 23);
-            this.blueButton.TabIndex = 3;
-            this.blueButton.Text = "Blue";
-            this.blueButton.UseVisualStyleBackColor = true;
-            this.blueButton.Click += new System.EventHandler(this.blueButton_Click);
             // 
             // viewingWindow
             // 
+            this.viewingWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.viewingWindow.AutoSize = true;
             this.viewingWindow.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.viewingWindow.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.viewingWindow.Location = new System.Drawing.Point(0, 0);
+            this.viewingWindow.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.viewingWindow.Location = new System.Drawing.Point(255, 24);
+            this.viewingWindow.MaximumSize = new System.Drawing.Size(9999, 9999);
+            this.viewingWindow.MinimumSize = new System.Drawing.Size(540, 540);
             this.viewingWindow.Name = "viewingWindow";
-            this.viewingWindow.Size = new System.Drawing.Size(781, 564);
+            this.viewingWindow.Size = new System.Drawing.Size(549, 540);
             this.viewingWindow.TabIndex = 0;
             this.viewingWindow.VSync = false;
             this.viewingWindow.Paint += new System.Windows.Forms.PaintEventHandler(this.glControl_Paint);
             this.viewingWindow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.glControl_KeyDown);
             this.viewingWindow.Resize += new System.EventHandler(this.glControl_Resize);
             // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(804, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "Open...";
+            // 
+            // treeView1
+            // 
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.treeView1.Location = new System.Drawing.Point(0, 24);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(258, 540);
+            this.treeView1.TabIndex = 2;
+            // 
             // LSDViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(781, 564);
-            this.Controls.Add(this.blueButton);
-            this.Controls.Add(this.greenButton);
-            this.Controls.Add(this.redButton);
+            this.ClientSize = new System.Drawing.Size(804, 564);
+            this.Controls.Add(this.treeView1);
             this.Controls.Add(this.viewingWindow);
+            this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
+            this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(820, 603);
             this.Name = "LSDViewForm";
-            this.Text = "OpenTK Windows Forms Tutorial 01 - Your first window";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
+            this.Text = "LSDView";
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private OpenTK.GLControl viewingWindow;
-        private System.Windows.Forms.Button redButton;
-        private System.Windows.Forms.Button greenButton;
-        private System.Windows.Forms.Button blueButton;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.TreeView treeView1;
     }
 }
