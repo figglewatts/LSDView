@@ -22,16 +22,10 @@ namespace LSDView.view
     {
         static float angle = 0.0f;
 
-        #region --- Constructor ---
-
         public LSDViewForm()
         {
             InitializeComponent();
         }
-
-        #endregion
-
-        #region OnLoad
 
         protected override void OnLoad(EventArgs e)
         {
@@ -64,20 +58,12 @@ namespace LSDView.view
             }
         }
 
-        #endregion
-
-        #region OnClosing
-
         protected override void OnClosing(CancelEventArgs e)
         {
             Application.Idle -= Application_Idle;
 
             base.OnClosing(e);
         }
-
-        #endregion
-
-        #region Application_Idle event
 
         void Application_Idle(object sender, EventArgs e)
         {
@@ -87,10 +73,6 @@ namespace LSDView.view
             }
         }
 
-        #endregion
-
-        #region GLControl.Resize event handler
-
         void glControl_Resize(object sender, EventArgs e)
         {
             OpenTK.GLControl c = sender as OpenTK.GLControl;
@@ -98,17 +80,13 @@ namespace LSDView.view
             if (c.ClientSize.Height == 0)
                 c.ClientSize = new System.Drawing.Size(c.ClientSize.Width, 1);
 
-            GL.Viewport(0, 0, c.ClientSize.Width, c.ClientSize.Height);
+            GL.Viewport(0, 0, c.Size.Width, c.Size.Height);
 
-            float aspect_ratio = Width / (float)Height;
+            float aspect_ratio = c.Size.Width / (float)c.Size.Height;
             Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadMatrix(ref perpective);
         }
-
-        #endregion
-
-        #region GLControl.KeyDown event handler
 
         void glControl_KeyDown(object sender, KeyEventArgs e)
         {
@@ -120,18 +98,10 @@ namespace LSDView.view
             }
         }
 
-        #endregion
-
-        #region GLControl.Paint event handler
-
         void glControl_Paint(object sender, PaintEventArgs e)
         {
             Render();
         }
-
-        #endregion
-
-        #region private void Render()
 
         private void Render()
         {
@@ -148,10 +118,6 @@ namespace LSDView.view
 
             viewingWindow.SwapBuffers();
         }
-
-        #endregion
-
-        #region private void DrawCube()
 
         private void DrawCube()
         {
@@ -197,10 +163,6 @@ namespace LSDView.view
             GL.End();
         }
 
-        #endregion
-
-        #region private void GrabScreenshot()
-
         Bitmap GrabScreenshot()
         {
             Bitmap bmp = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
@@ -213,24 +175,5 @@ namespace LSDView.view
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             return bmp;
         }
-
-        #endregion
-
-        #region public static void Main()
-
-        /// <summary>
-        /// Entry point of this example.
-        /// </summary>
-        [STAThread]
-        public static void Main()
-        {
-            OpenTK.Toolkit.Init();
-            using (LSDViewForm example = new LSDViewForm())
-            {
-                example.ShowDialog();
-            }
-        }
-
-        #endregion
     }
 }
