@@ -38,6 +38,7 @@ namespace LSDView.view
 
             GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
 
             Application.Idle += Application_Idle;
 
@@ -100,7 +101,7 @@ namespace LSDView.view
 
         private void Render()
         {
-            Matrix4 lookat = Matrix4.LookAt(5, 0, -1f, 0, 0, -1f, 0, 0, -1); // TODO: CHANGEME
+            Matrix4 lookat = Matrix4.LookAt(5, 0, -2, 0, 0, -1f, 0, 0, -1); // TODO: CHANGEME
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
 
@@ -165,9 +166,16 @@ namespace LSDView.view
                                 p1 = obj.Vertices[prim.PacketData.p1];
                                 p2 = obj.Vertices[prim.PacketData.p2];
 
-                                verts.Add(new Vertex(p0 / 500f));
                                 verts.Add(new Vertex(p1 / 500f));
+                                verts.Add(new Vertex(p0 / 500f));
                                 verts.Add(new Vertex(p2 / 500f));
+
+                                if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
+                                {
+                                    verts.Add(new Vertex(p0 / 500f));
+                                    verts.Add(new Vertex(p1 / 500f));
+                                    verts.Add(new Vertex(p2 / 500f));
+                                }
                             }
                             else
                             {
@@ -177,12 +185,22 @@ namespace LSDView.view
                                 p2 = obj.Vertices[prim.PacketData.p2];
                                 p3 = obj.Vertices[prim.PacketData.p3];
 
-                                verts.Add(new Vertex(p0 / 500f));
                                 verts.Add(new Vertex(p1 / 500f));
+                                verts.Add(new Vertex(p0 / 500f));
                                 verts.Add(new Vertex(p2 / 500f));
                                 verts.Add(new Vertex(p1 / 500f));
                                 verts.Add(new Vertex(p2 / 500f));
                                 verts.Add(new Vertex(p3 / 500f));
+
+                                if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
+                                {
+                                    verts.Add(new Vertex(p0 / 500f));
+                                    verts.Add(new Vertex(p1 / 500f));
+                                    verts.Add(new Vertex(p2 / 500f));
+                                    verts.Add(new Vertex(p2 / 500f));
+                                    verts.Add(new Vertex(p1 / 500f));
+                                    verts.Add(new Vertex(p3 / 500f));
+                                }
                             }
                         }
                     }
