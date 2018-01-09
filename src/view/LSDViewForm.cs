@@ -1,6 +1,4 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,19 +6,21 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
-
+using libLSD.Formats;
+using libLSD.Types;
+using LSDView.graphics;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Platform;
 using OpenTK;
-
-#endregion
 
 namespace LSDView.view
 {
     public partial class LSDViewForm : Form
     {
         static float angle = 0.0f;
+
+        private VertexBuffer buffer;
 
         public LSDViewForm()
         {
@@ -36,12 +36,7 @@ namespace LSDView.view
             viewingWindow.Resize += new EventHandler(glControl_Resize);
             viewingWindow.Paint += new PaintEventHandler(glControl_Paint);
 
-            Text =
-                GL.GetString(StringName.Vendor) + " " +
-                GL.GetString(StringName.Renderer) + " " +
-                GL.GetString(StringName.Version);
-
-            GL.ClearColor(Color.MidnightBlue);
+            GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
 
             Application.Idle += Application_Idle;
@@ -105,12 +100,12 @@ namespace LSDView.view
 
         private void Render()
         {
-            Matrix4 lookat = Matrix4.LookAt(0, 5, 5, 0, 0, 0, 0, 1, 0);
+            Matrix4 lookat = Matrix4.LookAt(5, 0, -1f, 0, 0, -1f, 0, 0, -1); // TODO: CHANGEME
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
 
-            GL.Rotate(angle, 0.0f, 1.0f, 0.0f);
-            angle += 0.05f;
+            GL.Rotate(angle, 0.0f, 0.0f, 1.0f);
+            angle += 0.02f;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -121,46 +116,21 @@ namespace LSDView.view
 
         private void DrawCube()
         {
-            GL.Begin(BeginMode.Quads);
+            if (buffer != null)
+            {
+                buffer.Bind();
+                buffer.Draw();
+            }
 
-            GL.Color3(Color.Silver);
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
+            /*GL.Begin(BeginMode.Points);
 
-            GL.Color3(Color.Honeydew);
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
-
-            GL.Color3(Color.Moccasin);
-
-            GL.Vertex3(-1.0f, -1.0f, -1.0f);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
-
-            GL.Color3(Color.IndianRed);
-            GL.Vertex3(-1.0f, -1.0f, 1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
-
-            GL.Color3(Color.PaleVioletRed);
-            GL.Vertex3(-1.0f, 1.0f, -1.0f);
-            GL.Vertex3(-1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
-
-            GL.Color3(Color.ForestGreen);
-            GL.Vertex3(1.0f, -1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, -1.0f);
-            GL.Vertex3(1.0f, 1.0f, 1.0f);
-            GL.Vertex3(1.0f, -1.0f, 1.0f);
-
-            GL.End();
+            GL.Color3(Color.Red);
+            float scale = 500f;
+            foreach (var v in pointCloud)
+            {
+                GL.Vertex3(v.X / scale, v.Y / scale, v.Z / scale);
+            }
+            GL.End();*/
         }
 
         Bitmap GrabScreenshot()
@@ -174,6 +144,52 @@ namespace LSDView.view
             bmp.UnlockBits(data);
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
             return bmp;
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)  
+            {
+                using (BinaryReader br = new BinaryReader(File.Open(openFileDialog.FileName, FileMode.Open)))
+                {
+                    TMD tmd = new TMD(br);
+                    List<Vertex> verts = new List<Vertex>();
+                    foreach (var obj in tmd.ObjectTable)
+                    {
+                        foreach (var prim in obj.Primitives)
+                        {
+                            if (!prim.Options.HasFlag(TMDPrimitivePacket.OptionsFlags.Quad))
+                            {
+                                Vec3 p0, p1, p2;
+                                p0 = obj.Vertices[prim.PacketData.p0];
+                                p1 = obj.Vertices[prim.PacketData.p1];
+                                p2 = obj.Vertices[prim.PacketData.p2];
+
+                                verts.Add(new Vertex(p0 / 500f));
+                                verts.Add(new Vertex(p1 / 500f));
+                                verts.Add(new Vertex(p2 / 500f));
+                            }
+                            else
+                            {
+                                Vec3 p0, p1, p2, p3;
+                                p0 = obj.Vertices[prim.PacketData.p0];
+                                p1 = obj.Vertices[prim.PacketData.p1];
+                                p2 = obj.Vertices[prim.PacketData.p2];
+                                p3 = obj.Vertices[prim.PacketData.p3];
+
+                                verts.Add(new Vertex(p0 / 500f));
+                                verts.Add(new Vertex(p1 / 500f));
+                                verts.Add(new Vertex(p2 / 500f));
+                                verts.Add(new Vertex(p1 / 500f));
+                                verts.Add(new Vertex(p2 / 500f));
+                                verts.Add(new Vertex(p3 / 500f));
+                            }
+                        }
+                    }
+
+                    buffer = new VertexBuffer(verts.ToArray());
+                }
+            }  
         }
     }
 }

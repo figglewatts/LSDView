@@ -34,6 +34,7 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewOutline = new System.Windows.Forms.TreeView();
             this.MainContainer = new System.Windows.Forms.SplitContainer();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainContainer)).BeginInit();
             this.MainContainer.Panel1.SuspendLayout();
@@ -81,6 +82,7 @@
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // ViewOutline
             // 
@@ -108,6 +110,11 @@
             this.MainContainer.Size = new System.Drawing.Size(804, 540);
             this.MainContainer.SplitterDistance = 200;
             this.MainContainer.TabIndex = 3;
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog";
+            this.openFileDialog.Title = "Open LSD file...";
             // 
             // LSDViewForm
             // 
@@ -142,5 +149,6 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.TreeView ViewOutline;
         private System.Windows.Forms.SplitContainer MainContainer;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
