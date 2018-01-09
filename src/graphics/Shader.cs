@@ -5,15 +5,17 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL;
+using LSDView.util;
+using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.graphics
 {
     class Shader
     {
-        private readonly int _vertHandle;
-        private readonly int _fragHandle;
-        private readonly int _progHandle;
+        private int _vertHandle;
+        private int _fragHandle;
+        private int _progHandle;
 
         public string Name { get; }
 
@@ -24,7 +26,27 @@ namespace LSDView.graphics
 
         private void compileAndLink(string path)
         {
+            // load and compile vertex shader
+            _vertHandle = loadSource(path, ShaderType.VertexShader);
+            GL.CompileShader(_vertHandle);
+            checkCompileErr(_vertHandle);
 
+            // load and compile fragment shader
+            _fragHandle = loadSource(path, ShaderType.FragmentShader);
+            GL.CompileShader(_fragHandle);
+            checkCompileErr(_fragHandle);
+
+            // link the shader program
+            _progHandle = GL.CreateProgram();
+            GL.AttachShader(_progHandle, _vertHandle);
+            GL.AttachShader(_progHandle, _fragHandle);
+            GL.LinkProgram(_progHandle);
+            checkLinkErr(_progHandle);
+
+            // clean up unused handles
+            GL.DeleteShader(_vertHandle);
+            GL.DeleteShader(_fragHandle);
+            _vertHandle = _fragHandle = 0;
         }
 
         private int loadSource(string path, ShaderType type)
@@ -42,5 +64,53 @@ namespace LSDView.graphics
             GL.ShaderSource(handle, source);
             return handle;
         }
+
+        private bool checkCompileErr(int shader)
+        {
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out int success);
+            if (success != 1)
+            {
+                string infoLog = GL.GetShaderInfoLog(shader);
+                Logger.Log()(LogLevel.ERR, "Could not compile shader {0}\n{1}", this.Name, infoLog);
+            }
+
+            return success == 1;
+        }
+
+        private bool checkLinkErr(int program)
+        {
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int success);
+            if (success != 1)
+            {
+                string infoLog = GL.GetProgramInfoLog(program);
+                Logger.Log()(LogLevel.ERR, "Could not link program {0}\n{1}", this.Name, infoLog);
+            }
+
+            return success == 1;
+        }
+
+        private int getUniformLocation(string name) { return GL.GetUniformLocation(_progHandle, name); }
+
+        public void Uniform(string name, bool value) { GL.Uniform1(getUniformLocation(name), value ? 1 : 0); }
+
+        public void Uniform(string name, int value) { GL.Uniform1(getUniformLocation(name), value); }
+
+        public void Uniform(string name, float value) { GL.Uniform1(getUniformLocation(name), value); }
+
+        public void Uniform(string name, bool transpose, Matrix4 value)
+        {
+            GL.UniformMatrix4(getUniformLocation(name), transpose, ref value);
+        }
+
+        public void Uniform(string name, bool transpose, Matrix3 value)
+        {
+            GL.UniformMatrix3(getUniformLocation(name), transpose, ref value);
+        }
+
+        public void Uniform(string name, Vector2 value) { GL.Uniform2(getUniformLocation(name), value); }
+
+        public void Uniform(string name, Vector3 value) { GL.Uniform3(getUniformLocation(name), value); }
+
+        public void Uniform(string name, Vector4 value) { GL.Uniform4(getUniformLocation(name), value); }
     }
 }
