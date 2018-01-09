@@ -8,9 +8,11 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using libLSD.Exceptions;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.util;
 using OpenTK.Graphics.OpenGL;
 using OpenTK;
 
@@ -153,7 +155,18 @@ namespace LSDView.view
             {
                 using (BinaryReader br = new BinaryReader(File.Open(openFileDialog.FileName, FileMode.Open)))
                 {
-                    TMD tmd = new TMD(br);
+                    Logger.Log()(LogLevel.INFO, "Opening {0}", openFileDialog.FileName);
+                    TMD tmd = null;
+                    try
+                    {
+                        tmd = new TMD(br);
+                    }
+                    catch (BadFormatException ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error loading file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    
                     List<Vertex> verts = new List<Vertex>();
                     foreach (var obj in tmd.ObjectTable)
                     {
