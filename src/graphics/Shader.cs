@@ -11,7 +11,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.graphics
 {
-    class Shader
+    public class Shader : IBindable, IDisposable
     {
         private int _vertHandle;
         private int _fragHandle;
@@ -21,6 +21,7 @@ namespace LSDView.graphics
 
         public Shader(string name, string path)
         {
+            this.Name = name;
             compileAndLink(path);
         }
 
@@ -29,12 +30,12 @@ namespace LSDView.graphics
             // load and compile vertex shader
             _vertHandle = loadSource(path, ShaderType.VertexShader);
             GL.CompileShader(_vertHandle);
-            checkCompileErr(_vertHandle);
+            checkCompileErr(_vertHandle, ShaderType.VertexShader);
 
             // load and compile fragment shader
             _fragHandle = loadSource(path, ShaderType.FragmentShader);
             GL.CompileShader(_fragHandle);
-            checkCompileErr(_fragHandle);
+            checkCompileErr(_fragHandle, ShaderType.FragmentShader);
 
             // link the shader program
             _progHandle = GL.CreateProgram();
@@ -65,13 +66,14 @@ namespace LSDView.graphics
             return handle;
         }
 
-        private bool checkCompileErr(int shader)
+        private bool checkCompileErr(int shader, ShaderType type)
         {
             GL.GetShader(shader, ShaderParameter.CompileStatus, out int success);
             if (success != 1)
             {
                 string infoLog = GL.GetShaderInfoLog(shader);
-                Logger.Log()(LogLevel.ERR, "Could not compile shader {0}\n{1}", this.Name, infoLog);
+                Logger.Log()(LogLevel.ERR, "Could not compile {0}: {1}", type.ToString(), this.Name);
+                Logger.Log()(LogLevel.ERR, "Info log: {0}", infoLog);
             }
 
             return success == 1;
@@ -83,7 +85,8 @@ namespace LSDView.graphics
             if (success != 1)
             {
                 string infoLog = GL.GetProgramInfoLog(program);
-                Logger.Log()(LogLevel.ERR, "Could not link program {0}\n{1}", this.Name, infoLog);
+                Logger.Log()(LogLevel.ERR, "Could not link program: {0}", this.Name);
+                Logger.Log()(LogLevel.ERR, "Info log: {0}", infoLog);
             }
 
             return success == 1;
@@ -112,5 +115,22 @@ namespace LSDView.graphics
         public void Uniform(string name, Vector3 value) { GL.Uniform3(getUniformLocation(name), value); }
 
         public void Uniform(string name, Vector4 value) { GL.Uniform4(getUniformLocation(name), value); }
+
+        public int GetAttribLocation(string name) { return GL.GetAttribLocation(_progHandle, name); }
+
+        public void Bind()
+        {
+            GL.UseProgram(_progHandle);
+        }
+
+        public void Unbind()
+        {
+            GL.UseProgram(0);
+        }
+
+        public void Dispose()
+        {
+            GL.DeleteProgram(_progHandle);
+        }
     }
 }

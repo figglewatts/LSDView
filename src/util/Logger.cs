@@ -42,6 +42,7 @@ namespace LSDView.util
                     format, logs);
                 string logString = $"{now:s} <{filename}:{caller}()#{lineNumber}> {level.ToString()} | {formattedString}";
                 logFile.WriteLine(logString);
+                logFile.Flush();
             };
         }
     }

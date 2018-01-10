@@ -4,17 +4,27 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using libLSD.Types;
+using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
 namespace LSDView.graphics
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct Vertex
+    public struct Vertex
     {
-        public static readonly int Size = 3 * 4; // size in bytes
-        public readonly Vec3 Position;
+        public static readonly int Size = (3 + 3 + 2 + 4) * 4; // size in bytes
+        public readonly Vector3 Position;
+        public readonly Vector3 Normal;
+        public readonly Vector2 TexCoord;
+        public readonly Vector4 Color;
 
-        public Vertex(Vec3 position) { Position = position; }
+        public Vertex(Vector3 position, Vector3 normal,
+            Vector2 texCoord, Vector4 color)
+        {
+            Position = position;
+            Normal = normal;
+            TexCoord = texCoord;
+            Color = color;
+        }
     }
 }

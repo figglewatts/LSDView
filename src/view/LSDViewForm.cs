@@ -22,7 +22,24 @@ namespace LSDView.view
     {
         static float angle = 0.0f;
 
-        private VertexBuffer buffer;
+        private Shader basic;
+
+        private Vertex[] vertices = 
+        {
+            new Vertex(new Vector3(0, 0, 0), Vector3.Zero, Vector2.Zero, new Vector4(1, 0, 0, 1)),
+            new Vertex(new Vector3(0, 1, 0), Vector3.Zero, Vector2.Zero, new Vector4(0, 1, 0, 1)),
+            new Vertex(new Vector3(1, 1, 0), Vector3.Zero, Vector2.Zero, new Vector4(0, 0, 1, 1))
+        };
+
+        private int[] indices =
+        {
+            0, 1, 2
+        };
+
+        private Mesh test;
+
+        private Matrix4 projection;
+        private Matrix4 view;
 
         public LSDViewForm()
         {
@@ -37,6 +54,9 @@ namespace LSDView.view
             viewingWindow.KeyUp += new KeyEventHandler(glControl_KeyUp);
             viewingWindow.Resize += new EventHandler(glControl_Resize);
             viewingWindow.Paint += new PaintEventHandler(glControl_Paint);
+
+            basic = new Shader("basic", "shaders/basic");
+            test = new Mesh(vertices, indices, basic);
 
             GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
@@ -81,9 +101,7 @@ namespace LSDView.view
             GL.Viewport(0, 0, c.Size.Width, c.Size.Height);
 
             float aspect_ratio = c.Size.Width / (float)c.Size.Height;
-            Matrix4 perpective = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref perpective);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect_ratio, 1, 64);
         }
 
         void glControl_KeyDown(object sender, KeyEventArgs e)
@@ -103,12 +121,7 @@ namespace LSDView.view
 
         private void Render()
         {
-            Matrix4 lookat = Matrix4.LookAt(5, 0, -2, 0, 0, -1f, 0, 0, -1); // TODO: CHANGEME
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref lookat);
-
-            GL.Rotate(angle, 0.0f, 0.0f, 1.0f);
-            angle += 0.02f;
+            view = Matrix4.LookAt(0, 0, -5, 0, 0, 0, 0, 1, 0); // TODO: CHANGEME
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -119,21 +132,8 @@ namespace LSDView.view
 
         private void DrawCube()
         {
-            if (buffer != null)
-            {
-                buffer.Bind();
-                buffer.Draw();
-            }
-
-            /*GL.Begin(BeginMode.Points);
-
-            GL.Color3(Color.Red);
-            float scale = 500f;
-            foreach (var v in pointCloud)
-            {
-                GL.Vertex3(v.X / scale, v.Y / scale, v.Z / scale);
-            }
-            GL.End();*/
+            ErrorCode err = GL.GetError();
+            test.Render(view, projection);
         }
 
         Bitmap GrabScreenshot()
@@ -167,6 +167,7 @@ namespace LSDView.view
                         return;
                     }
                     
+                    /*
                     List<Vertex> verts = new List<Vertex>();
                     foreach (var obj in tmd.ObjectTable)
                     {
@@ -175,9 +176,12 @@ namespace LSDView.view
                             if (!prim.Options.HasFlag(TMDPrimitivePacket.OptionsFlags.Quad))
                             {
                                 Vec3 p0, p1, p2;
-                                p0 = obj.Vertices[prim.PacketData.p0];
-                                p1 = obj.Vertices[prim.PacketData.p1];
-                                p2 = obj.Vertices[prim.PacketData.p2];
+                                p0 = obj.Vertices[prim.PacketData.p0] / 500f;
+                                p1 = obj.Vertices[prim.PacketData.p1] / 500f;
+                                p2 = obj.Vertices[prim.PacketData.p2] / 500f;
+
+                                Vertex v1
+
 
                                 verts.Add(new Vertex(p1 / 500f));
                                 verts.Add(new Vertex(p0 / 500f));
@@ -193,10 +197,10 @@ namespace LSDView.view
                             else
                             {
                                 Vec3 p0, p1, p2, p3;
-                                p0 = obj.Vertices[prim.PacketData.p0];
-                                p1 = obj.Vertices[prim.PacketData.p1];
-                                p2 = obj.Vertices[prim.PacketData.p2];
-                                p3 = obj.Vertices[prim.PacketData.p3];
+                                p0 = obj.Vertices[prim.PacketData.p0] / 500f;
+                                p1 = obj.Vertices[prim.PacketData.p1] / 500f;
+                                p2 = obj.Vertices[prim.PacketData.p2] / 500f;
+                                p3 = obj.Vertices[prim.PacketData.p3] / 500f;
 
                                 verts.Add(new Vertex(p1 / 500f));
                                 verts.Add(new Vertex(p0 / 500f));
@@ -217,8 +221,7 @@ namespace LSDView.view
                             }
                         }
                     }
-
-                    buffer = new VertexBuffer(verts.ToArray());
+                    */
                 }
             }  
         }
