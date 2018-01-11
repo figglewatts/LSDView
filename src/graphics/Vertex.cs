@@ -13,18 +13,18 @@ namespace LSDView.graphics
     public struct Vertex
     {
         public static readonly int Size = (3 + 3 + 2 + 4) * 4; // size in bytes
-        public readonly Vector3 Position;
-        public readonly Vector3 Normal;
-        public readonly Vector2 TexCoord;
-        public readonly Vector4 Color;
+        public Vector3 Position;
+        public Vector3 Normal;
+        public Vector2 TexCoord;
+        public Vector4 Color;
 
-        public Vertex(Vector3 position, Vector3 normal,
-            Vector2 texCoord, Vector4 color)
+        public Vertex(Vector3 position, Vector3? normal = null,
+            Vector2? texCoord = null, Vector4? color = null)
         {
             Position = position;
-            Normal = normal;
-            TexCoord = texCoord;
-            Color = color;
+            Normal = normal ?? Vector3.Zero;
+            TexCoord = texCoord ?? Vector2.Zero;
+            Color = color ?? Vector4.One;
         }
     }
 }

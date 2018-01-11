@@ -36,7 +36,7 @@ namespace LSDView.view
             0, 1, 2
         };
 
-        private Mesh test;
+        private Mesh tmdMesh;
 
         private Matrix4 projection;
         private Matrix4 view;
@@ -56,7 +56,6 @@ namespace LSDView.view
             viewingWindow.Paint += new PaintEventHandler(glControl_Paint);
 
             basic = new Shader("basic", "shaders/basic");
-            test = new Mesh(vertices, indices, basic);
 
             GL.ClearColor(Color.Black);
             GL.Enable(EnableCap.DepthTest);
@@ -121,7 +120,13 @@ namespace LSDView.view
 
         private void Render()
         {
-            view = Matrix4.LookAt(0, 0, -5, 0, 0, 0, 0, 1, 0); // TODO: CHANGEME
+            view = Matrix4.LookAt(0, 1.5f, -20, 0, 1.5f, 0, 0, 1, 0); // TODO: CHANGEME
+
+            if (tmdMesh != null)
+            {
+                tmdMesh.Model = Matrix4.CreateRotationZ(angle) * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(90f));
+            }
+            angle += 0.0001f;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -133,7 +138,8 @@ namespace LSDView.view
         private void DrawCube()
         {
             ErrorCode err = GL.GetError();
-            test.Render(view, projection);
+
+            tmdMesh?.Render(view, projection);
         }
 
         Bitmap GrabScreenshot()
@@ -166,7 +172,97 @@ namespace LSDView.view
                         MessageBox.Show(ex.Message, "Error loading file", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    
+
+                    Vertex[] verts = new Vertex[tmd.NumberOfVertices];
+                    List<int> indices = new List<int>();
+                    uint v = 0;
+                    foreach (var obj in tmd.ObjectTable)
+                    {
+                        for (int i = 0; i < obj.NumVertices; i++)
+                        {
+                            Vec3 vertPos = obj.Vertices[i] / 500f;
+                            verts[v + i] = new Vertex(new Vector3(vertPos.X, vertPos.Y, vertPos.Z));
+                        }
+                        
+                        foreach (var prim in obj.Primitives)
+                        {
+                            if (prim.Type != TMDPrimitivePacket.Types.POLYGON)
+                                continue;
+                            
+                            IPrimitivePacket primitivePacket = prim.PacketData;
+                            ITexturedPrimitivePacket texPrimitivePacket = prim.PacketData as ITexturedPrimitivePacket;
+                            IColoredPrimitivePacket colPrimitivePacket = prim.PacketData as IColoredPrimitivePacket;
+                            ILitPrimitivePacket litPrimitivePacket = prim.PacketData as ILitPrimitivePacket;
+
+                            List<int> polyIndices = new List<int>();
+                            int[] packetIndices = new int[primitivePacket.Vertices.Length];
+                            for (int i = 0; i < primitivePacket.Vertices.Length; i++)
+                            {
+                                int vertIndex = (int)v + primitivePacket.Vertices[i];
+                                packetIndices[i] = vertIndex;
+
+                                // handle packet colour
+                                if (colPrimitivePacket != null)
+                                {
+                                    Vec3 packetVertCol = colPrimitivePacket.Colors[colPrimitivePacket.Colors.Length > 1 ? i : 0];
+                                    verts[vertIndex].Color = new Vector4(packetVertCol.X, packetVertCol.Y, packetVertCol.Z, 1f);
+                                }
+
+                                // handle packet normals
+                                if (litPrimitivePacket != null)
+                                {
+                                    TMDNormal packetVertNorm =
+                                        obj.Normals[
+                                            litPrimitivePacket.Normals[litPrimitivePacket.Normals.Length > 1 ? i : 0]];
+                                    verts[vertIndex].Normal = new Vector3(packetVertNorm.X, packetVertNorm.Y,
+                                        packetVertNorm.Z);
+                                }
+
+                                // handle packet UVs
+                                if (texPrimitivePacket != null)
+                                {
+                                    int uvIndex = i * 2;
+                                    verts[vertIndex].TexCoord = new Vector2(texPrimitivePacket.UVs[uvIndex],
+                                        texPrimitivePacket.UVs[uvIndex + 1]);
+                                }
+                            }
+                            
+                            bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
+
+                            polyIndices.Add(packetIndices[1]);
+                            polyIndices.Add(packetIndices[0]);
+                            polyIndices.Add(packetIndices[2]);
+
+                            if (isQuad)
+                            {
+                                polyIndices.Add(packetIndices[1]);
+                                polyIndices.Add(packetIndices[2]);
+                                polyIndices.Add(packetIndices[3]);
+                            }
+
+                            // if primitive is double sided poly we need to add other side with reverse winding
+                            if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
+                            {
+                                polyIndices.Add(packetIndices[0]);
+                                polyIndices.Add(packetIndices[1]);
+                                polyIndices.Add(packetIndices[2]);
+
+                                if (isQuad)
+                                {
+                                    polyIndices.Add(packetIndices[2]);
+                                    polyIndices.Add(packetIndices[1]);
+                                    polyIndices.Add(packetIndices[3]);
+                                }
+                            }
+
+                            indices.AddRange(polyIndices);
+                        }
+
+                        v += obj.NumVertices - 1;
+                    }
+
+                    tmdMesh = new Mesh(verts, indices.ToArray(), basic);
+
                     /*
                     List<Vertex> verts = new List<Vertex>();
                     foreach (var obj in tmd.ObjectTable)

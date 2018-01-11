@@ -15,10 +15,13 @@ namespace LSDView.graphics
 
         public Shader Shader { get; set; }
 
+        public Matrix4 Model { get; set; }
+
         public Mesh(Vertex[] vertices, int[] indices, Shader shader)
         {
             _verts = new VertexArray(vertices, indices);
             _shader = shader;
+            Model = Matrix4.Identity;
         }
 
         public void Render(Matrix4 view, Matrix4 projection)
@@ -27,6 +30,7 @@ namespace LSDView.graphics
             _shader.Bind();
             _shader.Uniform("Projection", false, projection);
             _shader.Uniform("View", false, view);
+            _shader.Uniform("Model", false, Model);
             GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             _shader.Unbind();
             _verts.Unbind();
