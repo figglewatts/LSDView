@@ -3,36 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LSDView.math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.graphics
 {
-    public class Mesh : IDisposable
+    public class Mesh : IDisposable, IRenderable
     {
         private readonly VertexArray _verts;
-        private Shader _shader;
 
         public Shader Shader { get; set; }
-
-        public Matrix4 Model { get; set; }
+        public Transform Transform { get; set; }
 
         public Mesh(Vertex[] vertices, int[] indices, Shader shader)
         {
             _verts = new VertexArray(vertices, indices);
-            _shader = shader;
-            Model = Matrix4.Identity;
+            Shader = shader;
+            Transform = new Transform();
         }
 
-        public void Render(Matrix4 view, Matrix4 projection)
+        public void Render(Matrix4 modelView, Matrix4 projection)
         {
             _verts.Bind();
-            _shader.Bind();
-            _shader.Uniform("Projection", false, projection);
-            _shader.Uniform("View", false, view);
-            _shader.Uniform("Model", false, Model);
+            Shader.Bind();
+            Shader.Uniform("Projection", false, projection);
+            Shader.Uniform("ModelView", false, modelView);
             GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
-            _shader.Unbind();
+            Shader.Unbind();
             _verts.Unbind();
         }
 

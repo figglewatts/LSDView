@@ -55,22 +55,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\graphics\Camera.cs" />
     <Compile Include="src\graphics\IBindable.cs" />
     <Compile Include="src\graphics\IDisposable.cs" />
+    <Compile Include="src\graphics\IRenderable.cs" />
     <Compile Include="src\graphics\Mesh.cs" />
     <Compile Include="src\graphics\Shader.cs" />
     <Compile Include="src\graphics\Vertex.cs" />
     <Compile Include="src\graphics\VertexArray.cs" />
     <Compile Include="src\graphics\GLBuffer.cs" />
     <Compile Include="src\graphics\VertexAttrib.cs" />
+    <Compile Include="src\controller\TMDController.cs" />
+    <Compile Include="src\math\Transform.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\util\Logger.cs" />
+    <Compile Include="src\view\ILSDView.cs" />
+    <Compile Include="src\view\IRenderableTreeNode.cs" />
     <Compile Include="src\view\LSDViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\view\LSDViewForm.Designer.cs">
       <DependentUpon>LSDViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\view\TMDObjectTreeNode.cs" />
+    <Compile Include="src\view\TMDTreeNode.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -1,4 +1,5 @@
 ﻿using System;
+using LSDView.controller;
 using LSDView.view;
 
 public class Program
@@ -12,6 +13,7 @@ public class Program
         OpenTK.Toolkit.Init();
         using (LSDViewForm form = new LSDViewForm())
         {
+            form.TmdController = new TMDController(form);
             form.ShowDialog();
         }
     }
