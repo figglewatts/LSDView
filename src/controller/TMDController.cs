@@ -87,13 +87,14 @@ namespace LSDView.controller
 
         private Mesh meshFromObject(TMDObject obj)
         {
-            Vertex[] verts = new Vertex[obj.NumVertices];
+            Vec3[] verts = new Vec3[obj.NumVertices];
+            List<Vertex> vertList = new List<Vertex>();
             List<int> indices = new List<int>();
+            Dictionary<int, int> indexDictionary = new Dictionary<int, int>();
 
             for (int i = 0; i < obj.NumVertices; i++)
             {
-                Vec3 vertPos = obj.Vertices[i] / 500f;
-                verts[i] = new Vertex(new Vector3(vertPos.X, vertPos.Y, vertPos.Z));
+                verts[i] = obj.Vertices[i] / 500f;
             }
                         
             foreach (var prim in obj.Primitives)
@@ -111,13 +112,19 @@ namespace LSDView.controller
                 for (int i = 0; i < primitivePacket.Vertices.Length; i++)
                 {
                     int vertIndex = primitivePacket.Vertices[i];
-                    packetIndices[i] = vertIndex;
+                    packetIndices[i] = vertList.Count;
+                    indexDictionary[vertIndex] = vertList.Count;
+
+                    Vector3 vertPos = new Vector3(verts[vertIndex].X, verts[vertIndex].Y, verts[vertIndex].Z);
+                    Vector4 vertCol = Vector4.One;
+                    Vector3 vertNorm = Vector3.Zero;
+                    Vector2 vertUV = Vector2.Zero;
 
                     // handle packet colour
                     if (colPrimitivePacket != null)
                     {
                         Vec3 packetVertCol = colPrimitivePacket.Colors[colPrimitivePacket.Colors.Length > 1 ? i : 0];
-                        verts[vertIndex].Color = new Vector4(packetVertCol.X, packetVertCol.Y, packetVertCol.Z, 1f);
+                        vertCol = new Vector4(packetVertCol.X, packetVertCol.Y, packetVertCol.Z, 1f);
                     }
 
                     // handle packet normals
@@ -126,7 +133,7 @@ namespace LSDView.controller
                         TMDNormal packetVertNorm =
                             obj.Normals[
                                 litPrimitivePacket.Normals[litPrimitivePacket.Normals.Length > 1 ? i : 0]];
-                        verts[vertIndex].Normal = new Vector3(packetVertNorm.X, packetVertNorm.Y,
+                        vertNorm = new Vector3(packetVertNorm.X, packetVertNorm.Y,
                             packetVertNorm.Z);
                     }
 
@@ -134,9 +141,11 @@ namespace LSDView.controller
                     if (texPrimitivePacket != null)
                     {
                         int uvIndex = i * 2;
-                        verts[vertIndex].TexCoord = new Vector2(texPrimitivePacket.UVs[uvIndex],
+                        vertUV = new Vector2(texPrimitivePacket.UVs[uvIndex],
                             texPrimitivePacket.UVs[uvIndex + 1]);
                     }
+
+                    vertList.Add(new Vertex(vertPos, vertNorm, vertUV, vertCol));
                 }
                             
                 bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
@@ -170,7 +179,7 @@ namespace LSDView.controller
                 indices.AddRange(polyIndices);
             }
 
-            return new Mesh(verts, indices.ToArray(), _shader);
+            return new Mesh(vertList.ToArray(), indices.ToArray(), _shader);
         }
     }
 }
