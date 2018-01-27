@@ -14,6 +14,7 @@ public class Program
         using (LSDViewForm form = new LSDViewForm())
         {
             form.TmdController = new TMDController(form);
+            form.TimController = new TIMController(form);
             form.ShowDialog();
         }
     }

@@ -17,7 +17,7 @@ namespace LSDView.util
 
         static Logger()
         {
-            logFile = new StreamWriter(File.Open(LOG_FILE_NAME, FileMode.OpenOrCreate));
+            logFile = !File.Exists(LOG_FILE_NAME) ? File.CreateText(LOG_FILE_NAME) : new StreamWriter(File.Open(LOG_FILE_NAME, FileMode.Truncate));
             AppDomain.CurrentDomain.ProcessExit += Logger_Dtor;
         }
 

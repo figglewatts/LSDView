@@ -38,7 +38,9 @@ namespace LSDView.view
         public GLControl ViewingWindow => this._viewingWindow;
         public TreeView ViewOutline => this._viewOutline;
         public event EventHandler OnGLLoad;
+
         public TMDController TmdController { get; set; }
+        public TIMController TimController { get; set; }
 
         public LSDViewForm()
         {
@@ -126,7 +128,18 @@ namespace LSDView.view
             {
                 try
                 {
-                    TmdController.LoadTMD(openFileDialog.FileName);
+                    string ext = Path.GetExtension(openFileDialog.FileName).ToLowerInvariant();
+                    switch (ext)
+                    {
+                        case ".tmd":
+                            TmdController.LoadTMD(openFileDialog.FileName);
+                            break;
+                        case ".tim":
+                            TimController.LoadTIM(openFileDialog.FileName);
+                            break;
+                        
+                    }
+                    
                 }
                 catch (BadFormatException ex)
                 {
