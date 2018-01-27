@@ -90,7 +90,6 @@ namespace LSDView.controller
             Vec3[] verts = new Vec3[obj.NumVertices];
             List<Vertex> vertList = new List<Vertex>();
             List<int> indices = new List<int>();
-            Dictionary<int, int> indexDictionary = new Dictionary<int, int>();
 
             for (int i = 0; i < obj.NumVertices; i++)
             {
@@ -113,7 +112,6 @@ namespace LSDView.controller
                 {
                     int vertIndex = primitivePacket.Vertices[i];
                     packetIndices[i] = vertList.Count;
-                    indexDictionary[vertIndex] = vertList.Count;
 
                     Vector3 vertPos = new Vector3(verts[vertIndex].X, verts[vertIndex].Y, verts[vertIndex].Z);
                     Vector4 vertCol = Vector4.One;
