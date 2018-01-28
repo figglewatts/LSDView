@@ -18,7 +18,7 @@ namespace LSDView.view
                 List<IRenderable> renderables = new List<IRenderable>();
                 foreach (var n in Nodes)
                 {
-                    if (n is TMDObjectTreeNode objNode)
+                    if (n is RenderableMeshTreeNode objNode)
                         renderables.AddRange(objNode.Renderables);
                 }
 

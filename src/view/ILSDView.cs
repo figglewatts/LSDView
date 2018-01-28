@@ -13,6 +13,7 @@ namespace LSDView.view
     {
         TreeView ViewOutline { get; }
         GLControl ViewingWindow { get; }
+        Mesh CreateTextureQuad();
         
         event EventHandler OnGLLoad;
     }

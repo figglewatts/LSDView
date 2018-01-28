@@ -15,6 +15,7 @@ public class Program
         {
             form.TmdController = new TMDController(form);
             form.TimController = new TIMController(form);
+            form.TixController = new TIXController(form, form.TimController);
             form.ShowDialog();
         }
     }

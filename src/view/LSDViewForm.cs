@@ -41,6 +41,7 @@ namespace LSDView.view
 
         public TMDController TmdController { get; set; }
         public TIMController TimController { get; set; }
+        public TIXController TixController { get; set; }
 
         public LSDViewForm()
         {
@@ -49,6 +50,41 @@ namespace LSDView.view
             _sceneCamera.Transform.Translate(new Vector3(0, 10, -10));
             _sceneCamera.LookAt(Vector3.Zero);
             this.MouseWheel += _viewingWindow_MouseWheel;
+        }
+
+        public Mesh CreateTextureQuad()
+        {
+            Vector3[] vertPositions = new[]
+            {
+                new Vector3(-1, -1, 0),
+                new Vector3(-1, 1, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(1, -1, 0)
+            };
+
+            Vector2[] vertUVs = new[]
+            {
+                new Vector2(0, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                new Vector2(1, 0)
+            };
+
+            return new Mesh(
+                new Vertex[]
+                {
+                    new Vertex(
+                        vertPositions[0], null, vertUVs[0]),
+                    new Vertex(
+                        vertPositions[1], null, vertUVs[1]),
+                    new Vertex(
+                        vertPositions[2], null, vertUVs[2]),
+                    new Vertex(
+                        vertPositions[3], null, vertUVs[3])
+                },
+                new int[] { 1, 0, 2, 2, 0, 3 },
+                new Shader("texture", "shaders/texture")
+            );
         }
 
         protected override void OnLoad(EventArgs e)
@@ -68,6 +104,8 @@ namespace LSDView.view
             glControl_Resize(ViewingWindow, EventArgs.Empty);
 
             OnGLLoad?.Invoke(this, null);
+
+            
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -137,7 +175,9 @@ namespace LSDView.view
                         case ".tim":
                             TimController.LoadTIM(openFileDialog.FileName);
                             break;
-                        
+                        case ".tix":
+                            TixController.LoadTIX(openFileDialog.FileName);
+                            break;
                     }
                     
                 }

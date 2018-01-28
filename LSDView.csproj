@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\controller\TIMController.cs" />
+    <Compile Include="src\controller\TIXController.cs" />
     <Compile Include="src\graphics\Camera.cs" />
     <Compile Include="src\graphics\IBindable.cs" />
     <Compile Include="src\graphics\IDisposable.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="src\view\LSDViewForm.Designer.cs">
       <DependentUpon>LSDViewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\view\TMDObjectTreeNode.cs" />
+    <Compile Include="src\view\RenderableMeshTreeNode.cs" />
     <Compile Include="src\view\TMDTreeNode.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

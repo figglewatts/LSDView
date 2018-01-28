@@ -39,13 +39,6 @@ namespace LSDView.graphics
             GL.BindBuffer(_target, 0);
         }
 
-        public void Draw()
-        {
-            GL.EnableClientState(ArrayCap.VertexArray);
-            GL.VertexPointer(3, VertexPointerType.Float, Vertex.Size, 0);
-            //GL.DrawArrays(PrimitiveType.Triangles, 0, _verts.Length);
-        }
-
         public void Dispose()
         {
             GL.DeleteBuffer(_handle);

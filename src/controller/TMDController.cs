@@ -64,7 +64,7 @@ namespace LSDView.controller
             int i = 0;
             foreach (var m in Meshes)
             {
-                tmdNode.Nodes.Add(new TMDObjectTreeNode("Object " + i.ToString(), m));
+                tmdNode.Nodes.Add(new RenderableMeshTreeNode("Object " + i.ToString(), m));
                 i++;
             }
 

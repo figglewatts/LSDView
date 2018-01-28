@@ -20,51 +20,15 @@ namespace LSDView.controller
         public string TIMPath { get; private set; }
 
         private TIM _tim;
-        private Texture2D _texture;
-
-        private Shader _shader;
-
-        private static Mesh _textureMesh;
+        private Mesh _textureMesh;
 
         public TIMController(ILSDView view)
         {
             View = view;
 
-            View.OnGLLoad += (sender, args) =>
+            View.OnGLLoad += (sender, e) =>
             {
-                _shader = new Shader("texture", "shaders/texture");
-
-                Vector3[] vertPositions = new[]
-                {
-                    new Vector3(-1, -1, 0),
-                    new Vector3(-1, 1, 0),
-                    new Vector3(1, 1, 0),
-                    new Vector3(1, -1, 0)
-                };
-
-                Vector2[] vertUVs = new[]
-                {
-                    new Vector2(0, 0),
-                    new Vector2(0, 1),
-                    new Vector2(1, 1),
-                    new Vector2(1, 0)
-                };
-
-                _textureMesh = new Mesh(
-                    new Vertex[]
-                    {
-                        new Vertex(
-                            vertPositions[0], null, vertUVs[0]),
-                        new Vertex(
-                            vertPositions[1], null, vertUVs[1]),
-                        new Vertex(
-                            vertPositions[2], null, vertUVs[2]),
-                        new Vertex(
-                            vertPositions[3], null, vertUVs[3])
-                    },
-                    new int[] { 1, 0, 2, 2, 0, 3 },
-                    _shader
-                );
+                _textureMesh = View.CreateTextureQuad();
             };
         }
 
@@ -76,12 +40,28 @@ namespace LSDView.controller
                 _tim = new TIM(br);
             }
 
-            Console.WriteLine($"TIM Type: {_tim.Header.PixelMode.ToString()}");
-            Console.WriteLine($"TIM dim, W: {_tim.PixelData.Width}, H: {_tim.PixelData.Height}");
-
             IColor[,] imageColors = _tim.GetImage();
             int width = imageColors.GetLength(1);
             int height = imageColors.GetLength(0);
+            float[] imageData = ImageColorsToData(imageColors, width, height);
+
+            _textureMesh.Textures.Clear();
+
+            Logger.Log()(LogLevel.INFO, "Loaded TIM: {0}", path);
+
+            _textureMesh.Textures.Add(new Texture2D(imageData, width, height));
+
+            TreeNode timNode = new RenderableMeshTreeNode(Path.GetFileName(TIMPath), _textureMesh);
+
+            View.ViewOutline.BeginUpdate();
+            View.ViewOutline.Nodes.Clear();
+            View.ViewOutline.Nodes.Add(timNode);
+            View.ViewOutline.EndUpdate();
+            View.ViewOutline.SelectedNode = timNode;
+        }
+
+        public float[] ImageColorsToData(IColor[,] imageColors, int width, int height)
+        {
             float[] imageData = new float[imageColors.Length * 4];
 
             int i = 0;
@@ -98,23 +78,7 @@ namespace LSDView.controller
                 }
             }
 
-            Console.WriteLine(imageData[3584*4]);
-
-            _textureMesh.Textures.Clear();
-            _texture?.Dispose();
-
-            Logger.Log()(LogLevel.INFO, "Loaded TIM: {0}", path);
-
-            _texture = new Texture2D(imageData, width, height);
-            _textureMesh.Textures.Add(_texture);
-
-            TreeNode timNode = new TMDObjectTreeNode(Path.GetFileName(TIMPath), _textureMesh);
-
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Clear();
-            View.ViewOutline.Nodes.Add(timNode);
-            View.ViewOutline.EndUpdate();
-            View.ViewOutline.SelectedNode = timNode;
+            return imageData;
         }
     }
 }
