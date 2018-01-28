@@ -13,9 +13,10 @@ public class Program
         OpenTK.Toolkit.Init();
         using (LSDViewForm form = new LSDViewForm())
         {
-            form.TmdController = new TMDController(form);
             form.TimController = new TIMController(form);
             form.TixController = new TIXController(form, form.TimController);
+            form.VramController = new VRAMController(form, form.TimController);
+            form.TmdController = new TMDController(form, form.VramController);
             form.ShowDialog();
         }
     }

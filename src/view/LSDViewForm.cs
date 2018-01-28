@@ -42,6 +42,7 @@ namespace LSDView.view
         public TMDController TmdController { get; set; }
         public TIMController TimController { get; set; }
         public TIXController TixController { get; set; }
+        public VRAMController VramController { get; set; }
 
         public LSDViewForm()
         {
@@ -50,20 +51,23 @@ namespace LSDView.view
             _sceneCamera.Transform.Translate(new Vector3(0, 10, -10));
             _sceneCamera.LookAt(Vector3.Zero);
             this.MouseWheel += _viewingWindow_MouseWheel;
+
+            ViewOutline.AfterSelect += (sender, args) =>
+            {
+                this.Text = ViewOutline.SelectedNode.Text + " - LSDView";
+            };
         }
 
         public Mesh CreateTextureQuad()
         {
-            Vector3[] vertPositions = new[]
-            {
+            Vector3[] vertPositions = {
                 new Vector3(-1, -1, 0),
                 new Vector3(-1, 1, 0),
                 new Vector3(1, 1, 0),
                 new Vector3(1, -1, 0)
             };
 
-            Vector2[] vertUVs = new[]
-            {
+            Vector2[] vertUVs = {
                 new Vector2(0, 0),
                 new Vector2(0, 1),
                 new Vector2(1, 1),
@@ -71,7 +75,7 @@ namespace LSDView.view
             };
 
             return new Mesh(
-                new Vertex[]
+                new[]
                 {
                     new Vertex(
                         vertPositions[0], null, vertUVs[0]),
@@ -82,7 +86,7 @@ namespace LSDView.view
                     new Vertex(
                         vertPositions[3], null, vertUVs[3])
                 },
-                new int[] { 1, 0, 2, 2, 0, 3 },
+                new[] { 1, 0, 2, 2, 0, 3 },
                 new Shader("texture", "shaders/texture")
             );
         }
@@ -105,7 +109,7 @@ namespace LSDView.view
 
             OnGLLoad?.Invoke(this, null);
 
-            
+            GL.ClearColor(Color.DimGray);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -216,6 +220,23 @@ namespace LSDView.view
             _viewDistance -= (e.Delta * SCROLL_SENSITIVITY);
             _viewDistance = MathHelper.Clamp(_viewDistance, MIN_VIEW_DISTANCE, MAX_VIEW_DISTANCE);
             _sceneCamera.ArcBall(0, 0, Vector3.Zero, _viewDistance);
+        }
+
+        private void importTIXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    VramController.LoadTIXIntoVRAM(openFileDialog.FileName);
+
+                }
+                catch (BadFormatException ex)
+                {
+                    MessageBox.Show(ex.Message, "Could not load file", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                        MessageBoxDefaultButton.Button1);
+                }
+            }
         }
     }
 }

@@ -41,10 +41,6 @@ namespace LSDView.graphics
         public void Dispose()
         {
             _verts.Dispose();
-            foreach (Texture2D tex in Textures)
-            {
-                tex.Dispose();
-            }
         }
 
         private void BindTextures()

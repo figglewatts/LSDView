@@ -35,6 +35,8 @@
             this._viewOutline = new System.Windows.Forms.TreeView();
             this.MainContainer = new System.Windows.Forms.SplitContainer();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.vRAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importTIXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainContainer)).BeginInit();
             this.MainContainer.Panel1.SuspendLayout();
@@ -64,7 +66,8 @@
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.vRAMToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(804, 24);
@@ -82,7 +85,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -119,6 +122,21 @@
             this.openFileDialog.FileName = "openFileDialog";
             this.openFileDialog.Title = "Open LSD file...";
             // 
+            // vRAMToolStripMenuItem
+            // 
+            this.vRAMToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importTIXToolStripMenuItem});
+            this.vRAMToolStripMenuItem.Name = "vRAMToolStripMenuItem";
+            this.vRAMToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.vRAMToolStripMenuItem.Text = "VRAM";
+            // 
+            // importTIXToolStripMenuItem
+            // 
+            this.importTIXToolStripMenuItem.Name = "importTIXToolStripMenuItem";
+            this.importTIXToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.importTIXToolStripMenuItem.Text = "Import TIX...";
+            this.importTIXToolStripMenuItem.Click += new System.EventHandler(this.importTIXToolStripMenuItem_Click);
+            // 
             // LSDViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -153,5 +171,7 @@
         private System.Windows.Forms.SplitContainer MainContainer;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.TreeView _viewOutline;
+        private System.Windows.Forms.ToolStripMenuItem vRAMToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importTIXToolStripMenuItem;
     }
 }

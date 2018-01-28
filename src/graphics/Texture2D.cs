@@ -28,6 +28,20 @@ namespace LSDView.graphics
             Unbind();
         }
 
+        public Texture2D(int width, int height)
+        {
+            _handle = GL.GenTexture();
+            Bind();
+            Width = width;
+            Height = height;
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba32f, width, height, 0, PixelFormat.Rgba, PixelType.Float, IntPtr.Zero);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            Unbind();
+        }
+
         public void Dispose()
         {
             GL.DeleteTexture(_handle);
@@ -41,6 +55,18 @@ namespace LSDView.graphics
         public void Unbind()
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public void SubImage(float[] data, int x, int y, int width, int height)
+        {
+            Bind();
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, x, y, width, height, PixelFormat.Rgba, PixelType.Float, data);
+            Unbind();
+        }
+
+        public void Clear()
+        {
+            GL.ClearTexImage(_handle, 0, PixelFormat.Rgba, PixelType.Float, new float[] {1, 1, 1, 1});
         }
     }
 }

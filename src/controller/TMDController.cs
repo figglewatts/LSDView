@@ -17,16 +17,19 @@ namespace LSDView.controller
 {
     public class TMDController
     {
-        private Shader _shader;
-        private TMD _tmd;
-
         public string TMDPath;
         public List<Mesh> Meshes;
         public ILSDView View { get; set; }
 
-        public TMDController(ILSDView view)
+        private Shader _shader;
+        private TMD _tmd;
+        private VRAMController _vramController;
+
+        public TMDController(ILSDView view, VRAMController vramController)
         {
             Meshes = new List<Mesh>();
+
+            _vramController = vramController;
 
             View = view;
 
@@ -79,7 +82,9 @@ namespace LSDView.controller
 
             foreach (var obj in tmd.ObjectTable)
             {
-                meshList.Add(meshFromObject(obj));
+                Mesh objMesh = meshFromObject(obj);
+                objMesh.Textures.Add(_vramController.VRAMTexture);
+                meshList.Add(objMesh);
             }
             
             return meshList;
@@ -116,7 +121,7 @@ namespace LSDView.controller
                     Vector3 vertPos = new Vector3(verts[vertIndex].X, verts[vertIndex].Y, verts[vertIndex].Z);
                     Vector4 vertCol = Vector4.One;
                     Vector3 vertNorm = Vector3.Zero;
-                    Vector2 vertUV = Vector2.Zero;
+                    Vector2 vertUV = Vector2.One;
 
                     // handle packet colour
                     if (colPrimitivePacket != null)
@@ -138,9 +143,21 @@ namespace LSDView.controller
                     // handle packet UVs
                     if (texPrimitivePacket != null)
                     {
+                        int texPage = texPrimitivePacket.Texture.TexturePageNumber;
+
+                        int texPageXPos = ((texPage % 16) * 128) - 640;
+                        int texPageYPos = texPage < 16 ? 256 : 0;
+
                         int uvIndex = i * 2;
-                        vertUV = new Vector2(texPrimitivePacket.UVs[uvIndex],
-                            texPrimitivePacket.UVs[uvIndex + 1]);
+                        int vramXPos = texPageXPos + texPrimitivePacket.UVs[uvIndex];
+                        int vramYPos = texPageYPos + (256 - texPrimitivePacket.UVs[uvIndex + 1]);
+
+                        Console.WriteLine(vramYPos);
+
+                        float uCoord = vramXPos / (float) VRAMController.VRAM_WIDTH;
+                        float vCoord = vramYPos / (float) VRAMController.VRAM_HEIGHT;
+
+                        vertUV = new Vector2(uCoord, vCoord);
                     }
 
                     vertList.Add(new Vertex(vertPos, vertNorm, vertUV, vertCol));
