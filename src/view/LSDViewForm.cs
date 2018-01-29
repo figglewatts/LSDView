@@ -43,6 +43,7 @@ namespace LSDView.view
         public TIMController TimController { get; set; }
         public TIXController TixController { get; set; }
         public VRAMController VramController { get; set; }
+		public LBDController LbdController { get; set; }
 
         public LSDViewForm()
         {
@@ -182,6 +183,9 @@ namespace LSDView.view
                         case ".tix":
                             TixController.LoadTIX(openFileDialog.FileName);
                             break;
+						case ".lbd":
+							LbdController.LoadLBD(openFileDialog.FileName);
+							break;
                     }
                     
                 }

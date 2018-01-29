@@ -17,7 +17,7 @@ namespace LSDView.controller
 {
     public class TMDController
     {
-        public string TMDPath;
+        public string TMDPath { get; private set; }
         public List<Mesh> Meshes;
         public ILSDView View { get; set; }
 

@@ -17,6 +17,7 @@ public class Program
             form.TixController = new TIXController(form, form.TimController);
             form.VramController = new VRAMController(form, form.TimController);
             form.TmdController = new TMDController(form, form.VramController);
+			form.LbdController = new LBDController(form);
             form.ShowDialog();
         }
     }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.util;
 using LSDView.view;
 
 namespace LSDView.controller
@@ -38,7 +39,9 @@ namespace LSDView.controller
 
             TIXPath = path;
 
-            foreach (Mesh mesh in _tixTextureMeshes)
+	        Logger.Log()(LogLevel.INFO, "Loaded TIX: {0}", path);
+
+			foreach (Mesh mesh in _tixTextureMeshes)
             {
                 mesh.Dispose();
             }
