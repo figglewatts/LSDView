@@ -51,12 +51,9 @@ namespace LSDView.controller
             {
                 foreach (var tim in chunk.TIMs)
                 {
-                    IColor[,] imageColors = tim.GetImage();
-                    int width = imageColors.GetLength(1);
-                    int height = imageColors.GetLength(0);
-                    float[] imageData = _timController.ImageColorsToData(imageColors, width, height);
+	                var image = LibLSDUtil.GetImageDataFromTIM(tim);
 
-                    Texture2D timTex = new Texture2D(imageData, width, height);
+                    Texture2D timTex = new Texture2D(image.data, image.width, image.height);
                     Mesh textureMesh = View.CreateTextureQuad();
                     textureMesh.Textures.Add(timTex);
 

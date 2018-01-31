@@ -117,8 +117,9 @@ namespace LSDView.math
 
         private void recomputeMatrix()
         {
-            Matrix = Matrix4.CreateTranslation(Position) * Matrix4.CreateFromQuaternion(Rotation) *
-                     Matrix4.CreateScale(Scale);
+	        Matrix = Matrix4.CreateFromQuaternion(Rotation) *
+	                 Matrix4.CreateScale(Scale) * Matrix4.CreateTranslation(Position);
+
         }
     }
 }

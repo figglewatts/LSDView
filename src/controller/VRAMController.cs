@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.util;
 using LSDView.view;
 
 namespace LSDView.controller
@@ -47,15 +48,12 @@ namespace LSDView.controller
             {
                 foreach (var tim in chunk.TIMs)
                 {
-                    IColor[,] imageColors = tim.GetImage();
-                    int width = imageColors.GetLength(1);
-                    int height = imageColors.GetLength(0);
-                    float[] imageData = _timController.ImageColorsToData(imageColors, width, height);
+	                var image = LibLSDUtil.GetImageDataFromTIM(tim);
 
                     int actualXPos = (tim.PixelData.XPosition - 320) * 2;
-                    int actualYPos = 512 - tim.PixelData.YPosition - height;
+                    int actualYPos = 512 - tim.PixelData.YPosition - image.height;
 
-                    VRAMTexture.SubImage(imageData, actualXPos, actualYPos, width, height);
+                    VRAMTexture.SubImage(image.data, actualXPos, actualYPos, image.width, image.height);
                 }
             }
         }

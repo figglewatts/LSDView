@@ -9,7 +9,7 @@ using LSDView.graphics;
 
 namespace LSDView.view
 {
-    public class TMDTreeNode : TreeNode, IRenderableTreeNode
+    public class RenderableMeshListTreeNode : TreeNode, IRenderableTreeNode
     {
         public List<IRenderable> Renderables
         {
@@ -26,6 +26,6 @@ namespace LSDView.view
             }
         }
 
-        public TMDTreeNode(string text) : base(text) {}
+        public RenderableMeshListTreeNode(string text) : base(text) {}
     }
 }

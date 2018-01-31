@@ -58,6 +58,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,6 +91,7 @@
     <Compile Include="src\controller\TMDController.cs" />
     <Compile Include="src\math\Transform.cs" />
     <Compile Include="src\Program.cs" />
+    <Compile Include="src\util\LibLSDUtil.cs" />
     <Compile Include="src\util\Logger.cs" />
     <Compile Include="src\view\ILSDView.cs" />
     <Compile Include="src\view\IRenderableTreeNode.cs" />
@@ -97,8 +101,9 @@
     <Compile Include="src\view\LSDViewForm.Designer.cs">
       <DependentUpon>LSDViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\view\RenderableMeshLayoutTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshTreeNode.cs" />
-    <Compile Include="src\view\TMDTreeNode.cs" />
+    <Compile Include="src\view\RenderableMeshListTreeNode.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -40,16 +40,13 @@ namespace LSDView.controller
                 _tim = new TIM(br);
             }
 
-            IColor[,] imageColors = _tim.GetImage();
-            int width = imageColors.GetLength(1);
-            int height = imageColors.GetLength(0);
-            float[] imageData = ImageColorsToData(imageColors, width, height);
+	        var image = LibLSDUtil.GetImageDataFromTIM(_tim);
 
             _textureMesh.Textures.Clear();
 
             Logger.Log()(LogLevel.INFO, "Loaded TIM: {0}", path);
 
-            _textureMesh.Textures.Add(new Texture2D(imageData, width, height));
+            _textureMesh.Textures.Add(new Texture2D(image.data, image.width, image.height));
 
             TreeNode timNode = new RenderableMeshTreeNode(Path.GetFileName(TIMPath), _textureMesh);
 
@@ -60,25 +57,6 @@ namespace LSDView.controller
             View.ViewOutline.SelectedNode = timNode;
         }
 
-        public float[] ImageColorsToData(IColor[,] imageColors, int width, int height)
-        {
-            float[] imageData = new float[imageColors.Length * 4];
-
-            int i = 0;
-            for (int y = height - 1; y >= 0; y--)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    IColor col = imageColors[y, x];
-                    imageData[i] = col.Red;
-                    imageData[i + 1] = col.Green;
-                    imageData[i + 2] = col.Blue;
-                    imageData[i + 3] = col.Alpha;
-                    i += 4;
-                }
-            }
-
-            return imageData;
-        }
+        
     }
 }

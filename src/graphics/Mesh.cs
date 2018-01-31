@@ -25,13 +25,14 @@ namespace LSDView.graphics
             Textures = new List<Texture2D>();
         }
 
-        public void Render(Matrix4 modelView, Matrix4 projection)
+        public void Render(Matrix4 view, Matrix4 projection)
         {
             _verts.Bind();
             BindTextures();
             Shader.Bind();
             Shader.Uniform("Projection", false, projection);
-            Shader.Uniform("ModelView", false, modelView);
+            Shader.Uniform("View", false, view);
+			Shader.Uniform("Model", false, Transform.Matrix);
             GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
             Shader.Unbind();
             UnbindTextures();

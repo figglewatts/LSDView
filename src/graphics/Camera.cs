@@ -12,7 +12,7 @@ namespace LSDView.graphics
     {
         public Transform Transform { get; private set; }
 
-        public Matrix4 View => Matrix4.LookAt(Transform.Position, Transform.Forward, Transform.Up);
+        public Matrix4 View => Matrix4.LookAt(Transform.Position, Transform.Position + Transform.Forward, Transform.Up);
 
         public Camera() { Transform = new Transform(); }
 
