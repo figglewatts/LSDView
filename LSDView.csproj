@@ -73,6 +73,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\anim\AnimationPlayer.cs" />
+    <Compile Include="src\anim\TODAnimation.cs" />
     <Compile Include="src\controller\LBDController.cs" />
     <Compile Include="src\controller\TIMController.cs" />
     <Compile Include="src\controller\TIXController.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="src\graphics\VertexAttrib.cs" />
     <Compile Include="src\controller\TMDController.cs" />
     <Compile Include="src\math\Transform.cs" />
+    <Compile Include="src\model\MOMData.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\util\LibLSDUtil.cs" />
     <Compile Include="src\util\Logger.cs" />
@@ -101,6 +104,7 @@
     <Compile Include="src\view\LSDViewForm.Designer.cs">
       <DependentUpon>LSDViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\view\RenderableAnimationTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshLayoutTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshListTreeNode.cs" />
@@ -131,6 +135,8 @@
     <None Include="shaders\basic.vert" />
     <None Include="shaders\texture.frag" />
     <None Include="shaders\texture.vert" />
+    <None Include="shaders\untextured.frag" />
+    <None Include="shaders\untextured.vert" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -156,4 +162,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(ProjectDir)\shaders" "$(TargetDir)\shaders" /R /Y /S /F /I</PostBuildEvent>
+  </PropertyGroup>
 </Project>

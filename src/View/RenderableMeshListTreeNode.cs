@@ -20,6 +20,8 @@ namespace LSDView.view
                 {
                     if (n is RenderableMeshTreeNode objNode)
                         renderables.AddRange(objNode.Renderables);
+                    else if (n is RenderableMeshListTreeNode listNode)
+                        renderables.AddRange(listNode.Renderables);
                 }
 
                 return renderables;

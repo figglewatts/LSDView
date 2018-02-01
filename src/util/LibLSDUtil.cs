@@ -159,9 +159,6 @@ namespace LSDView.util
 			TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
 			Mesh tileMesh = MeshFromTMDObject(tileObj, shader);
 
-			if (tile.TileDirection != LBDTile.TileDirections.Deg0)
-				Console.WriteLine("bp");
-
 			switch (tile.TileDirection)
 			{
 				case LBDTile.TileDirections.Deg90:

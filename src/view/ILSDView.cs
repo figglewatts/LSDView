@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using LSDView.anim;
 using LSDView.graphics;
 using OpenTK;
 
@@ -14,6 +15,7 @@ namespace LSDView.view
         TreeView ViewOutline { get; }
         GLControl ViewingWindow { get; }
         Mesh CreateTextureQuad();
+		AnimationPlayer AnimPlayer { get; }
         
         event EventHandler OnGLLoad;
     }

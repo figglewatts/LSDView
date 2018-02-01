@@ -43,7 +43,20 @@ namespace LSDView.math
             }
         }
 
-        public Matrix4 Matrix { get; private set; }
+        private Matrix4 _matrix;
+        public Matrix4 Matrix
+        {
+            get
+            {
+                if (Parent == null)
+                {
+                    return _matrix;
+                }
+
+                return _matrix * Parent.Matrix;
+            }
+            private set => _matrix = value;
+        }
 
         public Vector3 Up => (Vector3.UnitY * new Matrix3(Matrix)).Normalized();
         public Vector3 Forward => (Vector3.UnitZ * new Matrix3(Matrix)).Normalized();
@@ -53,12 +66,15 @@ namespace LSDView.math
                                         * Matrix4.CreateFromQuaternion(Rotation.Inverted())
                                         * Matrix4.CreateScale(Vector3.One);
 
+        public Transform Parent { get; set; }
+
         public Transform()
         {
             Position = Vector3.Zero;
             Scale = Vector3.One;
             Rotation = Quaternion.Identity;
             Matrix = Matrix4.Identity;
+            Parent = null;
         }
 
         public Vector3 ToWorld(Vector3 pos)

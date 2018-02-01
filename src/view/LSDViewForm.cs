@@ -11,6 +11,7 @@ using System.Threading;
 using libLSD.Exceptions;
 using libLSD.Formats;
 using libLSD.Types;
+using LSDView.anim;
 using LSDView.controller;
 using LSDView.graphics;
 using LSDView.util;
@@ -28,17 +29,26 @@ namespace LSDView.view
         private Camera _sceneCamera;
         private float _viewDistance = 5f;
         private const float MAX_VIEW_DISTANCE = 200f;
-        private const float MIN_VIEW_DISTANCE = 5f;
+        private const float MIN_VIEW_DISTANCE = 1f;
 
         private Vector2 _lastMousePos = Vector2.Zero;
         private Vector2 _mouseDragAmount = Vector2.Zero;
         private const float MOUSE_DRAG_SCALING = 0.01f;
         private const float SCROLL_SENSITIVITY = 0.01f;
-	    private const float CAMERA_MOVE_SPEED = 0.005f;
-	    private const float CAMERA_ROTATION_SPEED = 0.001f;
+	    private const float CAMERA_MOVE_SPEED = 0.007f;
+	    private const float CAMERA_ROTATION_SPEED = 0.0010f;
 	    private bool _cameraFlyMode = false;
 	    private Vector3 _cachedCamPos;
 	    private Quaternion _cachedCamOrientation;
+
+        private KeyboardState _keyState;
+        private KeyboardState _lastKeyState;
+
+        private double t = 0.0;
+        private const double dt = 1000f / 60f;
+        private long currentTime = DateTime.Now.Ticks;
+        private double accumulator = 0.0;
+        private ulong frameNumber = 0;
 
         public bool MouseDown { get; set; }
 
@@ -52,6 +62,8 @@ namespace LSDView.view
         public VRAMController VramController { get; set; }
 		public LBDController LbdController { get; set; }
 
+		public AnimationPlayer AnimPlayer { get; }
+
         public LSDViewForm()
         {
             InitializeComponent();
@@ -59,6 +71,8 @@ namespace LSDView.view
             _sceneCamera.Transform.Translate(new Vector3(0, 10, -10));
             _sceneCamera.LookAt(Vector3.Zero);
             this.MouseWheel += _viewingWindow_MouseWheel;
+
+			AnimPlayer = new AnimationPlayer();
 
             ViewOutline.AfterSelect += (sender, args) =>
             {
@@ -131,9 +145,29 @@ namespace LSDView.view
         {
             while (ViewingWindow.IsIdle)
             {
-	            CheckInput();
+                long newTime = DateTime.Now.Ticks;
+                long frameTime = newTime - currentTime;
+                currentTime = newTime;
+
+                double frameTimeMs = TimeSpan.FromTicks(frameTime).TotalMilliseconds;
+                accumulator += frameTimeMs;
+
+                while (accumulator > dt)
+                {
+                    _lastKeyState = _keyState;
+                    _keyState = Keyboard.GetState();
+
+                    CheckInput();
+
+                    AnimPlayer.Update(dt);
+
+                    accumulator -= dt;
+                    t += dt;
+                }
 
 				Render();
+
+                frameNumber++;
             }
         }
 
@@ -178,43 +212,46 @@ namespace LSDView.view
 	    {
 		    if (!_cameraFlyMode) return;
 
-			KeyboardState keyState = Keyboard.GetState();
-
-		    if (keyState.IsKeyDown(Key.Left))
+		    if (_keyState.IsKeyDown(Key.Left))
 		    {
 			    _sceneCamera.Transform.Rotate(-CAMERA_ROTATION_SPEED, Vector3.UnitY, false);
 		    }
-			else if (keyState.IsKeyDown(Key.Right))
+			else if (_keyState.IsKeyDown(Key.Right))
 		    {
 				_sceneCamera.Transform.Rotate(CAMERA_ROTATION_SPEED, Vector3.UnitY, false);
 			}
 
-		    if (keyState.IsKeyDown(Key.Up))
+		    if (_keyState.IsKeyDown(Key.Up))
 		    {
 				_sceneCamera.Transform.Rotate(-CAMERA_ROTATION_SPEED, _sceneCamera.Transform.Right, false);
 			}
-			else if (keyState.IsKeyDown(Key.Down))
+			else if (_keyState.IsKeyDown(Key.Down))
 		    {
 			    _sceneCamera.Transform.Rotate(CAMERA_ROTATION_SPEED, _sceneCamera.Transform.Right, false);
 		    }
 
-		    if (keyState.IsKeyDown(Key.W))
+		    if (_keyState.IsKeyDown(Key.W))
 		    {
 			    _sceneCamera.Transform.Translate(_sceneCamera.Transform.Forward * CAMERA_MOVE_SPEED);
 		    }
-		    else if (keyState.IsKeyDown(Key.S))
+		    else if (_keyState.IsKeyDown(Key.S))
 		    {
 			    _sceneCamera.Transform.Translate(_sceneCamera.Transform.Forward * -CAMERA_MOVE_SPEED);
 		    }
-		    if (keyState.IsKeyDown(Key.A))
+		    if (_keyState.IsKeyDown(Key.A))
 		    {
 			    _sceneCamera.Transform.Translate(_sceneCamera.Transform.Right * CAMERA_MOVE_SPEED);
 		    }
-		    else if (keyState.IsKeyDown(Key.D))
+		    else if (_keyState.IsKeyDown(Key.D))
 		    {
 			    _sceneCamera.Transform.Translate(_sceneCamera.Transform.Right * -CAMERA_MOVE_SPEED);
 		    }
 		}
+
+        private bool keyPress(Key key)
+        {
+            return (_keyState[key] && (_keyState[key] != _lastKeyState[key]));
+        }
 		
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -323,5 +360,19 @@ namespace LSDView.view
 				_sceneCamera.Transform.Position = _cachedCamPos;
 			}
 	    }
-	}
+
+        private void _viewOutline_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node is RenderableAnimationTreeNode animNode)
+            {
+                AnimPlayer.Animation = animNode.Animation.AnimationData;
+                AnimPlayer.AnimatedMeshes = animNode.Animation.AnimationMeshes;
+                AnimPlayer.Active = true;
+            }
+            else
+            {
+                AnimPlayer.Active = false;
+            }
+        }
+    }
 }
