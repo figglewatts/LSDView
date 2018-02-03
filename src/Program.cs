@@ -18,6 +18,7 @@ public class Program
             form.VramController = new VRAMController(form, form.TimController);
             form.TmdController = new TMDController(form, form.VramController);
 			form.LbdController = new LBDController(form, form.VramController);
+            form.MomController = new MOMController(form, form.VramController);
             form.ShowDialog();
         }
     }

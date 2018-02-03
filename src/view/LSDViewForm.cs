@@ -61,6 +61,7 @@ namespace LSDView.view
         public TIXController TixController { get; set; }
         public VRAMController VramController { get; set; }
 		public LBDController LbdController { get; set; }
+        public MOMController MomController { get; set; }
 
 		public AnimationPlayer AnimPlayer { get; }
 
@@ -275,6 +276,13 @@ namespace LSDView.view
 						case ".lbd":
 							LbdController.LoadLBD(openFileDialog.FileName);
 							break;
+                        case ".mom":
+                            MomController.LoadMOM(openFileDialog.FileName);
+                            break;
+                        default:
+                            MessageBox.Show($"Unrecognized file extension \"{ext}\"", "Could not load file",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            break;
                     }
                     
                 }
