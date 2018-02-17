@@ -50,8 +50,6 @@ namespace LSDView.controller
                 // TODO: check if TMD loaded correctly
             }
 
-            UnloadTMD();
-
             TMDPath = path;
 
             Logger.Log()(LogLevel.INFO, "Loaded TMD: {0}", path);
@@ -63,7 +61,7 @@ namespace LSDView.controller
             };
             document.OnUnload += (sender, args) => UnloadTMD();
 
-            _documentController.LoadDocument(document);
+            _documentController.LoadDocument(document, Path.GetFileName(TMDPath));
 
         }
 

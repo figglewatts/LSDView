@@ -19,11 +19,13 @@ public class Program
             TIXController tixController = new TIXController(form, timController, documentController);
             VRAMController vramController = new VRAMController(form, timController);
             TMDController tmdController = new TMDController(form, vramController, documentController);
-            LBDController lbdController = new LBDController(form, vramController);
-            MOMController momController = new MOMController(form, vramController);
+            LBDController lbdController = new LBDController(form, vramController, documentController);
+            MOMController momController = new MOMController(form, vramController, documentController);
             outlineController.TMDController = tmdController;
             outlineController.TIMController = timController;
             outlineController.TIXController = tixController;
+            outlineController.MOMController = momController;
+            outlineController.LBDController = lbdController;
 
             form.TimController = timController;
             form.TixController = tixController;

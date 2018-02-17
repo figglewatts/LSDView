@@ -19,26 +19,42 @@ namespace LSDView.controller
         public TMDController TMDController { get; set; }
         public TIMController TIMController { get; set; }
         public TIXController TIXController { get; set; }
+        public MOMController MOMController { get; set; }
+        public LBDController LBDController { get; set; }
 
         public OutlineController(ILSDView view)
         {
             View = view;
         }
 
-        public void PopulateOutlineWithDocument(IDocument doc)
+        public void PopulateOutlineWithDocument(IDocument doc, string rootName)
         {
+            TreeNode node = null;
             switch (doc.Type)
             {
                 case DocumentType.TMD:
-                    PopulateOutlineWithTMD(doc as AbstractDocument<TMD>);
+                    node = CreateTMDNode(rootName, TMDController.Meshes);
                     break;
                 case DocumentType.TIM:
-                    PopulateOutlineWithTIM(doc as AbstractDocument<TIM>);
+                    node = CreateTIMNode(rootName, TIMController.TextureMesh);
                     break;
                 case DocumentType.TIX:
-                    PopulateOutlineWithTIX(doc as AbstractDocument<TIX>);
+                    node = CreateTIXNode(rootName, TIXController.TIXTextureMeshes);
                     break;
+                case DocumentType.MOM:
+                    node = CreateMOMNode(rootName, MOMController.MomData);
+                    break;
+                case DocumentType.LBD:
+                    node = CreateLBDNode(rootName, LBDController.TileLayout, LBDController.TileMeshes,
+                        LBDController.Moms);
+                    break;
+                default:
+                    throw new ArgumentException($"Unrecognized document type {doc.Type}");
             }
+
+            View.ViewOutline.BeginUpdate();
+            View.ViewOutline.Nodes.Add(node);
+            View.ViewOutline.EndUpdate();
         }
 
         public void ClearOutline()
@@ -48,49 +64,81 @@ namespace LSDView.controller
             View.ViewOutline.EndUpdate();
         }
 
-        private void PopulateOutlineWithTMD(AbstractDocument<TMD> tmd)
+        private TreeNode CreateTMDNode(string name, List<Mesh> meshes)
         {
-            TreeNode tmdNode = new RenderableMeshListTreeNode(Path.GetFileName(TMDController.TMDPath));
+            TreeNode tmdNode = new RenderableMeshListTreeNode(name);
 
             int i = 0;
-            foreach (var m in TMDController.Meshes)
+            foreach (var m in meshes)
             {
                 tmdNode.Nodes.Add(new RenderableMeshTreeNode("Object " + i.ToString(), m));
                 i++;
             }
 
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Add(tmdNode);
-            View.ViewOutline.EndUpdate();
             View.ViewOutline.SelectedNode = tmdNode;
+            return tmdNode;
         }
 
-        private void PopulateOutlineWithTIM(AbstractDocument<TIM> tim)
+        private TreeNode CreateTIMNode(string name, Mesh textureMesh)
         {
-            TreeNode timNode = new RenderableMeshTreeNode(Path.GetFileName(TIMController.TIMPath),TIMController.TextureMesh);
+            TreeNode timNode = new RenderableMeshTreeNode(name, textureMesh);
 
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Add(timNode);
-            View.ViewOutline.EndUpdate();
             View.ViewOutline.SelectedNode = timNode;
+            return timNode;
         }
 
-        private void PopulateOutlineWithTIX(AbstractDocument<TIX> tix)
+        private TreeNode CreateTIXNode(string name, List<Mesh> tixTextureMeshes)
         {
-            TreeNode baseTreeNode = new TreeNode(Path.GetFileName(TIXController.TIXPath));
+            TreeNode baseTreeNode = new TreeNode(name);
 
             int timNumber = 0;
-            foreach (Mesh mesh in TIXController.TIXTextureMeshes)
+            foreach (Mesh mesh in tixTextureMeshes)
             {
-                RenderableMeshTreeNode subNode = new RenderableMeshTreeNode($"Texture {timNumber}", mesh);
+                TreeNode subNode = CreateTIMNode($"Texture {timNumber}", mesh);
                 baseTreeNode.Nodes.Add(subNode);
 
                 timNumber++;
             }
 
-            View.ViewOutline.Nodes.Add(baseTreeNode);
-            View.ViewOutline.EndUpdate();
             View.ViewOutline.SelectedNode = baseTreeNode.Nodes[0];
+            return baseTreeNode;
+        }
+
+        private TreeNode CreateMOMNode(string name, MOMData data)
+        {
+            TreeNode momNode = CreateTMDNode(name, data.MomTmd);
+
+            int i = 0;
+            foreach (var anim in data.Animations)
+            {
+                RenderableAnimationTreeNode animNode =
+                    new RenderableAnimationTreeNode(View.AnimPlayer, anim, "TOD " + i.ToString());
+                momNode.Nodes.Add(animNode);
+                i++;
+            }
+
+            View.ViewOutline.SelectedNode = momNode;
+            return momNode;
+        }
+
+        private TreeNode CreateLBDNode(string name, List<Mesh> tileLayout, List<Mesh> tileMeshes, List<MOMData> moms)
+        {
+            TreeNode lbdNode = new RenderableMeshLayoutTreeNode(name, tileLayout.ToArray());
+
+            TreeNode tilesTmdNode = CreateTMDNode("Tiles TMD", tileMeshes);
+
+            int i = 0;
+            foreach (var mom in moms)
+            {
+                TreeNode momNode = CreateMOMNode($"MOM {i}", mom);
+                lbdNode.Nodes.Add(momNode);
+
+                i++;
+            }
+
+            lbdNode.Nodes.Add(tilesTmdNode);
+            View.ViewOutline.SelectedNode = lbdNode;
+            return lbdNode;
         }
     }
 }

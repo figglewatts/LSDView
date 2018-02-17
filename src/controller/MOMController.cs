@@ -16,17 +16,19 @@ namespace LSDView.controller
     public class MOMController
     {
         public ILSDView View { get; set; }
+        public MOMData MomData { get; private set; }
+        public string MomPath { get; private set; }
 
         private VRAMController _vramController;
-        private string _momPath;
         private MOM _mom;
-        private MOMData _momData;
         private Shader _shader;
+        private DocumentController _documentController;
 
-        public MOMController(ILSDView view, VRAMController vram)
+        public MOMController(ILSDView view, VRAMController vram, DocumentController documentController)
         {
             View = view;
             _vramController = vram;
+            _documentController = documentController;
 
             View.OnGLLoad += (sender, args) =>
             {
@@ -41,14 +43,16 @@ namespace LSDView.controller
                 _mom = new MOM(br);
             }
 
-            _momPath = path;
+            MomPath = path;
 
-            if (_momData != null)
-            {
-                _momData.Dispose();
-                _momData = null;
-            }
+            MOMDocument document = new MOMDocument(MomData);
+            document.OnLoad = (sender, args) => CreateMeshes();
+            document.OnUnload = (sender, args) => UnloadMOM();
+            _documentController.LoadDocument(document, Path.GetFileName(MomPath));
+        }
 
+        public void CreateMeshes()
+        {
             List<Mesh> momTmd = LibLSDUtil.CreateMeshesFromTMD(_mom.TMD, _shader, _vramController.VRAMTexture);
             List<TODAnimation> momAnimations = new List<TODAnimation>();
             foreach (var anim in _mom.MOS.TODs)
@@ -57,35 +61,16 @@ namespace LSDView.controller
                 TODAnimation animationObj = new TODAnimation(animatedMeshes, anim);
                 momAnimations.Add(animationObj);
             }
-            _momData = new MOMData(momTmd, momAnimations);
+            MomData = new MOMData(_mom, momTmd, momAnimations);
+        }
 
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Clear();
-
-            RenderableMeshLayoutTreeNode momNode = new RenderableMeshLayoutTreeNode(Path.GetFileName(_momPath), _momData.MomTmd.ToArray());
-
-            RenderableMeshListTreeNode momTmdNode = new RenderableMeshListTreeNode("TMD");
-            momNode.Nodes.Add(momTmdNode);
-
-            int j = 0;
-            foreach (var mesh in _momData.MomTmd)
+        public void UnloadMOM()
+        {
+            if (MomData != null)
             {
-                momTmdNode.Nodes.Add(new RenderableMeshTreeNode("Object " + j.ToString(), mesh));
-                j++;
+                MomData.Dispose();
+                MomData = null;
             }
-
-            j = 0;
-            foreach (var anim in _momData.Animations)
-            {
-                RenderableAnimationTreeNode animNode =
-                    new RenderableAnimationTreeNode(View.AnimPlayer, anim, "TOD " + j.ToString());
-                momNode.Nodes.Add(animNode);
-                j++;
-            }
-
-            View.ViewOutline.Nodes.Add(momNode);
-            View.ViewOutline.EndUpdate();
-            View.ViewOutline.SelectedNode = momNode;
         }
     }
 }

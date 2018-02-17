@@ -97,7 +97,9 @@
     <Compile Include="src\math\Transform.cs" />
     <Compile Include="src\model\AbstractDocument.cs" />
     <Compile Include="src\model\IDocument.cs" />
+    <Compile Include="src\model\LBDDocument.cs" />
     <Compile Include="src\model\MOMData.cs" />
+    <Compile Include="src\model\MOMDocument.cs" />
     <Compile Include="src\model\TIMDocument.cs" />
     <Compile Include="src\model\TIXDocument.cs" />
     <Compile Include="src\model\TMDDocument.cs" />

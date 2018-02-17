@@ -22,12 +22,12 @@ namespace LSDView.controller
             _outlineController = outlineController;
         }
 
-        public void LoadDocument(IDocument doc)
+        public void LoadDocument(IDocument doc, string rootName)
         {
             Document?.OnUnload(this, EventArgs.Empty);
 
             Document = doc;
-            Document.OnLoad += (sender, args) => _outlineController.PopulateOutlineWithDocument(Document);
+            Document.OnLoad += (sender, args) => _outlineController.PopulateOutlineWithDocument(Document, rootName);
             Document.OnUnload += (sender, args) => _outlineController.ClearOutline();
 
             Document.OnLoad(this, EventArgs.Empty);

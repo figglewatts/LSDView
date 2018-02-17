@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using libLSD.Formats;
 using LSDView.anim;
 using LSDView.graphics;
 
@@ -8,11 +9,13 @@ namespace LSDView.model
     {
         public List<Mesh> MomTmd { get; }
         public List<TODAnimation> Animations { get; }
+        public MOM Mom { get; }
 
-        public MOMData(List<Mesh> tmd, List<TODAnimation> animations)
+        public MOMData(MOM mom, List<Mesh> tmd, List<TODAnimation> animations)
         {
             MomTmd = tmd;
             Animations = animations;
+            Mom = mom;
         }
 
         public void Dispose()

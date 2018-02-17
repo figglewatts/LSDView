@@ -48,7 +48,7 @@ namespace LSDView.controller
             TIXDocument document = new TIXDocument(_tix);
             document.OnLoad += (sender, args) => CreateMeshes();
             document.OnUnload += (sender, args) => UnloadTIX();
-            _documentController.LoadDocument(document);
+            _documentController.LoadDocument(document, Path.GetFileName(TIXPath));
         }
 
         public void CreateMeshes()

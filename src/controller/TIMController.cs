@@ -46,14 +46,12 @@ namespace LSDView.controller
 
 	        var image = LibLSDUtil.GetImageDataFromTIM(_tim);
 
-            UnloadTIM();
-
             Logger.Log()(LogLevel.INFO, "Loaded TIM: {0}", path);
 
             TIMDocument document = new TIMDocument(_tim);
             document.OnLoad += (sender, args) => TextureMesh.Textures.Add(new Texture2D(image.data, image.width, image.height));
             document.OnUnload += (sender, args) => UnloadTIM();
-            _documentController.LoadDocument(document);
+            _documentController.LoadDocument(document, Path.GetFileName(TIMPath));
 
         }
 
