@@ -37,6 +37,8 @@
             this._viewOutline = new System.Windows.Forms.TreeView();
             this.MainContainer = new System.Windows.Forms.SplitContainer();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainContainer)).BeginInit();
             this.MainContainer.Panel1.SuspendLayout();
@@ -78,7 +80,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem});
+            this.openToolStripMenuItem,
+            this.exportToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -86,7 +89,7 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -138,6 +141,21 @@
             // 
             this.openFileDialog.Title = "Open LSD file...";
             // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.asOriginalToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // asOriginalToolStripMenuItem
+            // 
+            this.asOriginalToolStripMenuItem.Name = "asOriginalToolStripMenuItem";
+            this.asOriginalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.asOriginalToolStripMenuItem.Text = "As Original...";
+            this.asOriginalToolStripMenuItem.Click += new System.EventHandler(this.asOriginalToolStripMenuItem_Click);
+            // 
             // LSDViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -174,5 +192,7 @@
         private System.Windows.Forms.TreeView _viewOutline;
         private System.Windows.Forms.ToolStripMenuItem vRAMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importTIXToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asOriginalToolStripMenuItem;
     }
 }

@@ -62,6 +62,8 @@ namespace LSDView.view
         public VRAMController VramController { get; set; }
 		public LBDController LbdController { get; set; }
         public MOMController MomController { get; set; }
+        public OutlineController OutlineController { get; set; }
+        public DocumentController DocumentController { get; set; }
 
 		public AnimationPlayer AnimPlayer { get; }
 
@@ -381,6 +383,11 @@ namespace LSDView.view
             {
                 AnimPlayer.Active = false;
             }
+        }
+
+        private void asOriginalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

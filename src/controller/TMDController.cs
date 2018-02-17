@@ -9,6 +9,7 @@ using libLSD.Exceptions;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.model;
 using LSDView.util;
 using LSDView.view;
 using OpenTK;
@@ -24,12 +25,14 @@ namespace LSDView.controller
         private Shader _shader;
         private TMD _tmd;
         private VRAMController _vramController;
+        private DocumentController _documentController;
 
-        public TMDController(ILSDView view, VRAMController vramController)
+        public TMDController(ILSDView view, VRAMController vramController, DocumentController documentController)
         {
             Meshes = new List<Mesh>();
 
             _vramController = vramController;
+            _documentController = documentController;
 
             View = view;
 
@@ -47,33 +50,31 @@ namespace LSDView.controller
                 // TODO: check if TMD loaded correctly
             }
 
-            TMDPath = path;
+            UnloadTMD();
 
-            foreach (Mesh m in Meshes)
-            {
-                m.Dispose();
-            }
-            Meshes.Clear();
+            TMDPath = path;
 
             Logger.Log()(LogLevel.INFO, "Loaded TMD: {0}", path);
 
             Meshes = LibLSDUtil.CreateMeshesFromTMD(_tmd, _shader, _vramController.VRAMTexture);
 
-            TreeNode tmdNode = new RenderableMeshListTreeNode(Path.GetFileName(TMDPath));
+            TMDDocument document = new TMDDocument(_tmd);
+            _documentController.LoadDocument(document);
 
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Clear();
+        }
 
-            int i = 0;
-            foreach (var m in Meshes)
+        public void WriteTMD(string path)
+        {
+            
+        }
+
+        private void UnloadTMD()
+        {
+            foreach (Mesh m in Meshes)
             {
-                tmdNode.Nodes.Add(new RenderableMeshTreeNode("Object " + i.ToString(), m));
-                i++;
+                m.Dispose();
             }
-
-            View.ViewOutline.Nodes.Add(tmdNode);
-            View.ViewOutline.EndUpdate();
-            View.ViewOutline.SelectedNode = tmdNode;
+            Meshes.Clear();
         }
     }
 }
