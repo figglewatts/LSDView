@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.model;
 using LSDView.util;
 using LSDView.view;
 
@@ -19,15 +20,18 @@ namespace LSDView.controller
 
         public string TIXPath { get; private set; }
 
+        public List<Mesh> TIXTextureMeshes { get; private set; }
+
         private TIX _tix;
         private TIMController _timController;
-        private List<Mesh> _tixTextureMeshes;
+        private DocumentController _documentController;
 
-        public TIXController(ILSDView view, TIMController tim)
+        public TIXController(ILSDView view, TIMController tim, DocumentController documentController)
         {
             View = view;
             _timController = tim;
-            _tixTextureMeshes = new List<Mesh>();
+            _documentController = documentController;
+            TIXTextureMeshes = new List<Mesh>();
         }
 
         public void LoadTIX(string path)
@@ -41,43 +45,36 @@ namespace LSDView.controller
 
 	        Logger.Log()(LogLevel.INFO, "Loaded TIX: {0}", path);
 
-			foreach (Mesh mesh in _tixTextureMeshes)
-            {
-                mesh.Dispose();
-            }
-            _tixTextureMeshes.Clear();
+            TIXDocument document = new TIXDocument(_tix);
+            document.OnLoad += (sender, args) => CreateMeshes();
+            document.OnUnload += (sender, args) => UnloadTIX();
+            _documentController.LoadDocument(document);
+        }
 
+        public void CreateMeshes()
+        {
             foreach (var chunk in _tix.Chunks)
             {
                 foreach (var tim in chunk.TIMs)
                 {
-	                var image = LibLSDUtil.GetImageDataFromTIM(tim);
+                    var image = LibLSDUtil.GetImageDataFromTIM(tim);
 
                     Texture2D timTex = new Texture2D(image.data, image.width, image.height);
                     Mesh textureMesh = View.CreateTextureQuad();
                     textureMesh.Textures.Add(timTex);
 
-                    _tixTextureMeshes.Add(textureMesh);
+                    TIXTextureMeshes.Add(textureMesh);
                 }
             }
+        }
 
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Clear();
-
-            TreeNode baseTreeNode = new TreeNode(Path.GetFileName(TIXPath));
-
-            int timNumber = 0;
-            foreach (Mesh mesh in _tixTextureMeshes)
+        public void UnloadTIX()
+        {
+            foreach (Mesh mesh in TIXTextureMeshes)
             {
-                RenderableMeshTreeNode subNode = new RenderableMeshTreeNode($"Texture {timNumber}", mesh);
-                baseTreeNode.Nodes.Add(subNode);
-
-                timNumber++;
+                mesh.Dispose();
             }
-
-            View.ViewOutline.Nodes.Add(baseTreeNode);
-            View.ViewOutline.EndUpdate();
-            View.ViewOutline.SelectedNode = baseTreeNode.Nodes[0];
+            TIXTextureMeshes.Clear();
         }
     }
 }
