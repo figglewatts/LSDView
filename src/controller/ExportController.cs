@@ -58,6 +58,11 @@ namespace LSDView.controller
                     ExportTMD(Path.GetFileName(TMDController.TMDPath));
                     break;
                 }
+                case DocumentType.TIM:
+                {
+                    ExportTIM(Path.GetFileName(TIMController.TIMPath));
+                    break;
+                }
             }
         }
 
@@ -69,6 +74,17 @@ namespace LSDView.controller
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
                 TMDController.WriteTMD(SaveFileDialogController.FileName);
+            }
+        }
+
+        private void ExportTIM(string filename)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.TIM_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                TIMController.WriteTIM(SaveFileDialogController.FileName);
             }
         }
     }

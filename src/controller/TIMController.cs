@@ -59,5 +59,13 @@ namespace LSDView.controller
         {
             TextureMesh.ClearTextures();
         }
+
+        public void WriteTIM(string path)
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                _tim.Write(bw);
+            }
+        }
     }
 }

@@ -33,20 +33,20 @@ namespace LSDView.controller
             switch (doc.Type)
             {
                 case DocumentType.TMD:
-                    node = CreateTMDNode(rootName, TMDController.Meshes);
+                    node = CreateTMDNode(rootName, TMDController.Meshes, ((TMDDocument)doc).Document);
                     break;
                 case DocumentType.TIM:
-                    node = CreateTIMNode(rootName, TIMController.TextureMesh);
+                    node = CreateTIMNode(rootName, TIMController.TextureMesh, ((TIMDocument)doc).Document);
                     break;
                 case DocumentType.TIX:
-                    node = CreateTIXNode(rootName, TIXController.TIXTextureMeshes);
+                    node = CreateTIXNode(rootName, TIXController.TIXTextureMeshes, ((TIXDocument)doc).Document);
                     break;
                 case DocumentType.MOM:
                     node = CreateMOMNode(rootName, MOMController.MomData);
                     break;
                 case DocumentType.LBD:
                     node = CreateLBDNode(rootName, LBDController.TileLayout, LBDController.TileMeshes,
-                        LBDController.Moms);
+                        LBDController.Moms, ((LBDDocument)doc).Document);
                     break;
                 default:
                     throw new ArgumentException($"Unrecognized document type {doc.Type}");
@@ -64,14 +64,14 @@ namespace LSDView.controller
             View.ViewOutline.EndUpdate();
         }
 
-        private TreeNode CreateTMDNode(string name, List<Mesh> meshes)
+        private TreeNode CreateTMDNode(string name, List<Mesh> meshes, TMD tmd)
         {
-            TreeNode tmdNode = new RenderableMeshListTreeNode(name);
+            TreeNode tmdNode = new TMDTreeNode(name, tmd);
 
             int i = 0;
             foreach (var m in meshes)
             {
-                tmdNode.Nodes.Add(new RenderableMeshTreeNode("Object " + i.ToString(), m));
+                tmdNode.Nodes.Add(new TMDObjectTreeNode("Object " + i.ToString(), m));
                 i++;
             }
 
@@ -79,22 +79,22 @@ namespace LSDView.controller
             return tmdNode;
         }
 
-        private TreeNode CreateTIMNode(string name, Mesh textureMesh)
+        private TreeNode CreateTIMNode(string name, Mesh textureMesh, TIM tim)
         {
-            TreeNode timNode = new RenderableMeshTreeNode(name, textureMesh);
+            TreeNode timNode = new TIMTreeNode(name, textureMesh, tim);
 
             View.ViewOutline.SelectedNode = timNode;
             return timNode;
         }
 
-        private TreeNode CreateTIXNode(string name, List<Mesh> tixTextureMeshes)
+        private TreeNode CreateTIXNode(string name, List<Mesh> tixTextureMeshes, TIX tix)
         {
             TreeNode baseTreeNode = new RenderableMeshTreeNode(name, tixTextureMeshes[0]);
 
             int timNumber = 0;
             foreach (Mesh mesh in tixTextureMeshes)
             {
-                TreeNode subNode = CreateTIMNode($"Texture {timNumber}", mesh);
+                TreeNode subNode = CreateTIMNode($"Texture {timNumber}", mesh, tix.AllTIMs[timNumber]);
                 baseTreeNode.Nodes.Add(subNode);
 
                 timNumber++;
@@ -106,7 +106,7 @@ namespace LSDView.controller
 
         private TreeNode CreateMOMNode(string name, MOMData data)
         {
-            TreeNode momNode = CreateTMDNode(name, data.MomTmd);
+            TreeNode momNode = CreateTMDNode(name, data.MomTmd, data.Mom.TMD);
 
             int i = 0;
             foreach (var anim in data.Animations)
@@ -121,11 +121,11 @@ namespace LSDView.controller
             return momNode;
         }
 
-        private TreeNode CreateLBDNode(string name, List<Mesh> tileLayout, List<Mesh> tileMeshes, List<MOMData> moms)
+        private TreeNode CreateLBDNode(string name, List<Mesh> tileLayout, List<Mesh> tileMeshes, List<MOMData> moms, LBD lbd)
         {
             TreeNode lbdNode = new RenderableMeshLayoutTreeNode(name, tileLayout.ToArray());
 
-            TreeNode tilesTmdNode = CreateTMDNode("Tiles TMD", tileMeshes);
+            TreeNode tilesTmdNode = CreateTMDNode("Tiles TMD", tileMeshes, lbd.Tiles);
 
             int i = 0;
             foreach (var mom in moms)

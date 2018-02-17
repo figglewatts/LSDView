@@ -110,6 +110,7 @@
     <Compile Include="src\util\Logger.cs" />
     <Compile Include="src\view\ILSDView.cs" />
     <Compile Include="src\view\IRenderableTreeNode.cs" />
+    <Compile Include="src\view\LBDTreeNode.cs" />
     <Compile Include="src\view\LSDViewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +121,9 @@
     <Compile Include="src\view\RenderableMeshLayoutTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshListTreeNode.cs" />
+    <Compile Include="src\view\TIMTreeNode.cs" />
+    <Compile Include="src\view\TMDObjectTreeNode.cs" />
+    <Compile Include="src\view\TMDTreeNode.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
