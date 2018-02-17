@@ -13,15 +13,16 @@ public class Program
         OpenTK.Toolkit.Init();
         using (LSDViewForm form = new LSDViewForm())
         {
-            TIMController timController = new TIMController(form);
-            TIXController tixController = new TIXController(form, timController);
-            VRAMController vramController = new VRAMController(form, timController);
             OutlineController outlineController = new OutlineController(form);
             DocumentController documentController = new DocumentController(form, outlineController);
+            TIMController timController = new TIMController(form, documentController);
+            TIXController tixController = new TIXController(form, timController);
+            VRAMController vramController = new VRAMController(form, timController);
             TMDController tmdController = new TMDController(form, vramController, documentController);
             LBDController lbdController = new LBDController(form, vramController);
             MOMController momController = new MOMController(form, vramController);
             outlineController.TMDController = tmdController;
+            outlineController.TIMController = timController;
 
             form.TimController = timController;
             form.TixController = tixController;

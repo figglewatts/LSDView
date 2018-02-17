@@ -16,6 +16,7 @@ namespace LSDView.controller
         public ILSDView View { get; set; }
 
         public TMDController TMDController { get; set; }
+        public TIMController TIMController { get; set; }
 
         public OutlineController(ILSDView view)
         {
@@ -29,7 +30,9 @@ namespace LSDView.controller
                 case DocumentType.TMD:
                     PopulateOutlineWithTMD(doc as AbstractDocument<TMD>);
                     break;
-                
+                case DocumentType.TIM:
+                    PopulateOutlineWithTIM(doc as AbstractDocument<TIM>);
+                    break;
             }
         }
 
@@ -55,6 +58,17 @@ namespace LSDView.controller
             View.ViewOutline.Nodes.Add(tmdNode);
             View.ViewOutline.EndUpdate();
             View.ViewOutline.SelectedNode = tmdNode;
+        }
+
+        private void PopulateOutlineWithTIM(AbstractDocument<TIM> tim)
+        {
+            TreeNode timNode = new RenderableMeshTreeNode(Path.GetFileName(TIMController.TIMPath),TIMController.TextureMesh);
+
+            View.ViewOutline.BeginUpdate();
+            View.ViewOutline.Nodes.Clear();
+            View.ViewOutline.Nodes.Add(timNode);
+            View.ViewOutline.EndUpdate();
+            View.ViewOutline.SelectedNode = timNode;
         }
     }
 }

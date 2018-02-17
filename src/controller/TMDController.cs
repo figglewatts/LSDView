@@ -19,7 +19,7 @@ namespace LSDView.controller
     public class TMDController
     {
         public string TMDPath { get; private set; }
-        public List<Mesh> Meshes;
+        public List<Mesh> Meshes { get; private set; }
         public ILSDView View { get; set; }
 
         private Shader _shader;
@@ -56,9 +56,13 @@ namespace LSDView.controller
 
             Logger.Log()(LogLevel.INFO, "Loaded TMD: {0}", path);
 
-            Meshes = LibLSDUtil.CreateMeshesFromTMD(_tmd, _shader, _vramController.VRAMTexture);
-
             TMDDocument document = new TMDDocument(_tmd);
+            document.OnLoad += (sender, args) =>
+            {
+                Meshes = LibLSDUtil.CreateMeshesFromTMD(_tmd, _shader, _vramController.VRAMTexture);
+            };
+            document.OnUnload += (sender, args) => UnloadTMD();
+
             _documentController.LoadDocument(document);
 
         }

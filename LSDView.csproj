@@ -98,6 +98,7 @@
     <Compile Include="src\model\AbstractDocument.cs" />
     <Compile Include="src\model\IDocument.cs" />
     <Compile Include="src\model\MOMData.cs" />
+    <Compile Include="src\model\TIMDocument.cs" />
     <Compile Include="src\model\TMDDocument.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="src\util\LibLSDUtil.cs" />

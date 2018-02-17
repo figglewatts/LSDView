@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using libLSD.Formats;
 using libLSD.Types;
 using LSDView.graphics;
+using LSDView.model;
 using LSDView.util;
 using LSDView.view;
 using OpenTK;
@@ -18,17 +19,20 @@ namespace LSDView.controller
     {
         public ILSDView View { get; set; }
         public string TIMPath { get; private set; }
+        public Mesh TextureMesh { get; private set; }
 
         private TIM _tim;
-        private Mesh _textureMesh;
+        private DocumentController _documentController;
 
-        public TIMController(ILSDView view)
+        public TIMController(ILSDView view, DocumentController documentController)
         {
             View = view;
 
+            _documentController = documentController;
+
             View.OnGLLoad += (sender, e) =>
             {
-                _textureMesh = View.CreateTextureQuad();
+                TextureMesh = View.CreateTextureQuad();
             };
         }
 
@@ -42,21 +46,20 @@ namespace LSDView.controller
 
 	        var image = LibLSDUtil.GetImageDataFromTIM(_tim);
 
-            _textureMesh.Textures.Clear();
+            UnloadTIM();
 
             Logger.Log()(LogLevel.INFO, "Loaded TIM: {0}", path);
 
-            _textureMesh.Textures.Add(new Texture2D(image.data, image.width, image.height));
+            TIMDocument document = new TIMDocument(_tim);
+            document.OnLoad += (sender, args) => TextureMesh.Textures.Add(new Texture2D(image.data, image.width, image.height));
+            document.OnUnload += (sender, args) => UnloadTIM();
+            _documentController.LoadDocument(document);
 
-            TreeNode timNode = new RenderableMeshTreeNode(Path.GetFileName(TIMPath), _textureMesh);
-
-            View.ViewOutline.BeginUpdate();
-            View.ViewOutline.Nodes.Clear();
-            View.ViewOutline.Nodes.Add(timNode);
-            View.ViewOutline.EndUpdate();
-            View.ViewOutline.SelectedNode = timNode;
         }
 
-        
+        public void UnloadTIM()
+        {
+            TextureMesh.ClearTextures();
+        }
     }
 }
