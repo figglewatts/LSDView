@@ -15,16 +15,20 @@ namespace LSDView.controller
         public IDocument Document { get; private set; }
 
         private OutlineController _outlineController;
+        private ExportController _exportController;
 
-        public DocumentController(ILSDView view, OutlineController outlineController)
+        public DocumentController(ILSDView view, OutlineController outlineController, ExportController exportController)
         {
             View = view;
             _outlineController = outlineController;
+            _exportController = exportController;
         }
 
         public void LoadDocument(IDocument doc, string rootName)
         {
             Document?.OnUnload(this, EventArgs.Empty);
+
+            _exportController.SetExportButtonsEnabled(true);
 
             Document = doc;
             Document.OnLoad += (sender, args) => _outlineController.PopulateOutlineWithDocument(Document, rootName);

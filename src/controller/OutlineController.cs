@@ -89,7 +89,7 @@ namespace LSDView.controller
 
         private TreeNode CreateTIXNode(string name, List<Mesh> tixTextureMeshes)
         {
-            TreeNode baseTreeNode = new TreeNode(name);
+            TreeNode baseTreeNode = new RenderableMeshTreeNode(name, tixTextureMeshes[0]);
 
             int timNumber = 0;
             foreach (Mesh mesh in tixTextureMeshes)
@@ -100,7 +100,7 @@ namespace LSDView.controller
                 timNumber++;
             }
 
-            View.ViewOutline.SelectedNode = baseTreeNode.Nodes[0];
+            View.ViewOutline.SelectedNode = baseTreeNode;
             return baseTreeNode;
         }
 

@@ -16,6 +16,9 @@ namespace LSDView.view
         GLControl ViewingWindow { get; }
         Mesh CreateTextureQuad();
 		AnimationPlayer AnimPlayer { get; }
+        MenuStrip MenuStrip { get; }
+        SaveFileDialog SaveDialog { get; }
+        OpenFileDialog OpenDialog { get; }
         
         event EventHandler OnGLLoad;
     }

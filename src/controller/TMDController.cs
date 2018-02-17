@@ -67,7 +67,10 @@ namespace LSDView.controller
 
         public void WriteTMD(string path)
         {
-            
+            using (BinaryWriter bw = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                _tmd.Write(bw);
+            }
         }
 
         private void UnloadTMD()

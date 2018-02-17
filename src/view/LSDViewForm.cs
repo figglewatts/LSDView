@@ -54,6 +54,9 @@ namespace LSDView.view
 
         public GLControl ViewingWindow => this._viewingWindow;
         public TreeView ViewOutline => this._viewOutline;
+        public MenuStrip MenuStrip => this.menuStrip;
+        public SaveFileDialog SaveDialog => this.saveFileDialog;
+        public OpenFileDialog OpenDialog => this.openFileDialog;
         public event EventHandler OnGLLoad;
 
         public TMDController TmdController { get; set; }
@@ -64,6 +67,7 @@ namespace LSDView.view
         public MOMController MomController { get; set; }
         public OutlineController OutlineController { get; set; }
         public DocumentController DocumentController { get; set; }
+        public ExportController ExportController { get; set; }
 
 		public AnimationPlayer AnimPlayer { get; }
 
@@ -387,7 +391,7 @@ namespace LSDView.view
 
         private void asOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            ExportController.ExportDocumentAsOriginal();
         }
     }
 }

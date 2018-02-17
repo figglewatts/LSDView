@@ -39,6 +39,8 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.asAlternativeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainContainer)).BeginInit();
             this.MainContainer.Panel1.SuspendLayout();
@@ -144,17 +146,26 @@
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.asOriginalToolStripMenuItem});
+            this.asOriginalToolStripMenuItem,
+            this.asAlternativeToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportToolStripMenuItem.Text = "Export";
             // 
             // asOriginalToolStripMenuItem
             // 
+            this.asOriginalToolStripMenuItem.Enabled = false;
             this.asOriginalToolStripMenuItem.Name = "asOriginalToolStripMenuItem";
-            this.asOriginalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.asOriginalToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
             this.asOriginalToolStripMenuItem.Text = "As Original...";
             this.asOriginalToolStripMenuItem.Click += new System.EventHandler(this.asOriginalToolStripMenuItem_Click);
+            // 
+            // asAlternativeToolStripMenuItem
+            // 
+            this.asAlternativeToolStripMenuItem.Enabled = false;
+            this.asAlternativeToolStripMenuItem.Name = "asAlternativeToolStripMenuItem";
+            this.asAlternativeToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.asAlternativeToolStripMenuItem.Text = "As Alternative...";
             // 
             // LSDViewForm
             // 
@@ -194,5 +205,7 @@
         private System.Windows.Forms.ToolStripMenuItem importTIXToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem asOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem asAlternativeToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }

@@ -76,9 +76,11 @@
     <Compile Include="src\anim\AnimationPlayer.cs" />
     <Compile Include="src\anim\TODAnimation.cs" />
     <Compile Include="src\controller\DocumentController.cs" />
+    <Compile Include="src\controller\ExportController.cs" />
     <Compile Include="src\controller\LBDController.cs" />
     <Compile Include="src\controller\MOMController.cs" />
     <Compile Include="src\controller\OutlineController.cs" />
+    <Compile Include="src\controller\SaveFileDialogController.cs" />
     <Compile Include="src\controller\TIMController.cs" />
     <Compile Include="src\controller\TIXController.cs" />
     <Compile Include="src\controller\VRAMController.cs" />
