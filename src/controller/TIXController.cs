@@ -76,5 +76,31 @@ namespace LSDView.controller
             }
             TIXTextureMeshes.Clear();
         }
+
+        public void WriteTIX(string filename)
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Open(filename, FileMode.Create)))
+            {
+                _tix.Write(bw);
+            }
+        }
+
+        public void WriteTIXTIMs(string baseFilename)
+        {
+            int i = 0;
+            string path = Path.GetDirectoryName(baseFilename);
+            string baseFileWithoutExt = Path.GetFileNameWithoutExtension(baseFilename);
+            foreach (TIM tim in _tix.AllTIMs)
+            {
+                string filename = Path.Combine(path, baseFileWithoutExt + $"_TIM_{i}.tim");
+                using (BinaryWriter bw =
+                    new BinaryWriter(File.Open(filename, FileMode.Create))) 
+                {
+                    tim.Write(bw);
+                }
+
+                i++;
+            }
+        }
     }
 }

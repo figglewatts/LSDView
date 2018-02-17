@@ -63,6 +63,11 @@ namespace LSDView.controller
                     ExportTIM(Path.GetFileName(TIMController.TIMPath));
                     break;
                 }
+                case DocumentType.TIX:
+                {
+                    ExportTIX(Path.GetFileName(TIXController.TIXPath));
+                    break;
+                }
             }
         }
 
@@ -85,6 +90,30 @@ namespace LSDView.controller
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
                 TIMController.WriteTIM(SaveFileDialogController.FileName);
+            }
+        }
+
+        private void ExportTIX(string filename)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.TIX_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                Console.WriteLine(SaveFileDialogController.FilterIndex);
+                switch (SaveFileDialogController.FilterIndex)
+                {
+                    case 1: // write the TIX file
+                    {
+                        TIXController.WriteTIX(SaveFileDialogController.FileName);
+                        break;
+                    }
+                    case 2: // write the TIM files
+                    {
+                        TIXController.WriteTIXTIMs(SaveFileDialogController.FileName);
+                        break;
+                    }
+                }
             }
         }
     }
