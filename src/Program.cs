@@ -23,6 +23,9 @@ public class Program
             LBDController lbdController = new LBDController(form, vramController, documentController);
             MOMController momController = new MOMController(form, vramController, documentController);
             SaveFileDialogController saveFileDialogController = new SaveFileDialogController(form);
+            ContextMenuController contextMenuController = new ContextMenuController(form);
+
+            contextMenuController.ExportController = exportController;
 
             outlineController.TMDController = tmdController;
             outlineController.TIMController = timController;
@@ -47,6 +50,7 @@ public class Program
             form.LbdController = lbdController;
             form.MomController = momController;
             form.ExportController = exportController;
+            form.ContextMenuController = contextMenuController;
 
             form.ShowDialog();
         }

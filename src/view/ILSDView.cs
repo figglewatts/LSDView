@@ -19,6 +19,7 @@ namespace LSDView.view
         MenuStrip MenuStrip { get; }
         SaveFileDialog SaveDialog { get; }
         OpenFileDialog OpenDialog { get; }
+        ContextMenuStrip OutlineContextMenu { get; }
         
         event EventHandler OnGLLoad;
     }

@@ -3,22 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using libLSD.Formats;
 using LSDView.controller;
-using LSDView.graphics;
 using LSDView.view;
 
 namespace LSDView.view
 {
-    public class TMDObjectTreeNode : RenderableMeshTreeNode, IDataTypeTreeNode
+    public class MOMTreeNode : RenderableMeshListTreeNode, IDataTypeTreeNode
     {
-        public TMD Tmd { get; }
-        public int ObjectIndex { get; }
+        public MOM Mom { get; }
 
-        public TMDObjectTreeNode(string text, IRenderable r, TMD tmd, int objectIndex) : base(text, r)
+        public MOMTreeNode(string text, MOM mom) : base(text)
         {
-            Tmd = tmd;
-            ObjectIndex = objectIndex;
+            Mom = mom;
         }
 
         public void Accept(IOutlineTreeViewVisitor visitor)

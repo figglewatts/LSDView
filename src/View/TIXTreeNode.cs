@@ -6,19 +6,16 @@ using System.Threading.Tasks;
 using libLSD.Formats;
 using LSDView.controller;
 using LSDView.graphics;
-using LSDView.view;
 
 namespace LSDView.view
 {
-    public class TMDObjectTreeNode : RenderableMeshTreeNode, IDataTypeTreeNode
+    public class TIXTreeNode : RenderableMeshTreeNode, IDataTypeTreeNode
     {
-        public TMD Tmd { get; }
-        public int ObjectIndex { get; }
+        public TIX Tix { get; }
 
-        public TMDObjectTreeNode(string text, IRenderable r, TMD tmd, int objectIndex) : base(text, r)
+        public TIXTreeNode(string text, IRenderable r, TIX tix) : base(text, r)
         {
-            Tmd = tmd;
-            ObjectIndex = objectIndex;
+            Tix = tix;
         }
 
         public void Accept(IOutlineTreeViewVisitor visitor)

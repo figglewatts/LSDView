@@ -75,8 +75,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\anim\AnimationPlayer.cs" />
     <Compile Include="src\anim\TODAnimation.cs" />
+    <Compile Include="src\controller\ContextMenuController.cs" />
     <Compile Include="src\controller\DocumentController.cs" />
     <Compile Include="src\controller\ExportController.cs" />
+    <Compile Include="src\controller\IOutlineTreeViewVisitor.cs" />
     <Compile Include="src\controller\LBDController.cs" />
     <Compile Include="src\controller\MOMController.cs" />
     <Compile Include="src\controller\OutlineController.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="src\Program.cs" />
     <Compile Include="src\util\LibLSDUtil.cs" />
     <Compile Include="src\util\Logger.cs" />
+    <Compile Include="src\view\IDataTypeTreeNode.cs" />
     <Compile Include="src\view\ILSDView.cs" />
     <Compile Include="src\view\IRenderableTreeNode.cs" />
     <Compile Include="src\view\LBDTreeNode.cs" />
@@ -117,11 +120,13 @@
     <Compile Include="src\view\LSDViewForm.Designer.cs">
       <DependentUpon>LSDViewForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\view\MOMTreeNode.cs" />
     <Compile Include="src\view\RenderableAnimationTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshLayoutTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshTreeNode.cs" />
     <Compile Include="src\view\RenderableMeshListTreeNode.cs" />
     <Compile Include="src\view\TIMTreeNode.cs" />
+    <Compile Include="src\view\TIXTreeNode.cs" />
     <Compile Include="src\view\TMDObjectTreeNode.cs" />
     <Compile Include="src\view\TMDTreeNode.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

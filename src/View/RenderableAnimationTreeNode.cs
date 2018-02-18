@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LSDView.anim;
+using LSDView.controller;
 using LSDView.graphics;
 
 namespace LSDView.view
 {
-    class RenderableAnimationTreeNode : TreeNode, IRenderableTreeNode
+    public class RenderableAnimationTreeNode : TreeNode, IRenderableTreeNode, IDataTypeTreeNode
     {
         public List<IRenderable> Renderables { get; }
         public AnimationPlayer Player { get; }
@@ -25,6 +26,11 @@ namespace LSDView.view
                 Renderables.Add(renderable);
             }
             Player = player;
+        }
+
+        public void Accept(IOutlineTreeViewVisitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

@@ -28,20 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this._viewingWindow = new OpenTK.GLControl();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.vRAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importTIXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this._viewOutline = new System.Windows.Forms.TreeView();
-            this.MainContainer = new System.Windows.Forms.SplitContainer();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.asAlternativeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vRAMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importTIXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this._viewOutline = new System.Windows.Forms.TreeView();
+            this.outlineViewContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exportAsContextMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.MainContainer = new System.Windows.Forms.SplitContainer();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip.SuspendLayout();
+            this.outlineViewContextMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MainContainer)).BeginInit();
             this.MainContainer.Panel1.SuspendLayout();
             this.MainContainer.Panel2.SuspendLayout();
@@ -91,9 +95,33 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.openToolStripMenuItem.Text = "Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // exportToolStripMenuItem
+            // 
+            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.asOriginalToolStripMenuItem,
+            this.asAlternativeToolStripMenuItem});
+            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.exportToolStripMenuItem.Text = "Export";
+            // 
+            // asOriginalToolStripMenuItem
+            // 
+            this.asOriginalToolStripMenuItem.Enabled = false;
+            this.asOriginalToolStripMenuItem.Name = "asOriginalToolStripMenuItem";
+            this.asOriginalToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.asOriginalToolStripMenuItem.Text = "As Original...";
+            this.asOriginalToolStripMenuItem.Click += new System.EventHandler(this.asOriginalToolStripMenuItem_Click);
+            // 
+            // asAlternativeToolStripMenuItem
+            // 
+            this.asAlternativeToolStripMenuItem.Enabled = false;
+            this.asAlternativeToolStripMenuItem.Name = "asAlternativeToolStripMenuItem";
+            this.asAlternativeToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+            this.asAlternativeToolStripMenuItem.Text = "As Alternative...";
             // 
             // vRAMToolStripMenuItem
             // 
@@ -118,6 +146,20 @@
             this._viewOutline.Size = new System.Drawing.Size(200, 540);
             this._viewOutline.TabIndex = 2;
             this._viewOutline.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this._viewOutline_AfterSelect);
+            this._viewOutline.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this._viewOutline_NodeMouseClick);
+            // 
+            // outlineViewContextMenu
+            // 
+            this.outlineViewContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportAsContextMenuItem});
+            this.outlineViewContextMenu.Name = "outlineViewContextMenu";
+            this.outlineViewContextMenu.Size = new System.Drawing.Size(131, 26);
+            // 
+            // exportAsContextMenuItem
+            // 
+            this.exportAsContextMenuItem.Name = "exportAsContextMenuItem";
+            this.exportAsContextMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exportAsContextMenuItem.Text = "Export as...";
             // 
             // MainContainer
             // 
@@ -143,30 +185,6 @@
             // 
             this.openFileDialog.Title = "Open LSD file...";
             // 
-            // exportToolStripMenuItem
-            // 
-            this.exportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.asOriginalToolStripMenuItem,
-            this.asAlternativeToolStripMenuItem});
-            this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.exportToolStripMenuItem.Text = "Export";
-            // 
-            // asOriginalToolStripMenuItem
-            // 
-            this.asOriginalToolStripMenuItem.Enabled = false;
-            this.asOriginalToolStripMenuItem.Name = "asOriginalToolStripMenuItem";
-            this.asOriginalToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.asOriginalToolStripMenuItem.Text = "As Original...";
-            this.asOriginalToolStripMenuItem.Click += new System.EventHandler(this.asOriginalToolStripMenuItem_Click);
-            // 
-            // asAlternativeToolStripMenuItem
-            // 
-            this.asAlternativeToolStripMenuItem.Enabled = false;
-            this.asAlternativeToolStripMenuItem.Name = "asAlternativeToolStripMenuItem";
-            this.asAlternativeToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
-            this.asAlternativeToolStripMenuItem.Text = "As Alternative...";
-            // 
             // LSDViewForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -182,6 +200,7 @@
             this.Text = "LSDView";
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.outlineViewContextMenu.ResumeLayout(false);
             this.MainContainer.Panel1.ResumeLayout(false);
             this.MainContainer.Panel2.ResumeLayout(false);
             this.MainContainer.Panel2.PerformLayout();
@@ -207,5 +226,7 @@
         private System.Windows.Forms.ToolStripMenuItem asOriginalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem asAlternativeToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.ContextMenuStrip outlineViewContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem exportAsContextMenuItem;
     }
 }

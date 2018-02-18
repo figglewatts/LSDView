@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using libLSD.Exceptions;
-using libLSD.Formats;
-using libLSD.Types;
+﻿using libLSD.Exceptions;
 using LSDView.anim;
 using LSDView.controller;
 using LSDView.graphics;
-using LSDView.util;
-using OpenTK.Graphics.OpenGL;
 using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using System;
+using System.ComponentModel;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
 namespace LSDView.view
@@ -57,6 +49,7 @@ namespace LSDView.view
         public MenuStrip MenuStrip => this.menuStrip;
         public SaveFileDialog SaveDialog => this.saveFileDialog;
         public OpenFileDialog OpenDialog => this.openFileDialog;
+        public ContextMenuStrip OutlineContextMenu => this.outlineViewContextMenu;
         public event EventHandler OnGLLoad;
 
         public TMDController TmdController { get; set; }
@@ -68,6 +61,7 @@ namespace LSDView.view
         public OutlineController OutlineController { get; set; }
         public DocumentController DocumentController { get; set; }
         public ExportController ExportController { get; set; }
+        public ContextMenuController ContextMenuController { get; set; }
 
 		public AnimationPlayer AnimPlayer { get; }
 
@@ -392,6 +386,18 @@ namespace LSDView.view
         private void asOriginalToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportController.ExportDocumentAsOriginal();
+        }
+
+        private void _viewOutline_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            // handle context menu creation
+            if (e.Button == MouseButtons.Right)
+            {
+                IDataTypeTreeNode dataNode = (IDataTypeTreeNode) e.Node;
+                dataNode.Accept(ContextMenuController);
+                outlineViewContextMenu.Show(_viewOutline, e.Location);
+                _viewOutline.SelectedNode = e.Node;
+            }
         }
     }
 }
