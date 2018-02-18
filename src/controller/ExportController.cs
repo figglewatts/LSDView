@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using libLSD.Formats;
 using LSDView.model;
 using LSDView.view;
 
@@ -31,6 +32,7 @@ namespace LSDView.controller
         public TIXController TIXController { get; set; }
         public MOMController MOMController { get; set; }
         public LBDController LBDController { get; set; }
+        public TODController TODController { get; set; }
 
         private ToolStripMenuItem _exportMenuItem;
 
@@ -71,49 +73,82 @@ namespace LSDView.controller
             }
         }
 
-        private void ExportTMD(string filename)
+        // TODO(sam): log exports
+
+        public void ExportTMD(string filename = "", TMD? tmd = null)
         {
             SaveFileDialogController.Filter = SaveFileDialogController.TMD_FILTER;
             SaveFileDialogController.FileName = filename;
 
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
-                TMDController.WriteTMD(SaveFileDialogController.FileName);
+                TMDController.WriteTMD(SaveFileDialogController.FileName, tmd);
             }
         }
 
-        private void ExportTIM(string filename)
+        public void ExportTIM(string filename = "", TIM? tim = null)
         {
             SaveFileDialogController.Filter = SaveFileDialogController.TIM_FILTER;
             SaveFileDialogController.FileName = filename;
 
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
-                TIMController.WriteTIM(SaveFileDialogController.FileName);
+                TIMController.WriteTIM(SaveFileDialogController.FileName, tim);
             }
         }
 
-        private void ExportTIX(string filename)
+        public void ExportTIX(string filename = "", TIX? tix = null)
         {
             SaveFileDialogController.Filter = SaveFileDialogController.TIX_FILTER;
             SaveFileDialogController.FileName = filename;
 
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
-                Console.WriteLine(SaveFileDialogController.FilterIndex);
-                switch (SaveFileDialogController.FilterIndex)
-                {
-                    case 1: // write the TIX file
-                    {
-                        TIXController.WriteTIX(SaveFileDialogController.FileName);
-                        break;
-                    }
-                    case 2: // write the TIM files
-                    {
-                        TIXController.WriteTIXTIMs(SaveFileDialogController.FileName);
-                        break;
-                    }
-                }
+                TIXController.WriteTIX(SaveFileDialogController.FileName, tix);
+            }
+        }
+
+        public void ExportTIXTIMs(string filename = "", TIX? tix = null)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.TIM_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                TIXController.WriteTIXTIMs(SaveFileDialogController.FileName, tix);
+            }
+        }
+
+        public void ExportLBD(string filename = "", LBD? lbd = null)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.LBD_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                LBDController.WriteLBD(SaveFileDialogController.FileName, lbd);
+            }
+        }
+
+        public void ExportTOD(string filename = "", TOD? tod = null)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.TOD_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                TODController.WriteTOD(SaveFileDialogController.FileName, tod);
+            }
+        }
+
+        public void ExportMOM(string filename = "", MOM? mom = null)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.MOM_FILTER;
+            SaveFileDialogController.FileName = filename;
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                MOMController.WriteMOM(SaveFileDialogController.FileName, mom);
             }
         }
     }

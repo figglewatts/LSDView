@@ -24,6 +24,7 @@ public class Program
             MOMController momController = new MOMController(form, vramController, documentController);
             SaveFileDialogController saveFileDialogController = new SaveFileDialogController(form);
             ContextMenuController contextMenuController = new ContextMenuController(form);
+            TODController todController = new TODController();
 
             contextMenuController.ExportController = exportController;
 
@@ -40,6 +41,7 @@ public class Program
             exportController.TIXController = tixController;
             exportController.MOMController = momController;
             exportController.LBDController = lbdController;
+            exportController.TODController = todController;
 
             form.TimController = timController;
             form.TixController = tixController;
@@ -51,6 +53,7 @@ public class Program
             form.MomController = momController;
             form.ExportController = exportController;
             form.ContextMenuController = contextMenuController;
+            form.TodController = todController;
 
             form.ShowDialog();
         }

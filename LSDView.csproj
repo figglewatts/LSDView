@@ -85,6 +85,7 @@
     <Compile Include="src\controller\SaveFileDialogController.cs" />
     <Compile Include="src\controller\TIMController.cs" />
     <Compile Include="src\controller\TIXController.cs" />
+    <Compile Include="src\controller\TODController.cs" />
     <Compile Include="src\controller\VRAMController.cs" />
     <Compile Include="src\graphics\Camera.cs" />
     <Compile Include="src\graphics\IBindable.cs" />

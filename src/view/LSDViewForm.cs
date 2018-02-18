@@ -62,6 +62,7 @@ namespace LSDView.view
         public DocumentController DocumentController { get; set; }
         public ExportController ExportController { get; set; }
         public ContextMenuController ContextMenuController { get; set; }
+        public TODController TodController { get; set; }
 
 		public AnimationPlayer AnimPlayer { get; }
 

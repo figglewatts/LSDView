@@ -72,5 +72,20 @@ namespace LSDView.controller
                 MomData = null;
             }
         }
+
+        public void WriteMOM(string path, MOM? mom = null)
+        {
+            using (BinaryWriter bw = new BinaryWriter(File.Open(path, FileMode.Create)))
+            {
+                if (mom == null)
+                {
+                    _mom.Write(bw);
+                }
+                else
+                {
+                    mom.Value.Write(bw);
+                }
+            }
+        }
     }
 }

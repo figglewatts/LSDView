@@ -105,8 +105,9 @@
             this.asOriginalToolStripMenuItem,
             this.asAlternativeToolStripMenuItem});
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exportToolStripMenuItem.Text = "Export";
+            this.exportToolStripMenuItem.Visible = false;
             // 
             // asOriginalToolStripMenuItem
             // 

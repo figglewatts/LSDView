@@ -14,9 +14,13 @@ namespace LSDView.controller
 
         public const string TMD_FILTER = "TMD file|*.tmd";
         public const string TIM_FILTER = "TIM file|*.tim";
-        public const string TIX_FILTER = "TIX file|*.tix|All TIM files|*.tim";
+        public const string TIX_FILTER = "TIX file|*.tix";
         public const string MOM_FILTER = "MOM file|*.mom";
         public const string LBD_FILTER = "LBD file|*.lbd";
+        public const string TOD_FILTER = "TOD file|*.tod";
+        public const string OBJ_FILTER = "OBJ file|*.obj";
+        public const string PNG_FILTER = "PNG file|*.png";
+        public const string BMP_FILTER = "BMP file|*.bmp";
 
         public SaveFileDialogController(ILSDView view)
         {

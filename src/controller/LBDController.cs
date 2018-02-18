@@ -116,5 +116,20 @@ namespace LSDView.controller
 	        }
 	        Moms.Clear();
         }
+
+	    public void WriteLBD(string path, LBD? lbd = null)
+	    {
+	        using (BinaryWriter bw = new BinaryWriter(File.Open(path, FileMode.Create)))
+	        {
+	            if (lbd == null)
+	            {
+	                _lbdFile.Write(bw);
+	            }
+	            else
+	            {
+	                lbd.Value.Write(bw);
+	            }
+	        }
+	    }
 	}
 }
