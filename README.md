@@ -14,11 +14,16 @@ Data file viewer for LSD Dream Emulator.
   - Scroll wheel can be used to zoom in and out
   - Flycam mode can be toggled with Z
   - Flycam mode allows you to fly around with W, A, S, D, and arrow keys
+  
+## Dependencies
+- https://github.com/stefangordon/ObjParser
+- https://github.com/Figglewatts/libLSD
 
 ## Quick start
 1. Clone the repo
 2. Clone https://github.com/Figglewatts/libLSD
 3. Build LibLSD
+4. Clone https://github.com/stefangordon/ObjParser
+5. Build ObjParser
 4. Build LSDView
-5. Place LibLSD.dll next to LSDView.exe in the build folder
-
+5. Place LibLSD.dll and ObjParser.dll next to LSDView.exe in the build folder
