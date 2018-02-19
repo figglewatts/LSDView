@@ -13,13 +13,13 @@ namespace LSDView.controller
 {
     public class ImageController
     {
-        public void WriteTIMAsBMP(string path, TIM tim)
+        public void WriteTIMAsImage(string path, TIM tim, ImageFormat format)
         {
             var image = LibLSDUtil.GetImageDataFromTIM(tim, flip:false);
 
             Bitmap bmp = ImageUtil.ImageDataToBitmap(image.data, image.width, image.height);
 
-            bmp.Save(path, ImageFormat.Bmp);
+            bmp.Save(path, format);
         }
     }
 }

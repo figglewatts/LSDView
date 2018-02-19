@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,8 +69,9 @@ namespace LSDView.controller
             ToolStripMenuItem exportAsOriginal = new ToolStripMenuItem("TIM");
             exportAsOriginal.Click += (sender, args) => ExportController.ExportTIM("", node.Tim);
             ToolStripMenuItem exportAsPNG = new ToolStripMenuItem("PNG");
+            exportAsPNG.Click += (sender, args) => ExportController.ExportImage(node.Tim, ImageFormat.Png);
             ToolStripMenuItem exportAsBMP = new ToolStripMenuItem("BMP");
-            exportAsBMP.Click += (sender, args) => ExportController.ExportBMP(node.Tim);
+            exportAsBMP.Click += (sender, args) => ExportController.ExportImage(node.Tim, ImageFormat.Bmp);
             _exportMenu.DropDownItems.Add(exportAsOriginal);
             _exportMenu.DropDownItems.Add(exportAsPNG);
             _exportMenu.DropDownItems.Add(exportAsBMP);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -153,14 +154,26 @@ namespace LSDView.controller
             }
         }
 
-        public void ExportBMP(TIM tim)
+        public void ExportImage(TIM tim, ImageFormat format)
         {
-            SaveFileDialogController.Filter = SaveFileDialogController.BMP_FILTER;
+            if (format.Equals(ImageFormat.Bmp))
+            {
+                SaveFileDialogController.Filter = SaveFileDialogController.BMP_FILTER;
+            }
+            else if (format.Equals(ImageFormat.Png))
+            {
+                SaveFileDialogController.Filter = SaveFileDialogController.PNG_FILTER;
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid ImageFormat {format}");
+            }
+
             SaveFileDialogController.FileName = "";
 
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
-                ImageController.WriteTIMAsBMP(SaveFileDialogController.FileName, tim);
+                ImageController.WriteTIMAsImage(SaveFileDialogController.FileName, tim, format);
             }
         }
     }
