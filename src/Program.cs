@@ -25,6 +25,7 @@ public class Program
             SaveFileDialogController saveFileDialogController = new SaveFileDialogController(form);
             ContextMenuController contextMenuController = new ContextMenuController(form);
             TODController todController = new TODController();
+            ImageController imageController = new ImageController();
 
             contextMenuController.ExportController = exportController;
 
@@ -42,6 +43,7 @@ public class Program
             exportController.MOMController = momController;
             exportController.LBDController = lbdController;
             exportController.TODController = todController;
+            exportController.ImageController = imageController;
 
             form.TimController = timController;
             form.TixController = tixController;

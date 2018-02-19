@@ -33,6 +33,7 @@ namespace LSDView.controller
         public MOMController MOMController { get; set; }
         public LBDController LBDController { get; set; }
         public TODController TODController { get; set; }
+        public ImageController ImageController { get; set; }
 
         private ToolStripMenuItem _exportMenuItem;
 
@@ -149,6 +150,17 @@ namespace LSDView.controller
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
                 MOMController.WriteMOM(SaveFileDialogController.FileName, mom);
+            }
+        }
+
+        public void ExportBMP(TIM tim)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.BMP_FILTER;
+            SaveFileDialogController.FileName = "";
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                ImageController.WriteTIMAsBMP(SaveFileDialogController.FileName, tim);
             }
         }
     }

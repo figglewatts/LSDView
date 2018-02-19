@@ -69,6 +69,7 @@ namespace LSDView.controller
             exportAsOriginal.Click += (sender, args) => ExportController.ExportTIM("", node.Tim);
             ToolStripMenuItem exportAsPNG = new ToolStripMenuItem("PNG");
             ToolStripMenuItem exportAsBMP = new ToolStripMenuItem("BMP");
+            exportAsBMP.Click += (sender, args) => ExportController.ExportBMP(node.Tim);
             _exportMenu.DropDownItems.Add(exportAsOriginal);
             _exportMenu.DropDownItems.Add(exportAsPNG);
             _exportMenu.DropDownItems.Add(exportAsBMP);

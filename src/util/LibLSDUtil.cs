@@ -185,34 +185,52 @@ namespace LSDView.util
 			return tileMesh;
 		}
 
-		public static (float[] data, int width, int height) GetImageDataFromTIM(TIM tim)
+		public static (float[] data, int width, int height) GetImageDataFromTIM(TIM tim, bool flip = true)
 		{
 			IColor[,] imageColors = tim.GetImage();
 			int width = imageColors.GetLength(1);
 			int height = imageColors.GetLength(0);
-			float[] imageData = ImageColorsToData(imageColors, width, height);
+			float[] imageData = ImageColorsToData(imageColors, width, height, flip);
 			return (imageData, width, height);
 		}
 
-		public static float[] ImageColorsToData(IColor[,] imageColors, int width, int height)
+		public static float[] ImageColorsToData(IColor[,] imageColors, int width, int height, bool flip = true)
 		{
 			float[] imageData = new float[imageColors.Length * 4];
 
 			int i = 0;
-			for (int y = height - 1; y >= 0; y--)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					IColor col = imageColors[y, x];
-					imageData[i] = col.Red;
-					imageData[i + 1] = col.Green;
-					imageData[i + 2] = col.Blue;
-					imageData[i + 3] = col.Alpha;
-					i += 4;
-				}
-			}
+		    if (flip)
+		    {
+		        for (int y = height - 1; y >= 0; y--)
+		        {
+		            for (int x = 0; x < width; x++)
+		            {
+		                IColor col = imageColors[y, x];
+		                imageData[i] = col.Red;
+		                imageData[i + 1] = col.Green;
+		                imageData[i + 2] = col.Blue;
+		                imageData[i + 3] = col.Alpha;
+		                i += 4;
+		            }
+		        }
+		    }
+		    else
+		    {
+		        for (int y = 0; y < height; y++)
+		        {
+		            for (int x = 0; x < width; x++)
+		            {
+		                IColor col = imageColors[y, x];
+		                imageData[i] = col.Red;
+		                imageData[i + 1] = col.Green;
+		                imageData[i + 2] = col.Blue;
+		                imageData[i + 3] = col.Alpha;
+		                i += 4;
+		            }
+		        }
+            }
 
-			return imageData;
+		    return imageData;
 		}
 	}
 }
