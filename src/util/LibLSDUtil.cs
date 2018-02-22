@@ -206,11 +206,7 @@ namespace LSDView.util
 		            for (int x = 0; x < width; x++)
 		            {
 		                IColor col = imageColors[y, x];
-		                imageData[i] = col.Red;
-		                imageData[i + 1] = col.Green;
-		                imageData[i + 2] = col.Blue;
-		                imageData[i + 3] = col.Alpha;
-		                i += 4;
+		                SetImageColors(ref i, col, ref imageData);
 		            }
 		        }
 		    }
@@ -221,16 +217,21 @@ namespace LSDView.util
 		            for (int x = 0; x < width; x++)
 		            {
 		                IColor col = imageColors[y, x];
-		                imageData[i] = col.Red;
-		                imageData[i + 1] = col.Green;
-		                imageData[i + 2] = col.Blue;
-		                imageData[i + 3] = col.Alpha;
-		                i += 4;
-		            }
+		                SetImageColors(ref i, col, ref imageData);
+                    }
 		        }
             }
 
 		    return imageData;
 		}
+
+	    private static void SetImageColors(ref int i, IColor col, ref float[] imageData)
+	    {
+	        imageData[i] = col.Red;
+	        imageData[i + 1] = col.Green;
+	        imageData[i + 2] = col.Blue;
+	        imageData[i + 3] = col.Alpha;
+	        i += 4;
+	    }
 	}
 }
