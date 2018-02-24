@@ -17,6 +17,7 @@ Data file viewer for LSD Dream Emulator.
   
 ## Dependencies
 - https://github.com/Figglewatts/libLSD
+- https://github.com/opentk/opentk
 
 ## Quick start
 1. Clone the repo
