@@ -98,6 +98,7 @@ namespace LSDView.controller
             ToolStripMenuItem exportAsOriginal = new ToolStripMenuItem("TMD");
             exportAsOriginal.Click += (sender, args) => ExportController.ExportTMD("", node.Tmd); 
             ToolStripMenuItem exportAsOBJ = new ToolStripMenuItem("OBJ");
+            exportAsOBJ.Click += (sender, args) => ExportController.ExportOBJ(node.Tmd);
             _exportMenu.DropDownItems.Add(exportAsOriginal);
             _exportMenu.DropDownItems.Add(exportAsOBJ);
         }
@@ -106,6 +107,7 @@ namespace LSDView.controller
         {
             ClearExportMenu();
             ToolStripMenuItem exportAsOBJ = new ToolStripMenuItem("OBJ");
+            exportAsOBJ.Click += (sender, args) => ExportController.ExportOBJ(node.Renderables);
             _exportMenu.DropDownItems.Add(exportAsOBJ);
         }
 

@@ -26,6 +26,7 @@ public class Program
             ContextMenuController contextMenuController = new ContextMenuController(form);
             TODController todController = new TODController();
             ImageController imageController = new ImageController();
+            MeshController meshController = new MeshController();
 
             contextMenuController.ExportController = exportController;
 
@@ -44,6 +45,7 @@ public class Program
             exportController.LBDController = lbdController;
             exportController.TODController = todController;
             exportController.ImageController = imageController;
+            exportController.MeshController = meshController;
 
             form.TimController = timController;
             form.TixController = tixController;

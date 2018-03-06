@@ -64,7 +64,7 @@ namespace LSDView.math
 
         public Matrix4 InverseMatrix => Matrix4.CreateTranslation(-Position)
                                         * Matrix4.CreateFromQuaternion(Rotation.Inverted())
-                                        * Matrix4.CreateScale(Vector3.One);
+                                        * Matrix4.CreateScale(Vector3.Divide(Vector3.One, Scale));
 
         public Transform Parent { get; set; }
 

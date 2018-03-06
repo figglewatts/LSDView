@@ -24,6 +24,7 @@ namespace LSDView.graphics
         public Vertex[] Vertices => _vertexBuffer.Elements;
         public int[] Indices => _indexBuffer.Elements;
         public int Length => _indexBuffer.Length;
+        public int Tris => Length / 3;
 
         public VertexArray(Vertex[] vertices, int[] indices)
         {

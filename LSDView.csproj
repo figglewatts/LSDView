@@ -50,9 +50,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ObjParser">
-      <HintPath>..\..\..\Downloads\objloader\ObjParser-master\ObjParser\bin\Release\ObjParser.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -84,6 +81,7 @@
     <Compile Include="src\controller\ImageController.cs" />
     <Compile Include="src\controller\IOutlineTreeViewVisitor.cs" />
     <Compile Include="src\controller\LBDController.cs" />
+    <Compile Include="src\controller\MeshController.cs" />
     <Compile Include="src\controller\MOMController.cs" />
     <Compile Include="src\controller\OutlineController.cs" />
     <Compile Include="src\controller\SaveFileDialogController.cs" />
@@ -116,6 +114,8 @@
     <Compile Include="src\util\ImageUtil.cs" />
     <Compile Include="src\util\LibLSDUtil.cs" />
     <Compile Include="src\util\Logger.cs" />
+    <Compile Include="src\util\MeshUtil.cs" />
+    <Compile Include="src\util\ObjBuilder.cs" />
     <Compile Include="src\view\IDataTypeTreeNode.cs" />
     <Compile Include="src\view\ILSDView.cs" />
     <Compile Include="src\view\IRenderableTreeNode.cs" />

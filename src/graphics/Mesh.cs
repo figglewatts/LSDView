@@ -13,6 +13,8 @@ namespace LSDView.graphics
     {
         private readonly VertexArray _verts;
 
+        public VertexArray Verts => _verts;
+
         public Shader Shader { get; set; }
         public Transform Transform { get; set; }
         public List<Texture2D> Textures { get; set; }

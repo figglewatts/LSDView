@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using libLSD.Formats;
+using LSDView.graphics;
 using LSDView.model;
 using LSDView.view;
 
@@ -35,6 +36,7 @@ namespace LSDView.controller
         public LBDController LBDController { get; set; }
         public TODController TODController { get; set; }
         public ImageController ImageController { get; set; }
+        public MeshController MeshController { get; set; }
 
         private ToolStripMenuItem _exportMenuItem;
 
@@ -174,6 +176,39 @@ namespace LSDView.controller
             if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
             {
                 ImageController.WriteTIMAsImage(SaveFileDialogController.FileName, tim, format);
+            }
+        }
+
+        public void ExportOBJ(IRenderable mesh)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.OBJ_FILTER;
+            SaveFileDialogController.FileName = "";
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                MeshController.WriteMeshAsOBJ(SaveFileDialogController.FileName, mesh);
+            }
+        }
+
+        public void ExportOBJ(List<IRenderable> meshes)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.OBJ_FILTER;
+            SaveFileDialogController.FileName = "";
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                MeshController.WriteMeshesAsOBJ(SaveFileDialogController.FileName, meshes);
+            }
+        }
+
+        public void ExportOBJ(TMD tmd)
+        {
+            SaveFileDialogController.Filter = SaveFileDialogController.OBJ_FILTER;
+            SaveFileDialogController.FileName = "";
+
+            if (SaveFileDialogController.ShowDialog() == DialogResult.OK)
+            {
+                MeshController.WriteTMDAsOBJ(SaveFileDialogController.FileName, tmd);
             }
         }
     }
