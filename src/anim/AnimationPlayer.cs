@@ -179,7 +179,6 @@ namespace LSDView.anim
                 }
                 else
                 {
-                    //objTransform.Rotate(new Vector3(pitch, yaw, roll), false);
                     objTransform.Rotate(pitch, Vector3.UnitX, true);
                     objTransform.Rotate(yaw, Vector3.UnitY, true);
                     objTransform.Rotate(roll, Vector3.UnitZ, true);
