@@ -12,8 +12,6 @@ namespace LSDView.util
 {
     public static class MeshUtil
     {
-        // TODO(sam): rewrite this to generate from TIM files instead of a mesh?
-
         public static string TMDToOBJFile(TMD tmd)
         {
             int vertCount = (int)tmd.NumberOfVertices;
@@ -25,18 +23,31 @@ namespace LSDView.util
 
             ObjBuilder obj = new ObjBuilder();
             WriteOBJHeader(obj, vertCount, faceCount);
+            
+            List<Vector3> positions = new List<Vector3>();
+            List<Vector3> normals = new List<Vector3>();
 
             foreach (var tmdObj in tmd.ObjectTable)
             {
                 foreach (Vec3 vert in tmdObj.Vertices)
                 {
-                    obj.Vertex(new Vector3(vert.X, vert.Y, vert.Z));
+                    positions.Add(new Vector3(vert.X, vert.Y, vert.Z));
                 }
 
                 foreach (var norm in tmdObj.Normals)
                 {
-                    obj.Normal(new Vector3(norm.X, norm.Y, norm.Z));
+                    normals.Add(new Vector3(norm.X, norm.Y, norm.Z));
                 }
+            }
+
+            foreach (var pos in positions)
+            {
+                obj.Vertex(pos);
+            }
+
+            foreach (var norm in normals)
+            {
+                obj.Normal(norm);
             }
 
             foreach (var tmdObj in tmd.ObjectTable)
@@ -55,6 +66,7 @@ namespace LSDView.util
             }
 
             ObjFaceBuilder faceBuilder = new ObjFaceBuilder();
+            int indexBase = 0;
             for (int i = 0; i < tmd.Header.NumObjects; i++)
             {
                 obj.Group($"Object {i}");
@@ -66,9 +78,11 @@ namespace LSDView.util
                     ITexturedPrimitivePacket texPrimitivePacket = prim.PacketData as ITexturedPrimitivePacket;
                     ILitPrimitivePacket litPrimitivePacket = prim.PacketData as ILitPrimitivePacket;
 
+                    int[] indices = new int[primitivePacket.Vertices.Length];
                     for (int vert = 0; vert < primitivePacket.Vertices.Length; vert++)
                     {
-                        int v = primitivePacket.Vertices[vert] + 1;
+                        int v = indexBase + primitivePacket.Vertices[vert] + 1;
+                        indices[vert] = v;
                         int? t = null;
                         int? n = null;
 
@@ -81,13 +95,82 @@ namespace LSDView.util
                         {
                             n = litPrimitivePacket.Normals[vert] + 1;
                         }
-
-                        faceBuilder.Vertex(v, n, t);
                     }
 
+                    bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
+                    bool isDoubleSided = (prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0;
+
+                    faceBuilder.Vertex(indices[1]);
+                    faceBuilder.Vertex(indices[0]);
+                    faceBuilder.Vertex(indices[2]);
                     obj.Face(faceBuilder.Build());
                     faceBuilder.Clear();
+
+                    if (isQuad)
+                    {
+                        faceBuilder.Vertex(indices[1]);
+                        faceBuilder.Vertex(indices[2]);
+                        faceBuilder.Vertex(indices[3]);
+                        obj.Face(faceBuilder.Build());
+                        faceBuilder.Clear();
+                    }
+
+                    if (isDoubleSided)
+                    {
+                        obj.Comment("DOuble sided!");
+                        faceBuilder.Vertex(indices[0]);
+                        faceBuilder.Vertex(indices[1]);
+                        faceBuilder.Vertex(indices[2]);
+                        obj.Face(faceBuilder.Build());
+                        faceBuilder.Clear();
+                        
+                        if (isQuad)
+                        {
+                            faceBuilder.Vertex(indices[2]);
+                            faceBuilder.Vertex(indices[1]);
+                            faceBuilder.Vertex(indices[3]);
+                            obj.Face(faceBuilder.Build());
+                            faceBuilder.Clear();
+                        }
+                    }
+                    
+
+                    /*
+                    if (indices.Length == 3)
+                    {
+                        faceBuilder.Vertex(indices[0]);
+                        faceBuilder.Vertex(indices[2]);
+                        faceBuilder.Vertex(indices[1]);
+                        obj.Face(faceBuilder.Build());
+                        if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
+                        {
+                            faceBuilder.Clear();
+                            faceBuilder.Vertex(indices[0]);
+                            faceBuilder.Vertex(indices[1]);
+                            faceBuilder.Vertex(indices[2]);
+                            obj.Face(faceBuilder.Build());
+                        }
+                    }
+                    else if (indices.Length > 3)
+                    {
+                        faceBuilder.Vertex(indices[2]);
+                        faceBuilder.Vertex(indices[3]);
+                        faceBuilder.Vertex(indices[1]);
+                        faceBuilder.Vertex(indices[0]);
+                        obj.Face(faceBuilder.Build());
+                        if ((prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0)
+                        {
+                            faceBuilder.Clear();
+                            faceBuilder.Vertex(indices[0]);
+                            faceBuilder.Vertex(indices[1]);
+                            faceBuilder.Vertex(indices[3]);
+                            faceBuilder.Vertex(indices[2]);
+                            obj.Face(faceBuilder.Build());
+                        }
+                    }*/
+                    faceBuilder.Clear();
                 }
+                indexBase += tmd.ObjectTable[i].Vertices.Length;
             }
 
             return obj.ToString();
@@ -142,23 +225,34 @@ namespace LSDView.util
 
             ObjBuilder objString = new ObjBuilder();
             WriteOBJHeader(objString, vertCount, triCount);
+            
+            List<Vector3> positions = new List<Vector3>();
+            List<Vector3> normals = new List<Vector3>();
+            List<Vector2> uvs = new List<Vector2>();
 
             foreach (var mesh in meshes)
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
-                    objString.Vertex(vert.Position);
+                    positions.Add(vert.Position);
+                    normals.Add(vert.Normal);
+                    uvs.Add(vert.TexCoord);
                 }
+            }
 
-                foreach (var vert in mesh.Verts.Vertices)
-                {
-                    objString.Normal(vert.Normal);
-                }
+            foreach (var pos in positions)
+            {
+                objString.Vertex(pos);
+            }
 
-                foreach (var vert in mesh.Verts.Vertices)
-                {
-                    objString.UV(vert.TexCoord);
-                }
+            foreach (var norm in normals)
+            {
+                objString.Normal(norm);
+            }
+
+            foreach (var uv in uvs)
+            {
+                objString.UV(uv);
             }
 
             int faceBase = 0;
@@ -171,8 +265,8 @@ namespace LSDView.util
                 for (int i = 0; i < mesh.Verts.Length; i += 3)
                 {
                     int objIndex1 = faceBase + mesh.Verts.Indices[i] + 1;
-                    int objIndex2 = faceBase + mesh.Verts.Indices[i + 1] + 1;
-                    int objIndex3 = faceBase + mesh.Verts.Indices[i + 2] + 1;
+                    int objIndex2 = faceBase + mesh.Verts.Indices[i + 2] + 1;
+                    int objIndex3 = faceBase + mesh.Verts.Indices[i + 1] + 1;
                     faceBuilder.Vertex(objIndex1, objIndex1, objIndex1);
                     faceBuilder.Vertex(objIndex2, objIndex2, objIndex2);
                     faceBuilder.Vertex(objIndex3, objIndex3, objIndex3);
