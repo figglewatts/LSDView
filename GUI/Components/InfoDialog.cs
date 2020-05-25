@@ -16,13 +16,13 @@ namespace LSDView.GUI.GUIComponents
 
         // TODO: configurable buttons...
 
-        public InfoDialog(DialogType type, string message, MainWindow window)
-            : base(window)
+        public InfoDialog(DialogType type, string message)
+            : base()
         {
             Type = type;
             Message = message;
         }
 
-        public override void Render() { ImGui.Text(Message); }
+        protected override void renderSelf() { ImGui.Text(Message); }
     }
 }

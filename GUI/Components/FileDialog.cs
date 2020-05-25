@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 using IconFonts;
 using ImGuiNET;
@@ -22,13 +23,13 @@ namespace LSDView.GUI.GUIComponents
         {
             set
             {
-                _fileSearchPattern = value;
+                setFileSearchPattern(value);
                 invalidateFileList();
             }
         }
 
         private string _fileSaveType = "";
-        private string _fileSearchPattern = "*";
+        private string[] _fileSearchPattern = new string[0];
         private bool _open = true;
         private bool _lastOpen = false;
         private string _currentDir;
@@ -39,8 +40,8 @@ namespace LSDView.GUI.GUIComponents
         private readonly List<string> _filesInCurrentDir;
         private event Action<string> OnDialogAccept;
 
-        public FileDialog(string dir, DialogType type, MainWindow window)
-            : base(window)
+        public FileDialog(string dir, DialogType type)
+            : base()
         {
             FilePath = dir;
             Type = type;
@@ -50,10 +51,12 @@ namespace LSDView.GUI.GUIComponents
             updateFilesInCurrentDir();
         }
 
-        public void Show(Action<string> onDialogAccept, string fileSearchPattern = "*", string fileSaveType = "")
+        public void Show(Action<string> onDialogAccept,
+            string fileSearchPattern = "",
+            string fileSaveType = "")
         {
             OnDialogAccept = onDialogAccept;
-            _fileSearchPattern = fileSearchPattern;
+            setFileSearchPattern(fileSearchPattern);
             _fileSaveType = fileSaveType;
             FilePath = "";
             invalidateFileList();
@@ -63,7 +66,7 @@ namespace LSDView.GUI.GUIComponents
             _open = true;
         }
 
-        public override void Render()
+        protected override void renderSelf()
         {
             _lastOpen = _open;
 
@@ -82,10 +85,16 @@ namespace LSDView.GUI.GUIComponents
             }
         }
 
+        private void setFileSearchPattern(string searchPattern)
+        {
+            if (string.IsNullOrEmpty(searchPattern)) return;
+            _fileSearchPattern = searchPattern.Split('|');
+        }
+
         private void resetDefaults()
         {
             OnDialogAccept = null;
-            _fileSearchPattern = "";
+            _fileSearchPattern = new[] {""};
             _fileSaveType = "";
             FilePath = "";
             _currentDir = Directory.GetCurrentDirectory();
@@ -151,12 +160,21 @@ namespace LSDView.GUI.GUIComponents
             _filesInCurrentDir.Clear();
 
             if (!Directory.Exists(_currentDir)) return;
-            string[] files = Directory.GetFiles(_currentDir, _fileSearchPattern);
-
+            var files = Directory.EnumerateFiles(_currentDir, "*.*").Where(checkFileAgainstSearchPattern);
             foreach (string file in files)
             {
                 _filesInCurrentDir.Add(Path.GetFileName(file));
             }
+        }
+
+        private bool checkFileAgainstSearchPattern(string file)
+        {
+            foreach (var pattern in _fileSearchPattern)
+            {
+                if (file.EndsWith(pattern, StringComparison.OrdinalIgnoreCase)) return true;
+            }
+
+            return false;
         }
 
         private bool indexInFilesListIsDirectory(int i) { return i < _directoriesInCurrentDir.Count; }

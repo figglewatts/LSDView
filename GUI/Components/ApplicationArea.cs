@@ -1,6 +1,5 @@
 using System.Numerics;
 using ImGuiNET;
-using LSDView;
 using LSDView.GUI;
 
 namespace JsonAnything.GUI.GUIComponents
@@ -11,9 +10,9 @@ namespace JsonAnything.GUI.GUIComponents
 
         private readonly ImGuiIOPtr _io;
 
-        public ApplicationArea(MainWindow window) : base(window) { _io = ImGui.GetIO(); }
+        public ApplicationArea() { _io = ImGui.GetIO(); }
 
-        public override void Render()
+        protected override void renderSelf()
         {
             ImGui.SetNextWindowPos(new Vector2(0, TITLEBAR_HEIGHT), ImGuiCond.Always, Vector2.Zero);
             ImGui.SetNextWindowSize(new Vector2(_io.DisplaySize.X, _io.DisplaySize.Y - TITLEBAR_HEIGHT),
@@ -24,6 +23,11 @@ namespace JsonAnything.GUI.GUIComponents
                 ImGuiWindowFlags.NoSavedSettings |
                 ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus))
             {
+                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.OpenOnDoubleClick |
+                                           ImGuiTreeNodeFlags.OpenOnArrow;
+
+                renderChildren();
+
                 ImGui.End();
             }
 

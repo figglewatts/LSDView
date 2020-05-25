@@ -1,39 +1,32 @@
 using System.Numerics;
 using ImGuiNET;
+using LSDView.Controllers;
 
 namespace LSDView.GUI.GUIComponents
 {
     public class MainMenuBar : ImGuiComponent
     {
         private readonly FileDialog _openDialog;
-        private readonly FileDialog _openSchemaDialog;
-        private readonly FileDialog _saveDialog;
 
         private bool _openFileOpenDialog = false;
         private bool _openFileSaveDialog = false;
         private bool _openSchemaOpenDialog = false;
 
-        public MainMenuBar(MainWindow window)
-            : base(window)
+        private readonly FileOpenController _fileOpenController;
+
+        public MainMenuBar(FileOpenController fileOpenController)
         {
-            _openDialog = new FileDialog("", FileDialog.DialogType.Open, window);
-            _openSchemaDialog = new FileDialog("", FileDialog.DialogType.Open, window);
-            _saveDialog = new FileDialog("", FileDialog.DialogType.Save, window);
+            _openDialog = new FileDialog("", FileDialog.DialogType.Open);
+            _fileOpenController = fileOpenController;
         }
 
-        public override void Render()
+        protected override void renderSelf()
         {
             if (ImGui.BeginMainMenuBar())
             {
                 if (ImGui.BeginMenu("File"))
                 {
                     renderFileMenu();
-                    ImGui.EndMenu();
-                }
-
-                if (ImGui.BeginMenu("Edit"))
-                {
-                    renderEditMenu();
                     ImGui.EndMenu();
                 }
 
@@ -48,34 +41,18 @@ namespace LSDView.GUI.GUIComponents
 
             if (_openFileOpenDialog)
             {
-                _openDialog.Show((s) => { }, "*.json");
+                _openDialog.Show(path => _fileOpenController.OpenFile(path), ".lbd|.tix|.mom|.tmd|.tim");
                 _openFileOpenDialog = false;
             }
 
-            if (_openFileSaveDialog)
-            {
-                _saveDialog.Show((s) => { }, "*", ".json");
-                _openFileSaveDialog = false;
-            }
-
-            if (_openSchemaOpenDialog)
-            {
-                _openSchemaDialog.Show((s) => { }, "*.json");
-                _openSchemaOpenDialog = false;
-            }
-
             _openDialog.Render();
-            _openSchemaDialog.Render();
-            _saveDialog.Render();
-
-            renderModals();
         }
 
         private void renderFileMenu()
         {
             if (ImGui.MenuItem("New"))
             {
-                createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message", _window),
+                createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message"),
                     new Vector2(200, 200));
             }
 
@@ -134,7 +111,7 @@ namespace LSDView.GUI.GUIComponents
         {
             if (ImGui.MenuItem("About LSDView"))
             {
-                createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message", _window),
+                createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message"),
                     new Vector2(200, 200));
             }
         }

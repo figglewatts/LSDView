@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using IconFonts;
 using ImGuiNET;
 using JsonAnything.GUI.GUIComponents;
+using LSDView.Controllers;
 using LSDView.GUI;
+using LSDView.GUI.Components;
 using LSDView.GUI.GUIComponents;
 using LSDView.Util;
 using OpenTK;
@@ -16,24 +18,53 @@ namespace LSDView
 {
     public class MainWindow : GameWindow
     {
+        public static MainWindow Instance = null;
+
         private const int WINDOW_WIDTH = 800;
         private const int WINDOW_HEIGHT = 600;
         private const string WINDOW_TITLE = "LSDView";
         private const int GL_MAJOR_VERSION = 4;
         private const int GL_MINOR_VERSION = 0;
 
-        private List<ImGuiComponent> _guiComponents;
+        private readonly List<ImGuiComponent> _guiComponents;
+
+        // controllers
+        private LBDController _lbdController;
+        private TreeController _treeController;
+
+        private FileOpenController _fileOpenController;
+        // --------------
 
         public MainWindow() : base(WINDOW_WIDTH, WINDOW_HEIGHT, GraphicsMode.Default, WINDOW_TITLE,
             GameWindowFlags.Default, DisplayDevice.Default, GL_MAJOR_VERSION, GL_MINOR_VERSION,
             GraphicsContextFlags.Default)
         {
+            Instance = this;
+
             ImGuiRenderer.Init();
             _guiComponents = new List<ImGuiComponent>();
 
-            ApplicationArea area = new ApplicationArea(this);
-            _guiComponents.Add(new MainMenuBar(this));
+            createControllers();
+
+            ApplicationArea area = new ApplicationArea();
+
+            TreeView outlineView = new TreeView();
+            _treeController.SetTree(outlineView);
+
+            area.AddChild(new Columns(2, new List<ImGuiComponent>
+                {outlineView, new TreeNode("Test")}, new[] {250f, -1}));
+
+            var menuBar = new MainMenuBar(_fileOpenController);
+
             _guiComponents.Add(area);
+            _guiComponents.Add(menuBar);
+        }
+
+        private void createControllers()
+        {
+            _treeController = new TreeController();
+            _lbdController = new LBDController(_treeController);
+            _fileOpenController = new FileOpenController(_lbdController);
         }
 
         protected override void OnResize(EventArgs e)

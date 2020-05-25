@@ -6,24 +6,48 @@ namespace LSDView.GUI
 {
     public abstract class ImGuiComponent
     {
-        protected readonly Dictionary<string, Modal> _modals;
-        protected readonly MainWindow _window;
-        protected readonly Queue<string> _modalsToCreate;
-        protected readonly Queue<string> _modalsToDestroy;
+        public bool Show = true;
 
-        protected static int ModalCount = 0;
+        protected readonly List<ImGuiComponent> _children;
 
-        protected ImGuiComponent(MainWindow window)
+        private static int ModalCount = 0;
+        private readonly Dictionary<string, Modal> _modals;
+        private readonly Queue<string> _modalsToCreate;
+        private readonly Queue<string> _modalsToDestroy;
+
+        protected ImGuiComponent()
         {
+            _children = new List<ImGuiComponent>();
             _modals = new Dictionary<string, Modal>();
             _modalsToCreate = new Queue<string>();
             _modalsToDestroy = new Queue<string>();
-            _window = window;
         }
 
-        public abstract void Render();
+        public void Render()
+        {
+            if (Show)
+            {
+                renderSelf();
+            }
 
-        protected void renderModals()
+            renderModals();
+        }
+
+        protected abstract void renderSelf();
+
+        public virtual void AddChild(ImGuiComponent component) { _children.Add(component); }
+
+        public virtual void AddChildren(IEnumerable<ImGuiComponent> components) { _children.AddRange(components); }
+
+        protected void renderChildren()
+        {
+            foreach (var child in _children)
+            {
+                if (child.Show) child.Render();
+            }
+        }
+
+        private void renderModals()
         {
             while (_modalsToCreate.Count > 0)
             {
@@ -61,7 +85,7 @@ namespace LSDView.GUI
             _modalsToCreate.Enqueue(actualName);
         }
 
-        protected class Modal
+        internal class Modal
         {
             public bool Active = true;
             public readonly ImGuiComponent Component;
