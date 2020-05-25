@@ -1,31 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{920CF448-BB6D-4BAF-91E7-E70737437B3B}</ProjectGuid>
+    <ProjectGuid>{0138A340-4992-44EC-9BF6-4812B41A9C4A}</ProjectGuid>
     <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LSDView</RootNamespace>
     <AssemblyName>LSDView</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,150 +32,67 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>packages\OpenTK.3.0.0-pre\lib\net20\OpenTK.dll</HintPath>
+    <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="OpenTK.GLControl, Version=3.0.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <HintPath>packages\OpenTK.GLControl.3.0.0-pre\lib\net20\OpenTK.GLControl.dll</HintPath>
+    <Reference Include="mscorlib" />
+    <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <HintPath>packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fonts\IconsFontAwesome5.cs" />
+    <Compile Include="GUI\Components\ApplicationArea.cs" />
+    <Compile Include="GUI\Components\FileDialog.cs" />
+    <Compile Include="GUI\Components\InfoDialog.cs" />
+    <Compile Include="GUI\Components\TitleBar.cs" />
+    <Compile Include="GUI\ImGuiComponent.cs" />
+    <Compile Include="GUI\ImGuiRenderer.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\anim\AnimationPlayer.cs" />
-    <Compile Include="src\anim\TODAnimation.cs" />
-    <Compile Include="src\controller\ContextMenuController.cs" />
-    <Compile Include="src\controller\DocumentController.cs" />
-    <Compile Include="src\controller\ExportController.cs" />
-    <Compile Include="src\controller\ImageController.cs" />
-    <Compile Include="src\controller\IOutlineTreeViewVisitor.cs" />
-    <Compile Include="src\controller\LBDController.cs" />
-    <Compile Include="src\controller\MeshController.cs" />
-    <Compile Include="src\controller\MOMController.cs" />
-    <Compile Include="src\controller\OutlineController.cs" />
-    <Compile Include="src\controller\SaveFileDialogController.cs" />
-    <Compile Include="src\controller\TIMController.cs" />
-    <Compile Include="src\controller\TIXController.cs" />
-    <Compile Include="src\controller\TODController.cs" />
-    <Compile Include="src\controller\VRAMController.cs" />
-    <Compile Include="src\graphics\Camera.cs" />
-    <Compile Include="src\graphics\IBindable.cs" />
-    <Compile Include="src\graphics\IDisposable.cs" />
-    <Compile Include="src\graphics\IRenderable.cs" />
-    <Compile Include="src\graphics\Mesh.cs" />
-    <Compile Include="src\graphics\Shader.cs" />
-    <Compile Include="src\graphics\Texture2D.cs" />
-    <Compile Include="src\graphics\Vertex.cs" />
-    <Compile Include="src\graphics\VertexArray.cs" />
-    <Compile Include="src\graphics\GLBuffer.cs" />
-    <Compile Include="src\graphics\VertexAttrib.cs" />
-    <Compile Include="src\controller\TMDController.cs" />
-    <Compile Include="src\math\Transform.cs" />
-    <Compile Include="src\model\AbstractDocument.cs" />
-    <Compile Include="src\model\IDocument.cs" />
-    <Compile Include="src\model\LBDDocument.cs" />
-    <Compile Include="src\model\MOMData.cs" />
-    <Compile Include="src\model\MOMDocument.cs" />
-    <Compile Include="src\model\TIMDocument.cs" />
-    <Compile Include="src\model\TIXDocument.cs" />
-    <Compile Include="src\model\TMDDocument.cs" />
-    <Compile Include="src\Program.cs" />
-    <Compile Include="src\util\ImageUtil.cs" />
-    <Compile Include="src\util\LibLSDUtil.cs" />
-    <Compile Include="src\util\Logger.cs" />
-    <Compile Include="src\util\MeshUtil.cs" />
-    <Compile Include="src\util\ObjBuilder.cs" />
-    <Compile Include="src\view\IDataTypeTreeNode.cs" />
-    <Compile Include="src\view\ILSDView.cs" />
-    <Compile Include="src\view\IRenderableTreeNode.cs" />
-    <Compile Include="src\view\LBDTreeNode.cs" />
-    <Compile Include="src\view\LSDViewForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\view\LSDViewForm.Designer.cs">
-      <DependentUpon>LSDViewForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\view\MOMTreeNode.cs" />
-    <Compile Include="src\view\RenderableAnimationTreeNode.cs" />
-    <Compile Include="src\view\RenderableMeshLayoutTreeNode.cs" />
-    <Compile Include="src\view\RenderableMeshTreeNode.cs" />
-    <Compile Include="src\view\RenderableMeshListTreeNode.cs" />
-    <Compile Include="src\view\TIMTreeNode.cs" />
-    <Compile Include="src\view\TIXTreeNode.cs" />
-    <Compile Include="src\view\TMDObjectTreeNode.cs" />
-    <Compile Include="src\view\TMDTreeNode.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="src\view\LSDViewForm.resx">
-      <DependentUpon>LSDViewForm.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Util\Logger.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="shaders\basic.frag" />
-    <None Include="shaders\basic.vert" />
-    <None Include="shaders\texture.frag" />
-    <None Include="shaders\texture.vert" />
-    <None Include="shaders\untextured.frag" />
-    <None Include="shaders\untextured.vert" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\libLSD\libLSD\libLSD.csproj">
-      <Project>{e72e41f2-66c0-4d18-9c4b-6df5abddd858}</Project>
-      <Name>libLSD</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)\shaders" "$(TargetDir)\shaders" /R /Y /S /F /I</PostBuildEvent>
-  </PropertyGroup>
+  <Import Project="packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+           Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+      -->
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts" />
+  </Target>
 </Project>
