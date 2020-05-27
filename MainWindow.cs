@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using IconFonts;
 using ImGuiNET;
 using JsonAnything.GUI.GUIComponents;
+using LSDView.controller;
 using LSDView.Controllers;
+using LSDView.Graphics;
 using LSDView.GUI;
 using LSDView.GUI.Components;
 using LSDView.GUI.GUIComponents;
@@ -12,6 +14,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES30;
 using OpenTK.Input;
+using FramebufferTarget = OpenTK.Graphics.OpenGL4.FramebufferTarget;
 using Vector2 = System.Numerics.Vector2;
 
 namespace LSDView
@@ -28,9 +31,16 @@ namespace LSDView
 
         private readonly List<ImGuiComponent> _guiComponents;
 
+        private readonly Camera _cam;
+        private Matrix4 _proj;
+        private readonly Framebuffer _fbo;
+
         // controllers
         private LBDController _lbdController;
         private TreeController _treeController;
+        private VRAMController _vramController;
+        private CameraController _cameraController;
+        private ConfigController _configController;
 
         private FileOpenController _fileOpenController;
         // --------------
@@ -41,6 +51,13 @@ namespace LSDView
         {
             Instance = this;
 
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+
+            _cam = new Camera();
+            _cam.Transform.Translate(new Vector3(0, 0, -3));
+            _fbo = new Framebuffer(WINDOW_WIDTH, WINDOW_HEIGHT, FramebufferTarget.Framebuffer);
+
             ImGuiRenderer.Init();
             _guiComponents = new List<ImGuiComponent>();
 
@@ -48,13 +65,13 @@ namespace LSDView
 
             ApplicationArea area = new ApplicationArea();
 
-            TreeView outlineView = new TreeView();
+            TreeView<MeshTreeNode> outlineView = new TreeView<MeshTreeNode>();
             _treeController.SetTree(outlineView);
 
             area.AddChild(new Columns(2, new List<ImGuiComponent>
-                {outlineView, new TreeNode("Test")}, new[] {250f, -1}));
+                {outlineView, new FramebufferArea(_fbo)}, new[] {250f, -1}));
 
-            var menuBar = new MainMenuBar(_fileOpenController);
+            var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController);
 
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
@@ -62,9 +79,12 @@ namespace LSDView
 
         private void createControllers()
         {
+            _configController = new ConfigController();
             _treeController = new TreeController();
-            _lbdController = new LBDController(_treeController);
-            _fileOpenController = new FileOpenController(_lbdController);
+            _vramController = new VRAMController();
+            _cameraController = new CameraController(_cam);
+            _lbdController = new LBDController(_treeController, _vramController);
+            _fileOpenController = new FileOpenController(_lbdController, _configController);
         }
 
         protected override void OnResize(EventArgs e)
@@ -95,7 +115,12 @@ namespace LSDView
 
         protected override void OnUnload(EventArgs e) { ImGuiRenderer.Shutdown(); }
 
-        protected override void OnUpdateFrame(FrameEventArgs e) { HandleInput(); }
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            HandleInput();
+
+            _cameraController.Update();
+        }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -109,6 +134,16 @@ namespace LSDView
             }
 
             ImGuiRenderer.EndFrame();
+
+            _fbo.Bind();
+            GL.Viewport(0, 0, _fbo.Width, _fbo.Height);
+            _proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(60f),
+                (float)_fbo.Width / _fbo.Height, 0.1f, 100f);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            _treeController.RenderSelectedNode(_cam.View, _proj);
+
+            _fbo.Unbind();
 
             SwapBuffers();
         }

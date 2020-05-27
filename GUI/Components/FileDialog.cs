@@ -38,14 +38,16 @@ namespace LSDView.GUI.GUIComponents
         private readonly Vector2 _dialogStartSize = new Vector2(400, 300);
         private readonly List<string> _directoriesInCurrentDir;
         private readonly List<string> _filesInCurrentDir;
+        private string _initialDir;
         private event Action<string> OnDialogAccept;
 
         public FileDialog(string dir, DialogType type)
             : base()
         {
             FilePath = dir;
+            _initialDir = dir;
             Type = type;
-            _currentDir = Directory.GetCurrentDirectory();
+            _currentDir = _initialDir;
             _directoriesInCurrentDir = new List<string>();
             _filesInCurrentDir = new List<string>();
             updateFilesInCurrentDir();
@@ -58,7 +60,7 @@ namespace LSDView.GUI.GUIComponents
             OnDialogAccept = onDialogAccept;
             setFileSearchPattern(fileSearchPattern);
             _fileSaveType = fileSaveType;
-            FilePath = "";
+            FilePath = _initialDir;
             invalidateFileList();
             ImGui.OpenPopup(Type == DialogType.Open
                 ? $"Open file...##{GetHashCode()}"
@@ -96,8 +98,8 @@ namespace LSDView.GUI.GUIComponents
             OnDialogAccept = null;
             _fileSearchPattern = new[] {""};
             _fileSaveType = "";
-            FilePath = "";
-            _currentDir = Directory.GetCurrentDirectory();
+            FilePath = _initialDir;
+            _currentDir = _initialDir;
             _directoriesInCurrentDir.Clear();
             _filesInCurrentDir.Clear();
         }

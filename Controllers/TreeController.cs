@@ -2,12 +2,13 @@ using System;
 using libLSD.Formats;
 using LSDView.GUI.Components;
 using LSDView.Models;
+using OpenTK;
 
 namespace LSDView.Controllers
 {
     public class TreeController
     {
-        public TreeView Tree { get; private set; }
+        public TreeView<MeshTreeNode> Tree { get; private set; }
 
         public void PopulateTreeWithDocument(IDocument doc, string rootName)
         {
@@ -15,7 +16,7 @@ namespace LSDView.Controllers
             switch (doc.Type)
             {
                 case DocumentType.LBD:
-                    Tree.Nodes.Add(createLBDNode(rootName, ((LBDDocument)doc).Document));
+                    Tree.Nodes.Add(createLBDNode(rootName, doc as LBDDocument));
                     break;
                 case DocumentType.TMD:
                     break;
@@ -30,18 +31,29 @@ namespace LSDView.Controllers
             }
         }
 
-        public void SetTree(TreeView tree) { Tree = tree; }
-
-        private TreeNode createLBDNode(string name, LBD lbd)
+        public void RenderSelectedNode(Matrix4 view, Matrix4 projection)
         {
-            TreeNode rootNode = new TreeNode(name);
+            if (Tree.Selected is MeshTreeNode renderableTreeNode)
+            {
+                foreach (var mesh in renderableTreeNode.Meshes)
+                {
+                    mesh.Render(view, projection);
+                }
+            }
+        }
 
-            TreeNode tilesNode = createTMDNode("Tiles", lbd.Tiles);
+        public void SetTree(TreeView<MeshTreeNode> tree) { Tree = tree; }
+
+        private MeshTreeNode createLBDNode(string name, LBDDocument lbdDoc)
+        {
+            MeshTreeNode rootNode = new MeshTreeNode(name, lbdDoc.TileLayout);
+
+            TreeNode tilesNode = createTMDNode("Tiles", lbdDoc.Document.Tiles);
             rootNode.AddNode(tilesNode);
 
-            if (lbd.MML != null)
+            if (lbdDoc.Document.MML != null)
             {
-                TreeNode objectsNode = createMMLNode("Entities", lbd.MML.Value);
+                TreeNode objectsNode = createMMLNode("Entities", lbdDoc.Document.MML.Value);
                 rootNode.AddNode(objectsNode);
             }
 

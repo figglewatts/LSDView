@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using libLSD.Formats;
+using LSDView.Graphics;
 
 namespace LSDView.Models
 {
@@ -13,6 +15,15 @@ namespace LSDView.Models
 
         public override LBD Document { get; }
 
-        public LBDDocument(LBD lbd) { Document = lbd; }
+        public List<Mesh> TileMeshes { get; }
+
+        public List<Mesh> TileLayout { get; }
+
+        public LBDDocument(LBD lbd, List<Mesh> tileMeshes, List<Mesh> tileLayout)
+        {
+            Document = lbd;
+            TileMeshes = tileMeshes;
+            TileLayout = tileLayout;
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace LSDView.GUI.Components
 
         protected override void renderSelf()
         {
-            ImGui.Columns(Count);
+            ImGui.Columns(Count, GetHashCode().ToString(), false);
             for (int i = 0; i < Count; i++)
             {
                 // if we haven't already set the width and the width is valid, then set it

@@ -42,6 +42,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
       <HintPath>packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
       <Private>True</Private>
@@ -65,26 +69,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CameraController.cs" />
+    <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\FileOpenController.cs" />
     <Compile Include="Controllers\LBDController.cs" />
     <Compile Include="Controllers\TreeController.cs" />
+    <Compile Include="Controllers\VRAMController.cs" />
     <Compile Include="Fonts\IconsFontAwesome5.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Framebuffer.cs" />
+    <Compile Include="Graphics\GLBuffer.cs" />
+    <Compile Include="Graphics\IBindable.cs" />
+    <Compile Include="Graphics\IDisposable.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\Shader.cs" />
+    <Compile Include="Graphics\Texture2D.cs" />
+    <Compile Include="Graphics\Vertex.cs" />
+    <Compile Include="Graphics\VertexArray.cs" />
+    <Compile Include="Graphics\VertexAttrib.cs" />
     <Compile Include="GUI\Components\ApplicationArea.cs" />
     <Compile Include="GUI\Components\Columns.cs" />
     <Compile Include="GUI\Components\FileDialog.cs" />
+    <Compile Include="GUI\Components\FramebufferArea.cs" />
+    <Compile Include="GUI\Components\GenericDialog.cs" />
     <Compile Include="GUI\Components\InfoDialog.cs" />
+    <Compile Include="GUI\Components\MeshTreeNode.cs" />
     <Compile Include="GUI\Components\TitleBar.cs" />
     <Compile Include="GUI\Components\TreeNode.cs" />
     <Compile Include="GUI\Components\TreeView.cs" />
     <Compile Include="GUI\ImGuiComponent.cs" />
     <Compile Include="GUI\ImGuiRenderer.cs" />
     <Compile Include="MainWindow.cs" />
+    <Compile Include="Math\Transform.cs" />
     <Compile Include="Models\AbstractDocument.cs" />
     <Compile Include="Models\IDocument.cs" />
     <Compile Include="Models\LBDDocument.cs" />
+    <Compile Include="Models\LSDViewConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\LibLSDUtil.cs" />
     <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\PathUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
@@ -99,13 +125,17 @@
     <Error Condition="!Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-           Other similar extension points exist, see Microsoft.Common.targets.
-      <Target Name="BeforeBuild">
-      </Target>
-      <Target Name="AfterBuild">
-      </Target>
-      -->
+             Other similar extension points exist, see Microsoft.Common.targets.
+        <Target Name="BeforeBuild">
+        </Target>
+        <Target Name="AfterBuild">
+        </Target>
+        -->
+  <ItemGroup>
+    <Shaders Include="Shaders/**" />
+  </ItemGroup>
   <Target Name="AfterBuild">
     <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts" />
+    <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders" />
   </Target>
 </Project>

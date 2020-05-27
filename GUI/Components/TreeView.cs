@@ -3,13 +3,15 @@ using ImGuiNET;
 
 namespace LSDView.GUI.Components
 {
-    public class TreeView : ImGuiComponent
+    public class TreeView<T> : ImGuiComponent where T : TreeNode
     {
-        public List<TreeNode> Nodes;
+        public List<T> Nodes;
+
+        public TreeNode Selected => _selected;
 
         private TreeNode _selected = null;
 
-        public TreeView() { Nodes = new List<TreeNode>(); }
+        public TreeView() { Nodes = new List<T>(); }
 
         protected override void renderSelf()
         {
