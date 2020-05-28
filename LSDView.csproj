@@ -75,6 +75,8 @@
     <Compile Include="Controllers\FileOpenController.cs" />
     <Compile Include="Controllers\LBDController.cs" />
     <Compile Include="Controllers\MOMController.cs" />
+    <Compile Include="Controllers\TIMController.cs" />
+    <Compile Include="Controllers\TIXController.cs" />
     <Compile Include="Controllers\TMDController.cs" />
     <Compile Include="Controllers\TreeController.cs" />
     <Compile Include="Controllers\VRAMController.cs" />
@@ -111,6 +113,8 @@
     <Compile Include="Models\LBDDocument.cs" />
     <Compile Include="Models\LSDViewConfig.cs" />
     <Compile Include="Models\MOMDocument.cs" />
+    <Compile Include="Models\TIMDocument.cs" />
+    <Compile Include="Models\TIXDocument.cs" />
     <Compile Include="Models\TMDDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

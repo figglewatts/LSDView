@@ -43,6 +43,8 @@ namespace LSDView
         private LBDController _lbdController;
         private TMDController _tmdController;
         private MOMController _momController;
+        private TIMController _timController;
+        private TIXController _tixController;
         private FileOpenController _fileOpenController;
         private AnimationController _animationController;
 
@@ -90,8 +92,11 @@ namespace LSDView
             _tmdController = new TMDController(_treeController, _vramController);
             _momController = new MOMController(_treeController, _vramController, _tmdController);
             _lbdController = new LBDController(_treeController, _vramController, _tmdController, _momController);
+            _timController = new TIMController(_treeController);
+            _tixController = new TIXController(_treeController, _timController);
             _fileOpenController =
-                new FileOpenController(_lbdController, _tmdController, _momController, _configController);
+                new FileOpenController(_lbdController, _tmdController, _momController, _timController, _tixController,
+                    _configController);
         }
 
         protected override void OnResize(EventArgs e)

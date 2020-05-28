@@ -30,11 +30,13 @@ namespace LSDView.Controllers
                     node = createTMDNode(rootName, doc as TMDDocument);
                     break;
                 case DocumentType.TIM:
+                    node = createTIMNode(rootName, doc as TIMDocument);
                     break;
                 case DocumentType.MOM:
                     node = createMOMNode(rootName, doc as MOMDocument);
                     break;
                 case DocumentType.TIX:
+                    node = createTIXNode(rootName, doc as TIXDocument);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -55,6 +57,24 @@ namespace LSDView.Controllers
         }
 
         public void SetTree(TreeView<MeshListTreeNode> tree) { Tree = tree; }
+
+        private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
+        {
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<Mesh> {tixDoc.TIMs[0].TextureMesh});
+
+            for (int i = 0; i < tixDoc.TIMs.Count; i++)
+            {
+                MeshListTreeNode timNode = createTIMNode($"Texture {i}", tixDoc.TIMs[i]);
+                rootNode.AddNode(timNode);
+            }
+
+            return rootNode;
+        }
+
+        private MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
+        {
+            return new MeshListTreeNode(name, new List<Mesh> {timDoc.TextureMesh});
+        }
 
         private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)
         {

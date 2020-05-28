@@ -27,6 +27,7 @@ namespace LSDView.GUI.Components
             Nodes.Clear();
             Nodes.Add(node);
             _selected = node;
+            node.Flags |= ImGuiTreeNodeFlags.Selected;
         }
 
         protected override void renderSelf()

@@ -24,6 +24,41 @@ namespace LSDView.Graphics
             Textures = new List<Texture2D>();
         }
 
+        public static Mesh CreateQuad(Shader shader)
+        {
+            Vector3[] vertPositions =
+            {
+                new Vector3(-1, -1, 0),
+                new Vector3(-1, 1, 0),
+                new Vector3(1, 1, 0),
+                new Vector3(1, -1, 0)
+            };
+
+            Vector2[] vertUVs =
+            {
+                new Vector2(0, 0),
+                new Vector2(0, 1),
+                new Vector2(1, 1),
+                new Vector2(1, 0)
+            };
+
+            return new Mesh(
+                new[]
+                {
+                    new Vertex(
+                        vertPositions[0], null, vertUVs[0]),
+                    new Vertex(
+                        vertPositions[1], null, vertUVs[1]),
+                    new Vertex(
+                        vertPositions[2], null, vertUVs[2]),
+                    new Vertex(
+                        vertPositions[3], null, vertUVs[3])
+                },
+                new[] {1, 0, 2, 2, 0, 3},
+                shader
+            );
+        }
+
         public void Render(Matrix4 view, Matrix4 projection)
         {
             _verts.Bind();

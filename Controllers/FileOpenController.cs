@@ -8,16 +8,22 @@ namespace LSDView.Controllers
         private readonly LBDController _lbdController;
         private readonly TMDController _tmdController;
         private readonly MOMController _momController;
+        private readonly TIMController _timController;
+        private readonly TIXController _tixController;
         private readonly ConfigController _configController;
 
         public FileOpenController(LBDController lbdController,
             TMDController tmdController,
             MOMController momController,
+            TIMController timController,
+            TIXController tixController,
             ConfigController configController)
         {
             _lbdController = lbdController;
             _tmdController = tmdController;
             _momController = momController;
+            _timController = timController;
+            _tixController = tixController;
             _configController = configController;
         }
 
@@ -35,6 +41,12 @@ namespace LSDView.Controllers
                     break;
                 case ".mom":
                     _momController.LoadMOM(filePath);
+                    break;
+                case ".tim":
+                    _timController.LoadTIM(filePath);
+                    break;
+                case ".tix":
+                    _tixController.LoadTIX(filePath);
                     break;
                 default:
                     Logger.Log()(LogLevel.WARN, $"Unable to open file {filePath}, unsupported type.");
