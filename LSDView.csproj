@@ -69,10 +69,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AnimationController.cs" />
     <Compile Include="Controllers\CameraController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\FileOpenController.cs" />
     <Compile Include="Controllers\LBDController.cs" />
+    <Compile Include="Controllers\MOMController.cs" />
+    <Compile Include="Controllers\TMDController.cs" />
     <Compile Include="Controllers\TreeController.cs" />
     <Compile Include="Controllers\VRAMController.cs" />
     <Compile Include="Fonts\IconsFontAwesome5.cs" />
@@ -88,13 +91,14 @@
     <Compile Include="Graphics\Vertex.cs" />
     <Compile Include="Graphics\VertexArray.cs" />
     <Compile Include="Graphics\VertexAttrib.cs" />
+    <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs" />
     <Compile Include="GUI\Components\ApplicationArea.cs" />
     <Compile Include="GUI\Components\Columns.cs" />
     <Compile Include="GUI\Components\FileDialog.cs" />
     <Compile Include="GUI\Components\FramebufferArea.cs" />
     <Compile Include="GUI\Components\GenericDialog.cs" />
     <Compile Include="GUI\Components\InfoDialog.cs" />
-    <Compile Include="GUI\Components\MeshTreeNode.cs" />
+    <Compile Include="GUI\Components\MeshListTreeNode.cs" />
     <Compile Include="GUI\Components\TitleBar.cs" />
     <Compile Include="GUI\Components\TreeNode.cs" />
     <Compile Include="GUI\Components\TreeView.cs" />
@@ -106,6 +110,8 @@
     <Compile Include="Models\IDocument.cs" />
     <Compile Include="Models\LBDDocument.cs" />
     <Compile Include="Models\LSDViewConfig.cs" />
+    <Compile Include="Models\MOMDocument.cs" />
+    <Compile Include="Models\TMDDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\LibLSDUtil.cs" />

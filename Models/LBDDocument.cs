@@ -15,15 +15,18 @@ namespace LSDView.Models
 
         public override LBD Document { get; }
 
-        public List<Mesh> TileMeshes { get; }
+        public TMDDocument TilesTMD { get; }
 
         public List<Mesh> TileLayout { get; }
 
-        public LBDDocument(LBD lbd, List<Mesh> tileMeshes, List<Mesh> tileLayout)
+        public List<MOMDocument> Entities { get; }
+
+        public LBDDocument(LBD lbd, TMDDocument tilesTmd, List<Mesh> tileLayout, List<MOMDocument> entities)
         {
             Document = lbd;
-            TileMeshes = tileMeshes;
+            TilesTMD = tilesTmd;
             TileLayout = tileLayout;
+            Entities = entities;
         }
     }
 }

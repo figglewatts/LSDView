@@ -18,12 +18,14 @@ namespace LSDView.GUI.GUIComponents
         private readonly FileOpenController _fileOpenController;
         private readonly VRAMController _vramController;
         private readonly ConfigController _configController;
+        private readonly CameraController _cameraController;
 
         private string _streamingAssetsPathFieldValue;
 
         public MainMenuBar(FileOpenController fileOpenController,
             VRAMController vramController,
-            ConfigController configController)
+            ConfigController configController,
+            CameraController cameraController)
         {
             _configController = configController;
             _streamingAssetsPathFieldValue = _configController.Config.StreamingAssetsPath;
@@ -31,6 +33,7 @@ namespace LSDView.GUI.GUIComponents
             _openVramDialog = new FileDialog(_configController.Config.StreamingAssetsPath, FileDialog.DialogType.Open);
             _fileOpenController = fileOpenController;
             _vramController = vramController;
+            _cameraController = cameraController;
         }
 
         protected override void renderSelf()
@@ -143,6 +146,11 @@ namespace LSDView.GUI.GUIComponents
             {
                 createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message"),
                     new Vector2(200, 200));
+            }
+
+            if (ImGui.MenuItem("Recenter view"))
+            {
+                _cameraController.RecenterView();
             }
         }
     }

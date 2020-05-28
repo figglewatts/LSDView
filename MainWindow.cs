@@ -36,13 +36,16 @@ namespace LSDView
         private readonly Framebuffer _fbo;
 
         // controllers
-        private LBDController _lbdController;
         private TreeController _treeController;
         private VRAMController _vramController;
         private CameraController _cameraController;
         private ConfigController _configController;
-
+        private LBDController _lbdController;
+        private TMDController _tmdController;
+        private MOMController _momController;
         private FileOpenController _fileOpenController;
+        private AnimationController _animationController;
+
         // --------------
 
         public MainWindow() : base(WINDOW_WIDTH, WINDOW_HEIGHT, GraphicsMode.Default, WINDOW_TITLE,
@@ -65,13 +68,13 @@ namespace LSDView
 
             ApplicationArea area = new ApplicationArea();
 
-            TreeView<MeshTreeNode> outlineView = new TreeView<MeshTreeNode>();
+            TreeView<MeshListTreeNode> outlineView = new TreeView<MeshListTreeNode>();
             _treeController.SetTree(outlineView);
 
             area.AddChild(new Columns(2, new List<ImGuiComponent>
                 {outlineView, new FramebufferArea(_fbo)}, new[] {250f, -1}));
 
-            var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController);
+            var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController, _cameraController);
 
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
@@ -80,11 +83,15 @@ namespace LSDView
         private void createControllers()
         {
             _configController = new ConfigController();
-            _treeController = new TreeController();
+            _animationController = new AnimationController();
+            _treeController = new TreeController(_animationController);
             _vramController = new VRAMController();
             _cameraController = new CameraController(_cam);
-            _lbdController = new LBDController(_treeController, _vramController);
-            _fileOpenController = new FileOpenController(_lbdController, _configController);
+            _tmdController = new TMDController(_treeController, _vramController);
+            _momController = new MOMController(_treeController, _vramController, _tmdController);
+            _lbdController = new LBDController(_treeController, _vramController, _tmdController, _momController);
+            _fileOpenController =
+                new FileOpenController(_lbdController, _tmdController, _momController, _configController);
         }
 
         protected override void OnResize(EventArgs e)
@@ -120,6 +127,7 @@ namespace LSDView
             HandleInput();
 
             _cameraController.Update();
+            _animationController.Update(e.Time);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -148,9 +156,17 @@ namespace LSDView
             SwapBuffers();
         }
 
-        protected override void OnKeyPress(KeyPressEventArgs e) { ImGuiRenderer.AddKeyChar(e.KeyChar); }
+        protected override void OnKeyPress(KeyPressEventArgs e)
+        {
+            if (!Focused) return;
+            ImGuiRenderer.AddKeyChar(e.KeyChar);
+        }
 
-        protected override void OnMouseMove(MouseMoveEventArgs e) { ImGuiRenderer.UpdateMousePos(e.X, e.Y); }
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            if (!Focused) return;
+            ImGuiRenderer.UpdateMousePos(e.X, e.Y);
+        }
 
         private void HandleInput() { }
     }

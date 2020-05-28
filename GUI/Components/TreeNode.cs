@@ -56,12 +56,17 @@ namespace LSDView.GUI.Components
             }
         }
 
+        protected virtual void internalOnSelect() { }
+
+        public virtual void OnDeselect() { }
+
         protected override void renderSelf()
         {
             bool show = ImGui.TreeNodeEx(Text, Flags);
             if (ImGui.IsItemClicked())
             {
                 OnSelect?.Invoke(this);
+                internalOnSelect();
             }
 
             if (show)

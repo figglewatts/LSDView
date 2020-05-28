@@ -13,6 +13,22 @@ namespace LSDView.GUI.Components
 
         public TreeView() { Nodes = new List<T>(); }
 
+        public void Deselect()
+        {
+            if (_selected == null) return;
+
+            _selected.Flags &= ~ImGuiTreeNodeFlags.Selected;
+            _selected.OnDeselect();
+            _selected = null;
+        }
+
+        public void SetNode(T node)
+        {
+            Nodes.Clear();
+            Nodes.Add(node);
+            _selected = node;
+        }
+
         protected override void renderSelf()
         {
             ImGui.BeginChild("tree");
@@ -29,7 +45,12 @@ namespace LSDView.GUI.Components
 
         private void select(TreeNode node)
         {
-            if (_selected != null) _selected.Flags &= ~ImGuiTreeNodeFlags.Selected;
+            if (_selected != null)
+            {
+                _selected.Flags &= ~ImGuiTreeNodeFlags.Selected;
+                _selected.OnDeselect();
+            }
+
             _selected = node;
             node.Flags |= ImGuiTreeNodeFlags.Selected;
         }

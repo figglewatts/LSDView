@@ -4,11 +4,11 @@ using LSDView.Graphics;
 
 namespace LSDView.GUI.Components
 {
-    public class MeshTreeNode : TreeNode
+    public class MeshListTreeNode : TreeNode
     {
         public readonly List<Mesh> Meshes;
 
-        public MeshTreeNode(string text,
+        public MeshListTreeNode(string text,
             List<Mesh> meshes,
             IEnumerable<TreeNode> children = null,
             Action<TreeNode> onSelect = null) :

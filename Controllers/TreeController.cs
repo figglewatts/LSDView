@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using libLSD.Formats;
+using LSDView.Graphics;
 using LSDView.GUI.Components;
 using LSDView.Models;
 using OpenTK;
@@ -8,32 +10,42 @@ namespace LSDView.Controllers
 {
     public class TreeController
     {
-        public TreeView<MeshTreeNode> Tree { get; private set; }
+        public TreeView<MeshListTreeNode> Tree { get; private set; }
+
+        private readonly AnimationController _animationController;
+
+        public TreeController(AnimationController animationController) { _animationController = animationController; }
 
         public void PopulateTreeWithDocument(IDocument doc, string rootName)
         {
+            Tree.Deselect();
             Tree.Nodes.Clear();
+            MeshListTreeNode node = null;
             switch (doc.Type)
             {
                 case DocumentType.LBD:
-                    Tree.Nodes.Add(createLBDNode(rootName, doc as LBDDocument));
+                    node = createLBDNode(rootName, doc as LBDDocument);
                     break;
                 case DocumentType.TMD:
+                    node = createTMDNode(rootName, doc as TMDDocument);
                     break;
                 case DocumentType.TIM:
                     break;
                 case DocumentType.MOM:
+                    node = createMOMNode(rootName, doc as MOMDocument);
                     break;
                 case DocumentType.TIX:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            Tree.SetNode(node);
         }
 
         public void RenderSelectedNode(Matrix4 view, Matrix4 projection)
         {
-            if (Tree.Selected is MeshTreeNode renderableTreeNode)
+            if (Tree.Selected is MeshListTreeNode renderableTreeNode)
             {
                 foreach (var mesh in renderableTreeNode.Meshes)
                 {
@@ -42,70 +54,76 @@ namespace LSDView.Controllers
             }
         }
 
-        public void SetTree(TreeView<MeshTreeNode> tree) { Tree = tree; }
+        public void SetTree(TreeView<MeshListTreeNode> tree) { Tree = tree; }
 
-        private MeshTreeNode createLBDNode(string name, LBDDocument lbdDoc)
+        private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)
         {
-            MeshTreeNode rootNode = new MeshTreeNode(name, lbdDoc.TileLayout);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, lbdDoc.TileLayout);
 
-            TreeNode tilesNode = createTMDNode("Tiles", lbdDoc.Document.Tiles);
+            TreeNode tilesNode = createTMDNode("Tiles", lbdDoc.TilesTMD);
             rootNode.AddNode(tilesNode);
 
-            if (lbdDoc.Document.MML != null)
+            if (lbdDoc.Entities != null)
             {
-                TreeNode objectsNode = createMMLNode("Entities", lbdDoc.Document.MML.Value);
+                TreeNode objectsNode = createMMLNode("Entities", lbdDoc.Entities);
                 rootNode.AddNode(objectsNode);
             }
 
             return rootNode;
         }
 
-        private TreeNode createMMLNode(string name, MML mml)
+        private TreeNode createMMLNode(string name, List<MOMDocument> entities)
         {
-            TreeNode rootNode = new TreeNode(name);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, entities[0].Models.ObjectMeshes);
 
-            for (int i = 0; i < mml.NumberOfMOMs; i++)
+            for (int i = 0; i < entities.Count; i++)
             {
-                TreeNode momNode = new TreeNode($"Entity {i}");
+                MeshListTreeNode momNode = createMOMNode($"Entity {i}", entities[i]);
                 rootNode.AddNode(momNode);
             }
 
             return rootNode;
         }
 
-        private TreeNode createMOMNode(string name, MOM mom)
+        private MeshListTreeNode createMOMNode(string name, MOMDocument momDoc)
         {
-            TreeNode rootNode = new TreeNode(name);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, momDoc.Models.ObjectMeshes);
 
-            TreeNode modelsNode = createTMDNode("Models", mom.TMD);
+            MeshListTreeNode modelsNode = createTMDNode("Models", momDoc.Models);
             rootNode.AddNode(modelsNode);
 
-            TreeNode animationsNode = createMOSNode("Animations", mom.MOS);
+            AnimatedMeshListTreeNode animationsNode =
+                createMOSNode("Animations", momDoc.Document.MOS, momDoc);
             rootNode.AddNode(animationsNode);
 
             return rootNode;
         }
 
-        private TreeNode createMOSNode(string name, MOS mos)
+        private AnimatedMeshListTreeNode createMOSNode(string name, MOS mos, MOMDocument entity)
         {
-            TreeNode rootNode = new TreeNode(name);
+            AnimatedMeshListTreeNode rootNode =
+                new AnimatedMeshListTreeNode(name, entity.Models.ObjectMeshes, entity, 0,
+                    _animationController);
 
             for (int i = 0; i < mos.NumberOfTODs; i++)
             {
-                TreeNode animationNode = new TreeNode($"Animation {i}");
+                AnimatedMeshListTreeNode animationNode = new AnimatedMeshListTreeNode($"Animation {i}",
+                    entity.Models.ObjectMeshes, entity,
+                    i, _animationController);
                 rootNode.AddNode(animationNode);
             }
 
             return rootNode;
         }
 
-        private TreeNode createTMDNode(string name, TMD tmd)
+        private MeshListTreeNode createTMDNode(string name, TMDDocument tmdDoc)
         {
-            TreeNode rootNode = new TreeNode(name);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, tmdDoc.ObjectMeshes);
 
-            for (int i = 0; i < tmd.Header.NumObjects; i++)
+            for (int i = 0; i < tmdDoc.Document.Header.NumObjects; i++)
             {
-                TreeNode objNode = new TreeNode($"Object {i}");
+                MeshListTreeNode objNode =
+                    new MeshListTreeNode($"Object {i}", new List<Mesh> {tmdDoc.ObjectMeshes[i]});
                 rootNode.AddNode(objNode);
             }
 

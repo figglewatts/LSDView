@@ -22,6 +22,8 @@ namespace LSDView.Controllers
 
         public void Update()
         {
+            if (!MainWindow.Instance.Focused) return;
+
             var mouseState = Mouse.GetCursorState();
 
             if (mouseState.IsButtonDown(MouseButton.Left)) arcBallRotation(mouseState);
@@ -32,24 +34,30 @@ namespace LSDView.Controllers
             _lastScroll = mouseState.Scroll.Y;
         }
 
-        private Vector2 DragDelta(MouseState state)
+        public void RecenterView()
+        {
+            _arcBallTarget = Vector3.Zero;
+            _cam.ArcBall(0, 0, _arcBallTarget, _arcBallDistance);
+        }
+
+        private Vector2 dragDelta(MouseState state)
         {
             return new Vector2(state.X, state.Y) - new Vector2(_lastMouseState.X, _lastMouseState.Y);
         }
 
-        private float ScrollDelta(MouseState state) { return state.Scroll.Y - _lastScroll; }
+        private float scrollDelta(MouseState state) { return state.Scroll.Y - _lastScroll; }
 
         private void arcBallRotation(MouseState state)
         {
-            var dragDelta = DragDelta(state);
-            _cam.ArcBall(MathHelper.DegreesToRadians(dragDelta.X), MathHelper.DegreesToRadians(-dragDelta.Y),
+            var delta = dragDelta(state);
+            _cam.ArcBall(MathHelper.DegreesToRadians(-delta.X), MathHelper.DegreesToRadians(delta.Y),
                 _arcBallTarget, _arcBallDistance);
         }
 
         private void middleMousePanning(MouseState state)
         {
-            var dragDelta = DragDelta(state);
-            var translationVec = _cam.Transform.Right * dragDelta.X + _cam.Transform.Up * dragDelta.Y;
+            var delta = dragDelta(state);
+            var translationVec = _cam.Transform.Right * delta.X + _cam.Transform.Up * delta.Y;
             translationVec *= PAN_SPEED;
             _cam.Transform.Translate(translationVec);
             _arcBallTarget += translationVec;
@@ -57,7 +65,7 @@ namespace LSDView.Controllers
 
         private void scrollZooming(MouseState state)
         {
-            _arcBallDistance -= ScrollDelta(state);
+            _arcBallDistance -= scrollDelta(state);
             _arcBallDistance = MathHelper.Clamp(_arcBallDistance, MIN_ARCBALL_DISTANCE, MAX_ARCBALL_DISTANCE);
             _cam.ArcBall(0, 0, _arcBallTarget, _arcBallDistance);
         }

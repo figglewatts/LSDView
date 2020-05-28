@@ -12,12 +12,19 @@ namespace LSDView.Controllers
     {
         private readonly TreeController _treeController;
         private readonly VRAMController _vramController;
+        private readonly TMDController _tmdController;
+        private readonly MOMController _momController;
         private readonly Shader _shader;
 
-        public LBDController(TreeController treeController, VRAMController vramController)
+        public LBDController(TreeController treeController,
+            VRAMController vramController,
+            TMDController tmdController,
+            MOMController momController)
         {
             _treeController = treeController;
             _vramController = vramController;
+            _tmdController = tmdController;
+            _momController = momController;
             _shader = new Shader("basic", "Shaders/basic");
         }
 
@@ -29,13 +36,13 @@ namespace LSDView.Controllers
                 lbd = new LBD(br);
             }
 
-            LBDDocument document = createDocument(lbd);
+            LBDDocument document = CreateDocument(lbd);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(lbdPath));
         }
 
-        private LBDDocument createDocument(LBD lbd)
+        public LBDDocument CreateDocument(LBD lbd)
         {
-            List<Mesh> tileMeshes = LibLSDUtil.CreateMeshesFromTMD(lbd.Tiles, _shader, _vramController.VRAMTexture);
+            TMDDocument tileTmd = _tmdController.CreateDocument(lbd.Tiles);
             List<Mesh> tileLayout = new List<Mesh>();
 
             int tileNo = 0;
@@ -53,27 +60,17 @@ namespace LSDView.Controllers
                 tileNo++;
             }
 
-            return new LBDDocument(lbd, tileMeshes, tileLayout);
+            List<MOMDocument> entities = null;
+            if (lbd.Header.HasMML)
+            {
+                entities = new List<MOMDocument>();
+                foreach (MOM mom in lbd.MML?.MOMs)
+                {
+                    entities.Add(_momController.CreateDocument(mom));
+                }
+            }
 
-            // TODO: LBD MML in document
-            // if (lbd.Header.HasMML)
-            // {
-            //     foreach (MOM mom in lbd.MML?.MOMs)
-            //     {
-            //         List<Mesh> momTmd = LibLSDUtil.CreateMeshesFromTMD(mom.TMD, _shader, _vramController.VRAMTexture);
-            //         List<TODAnimation> momAnimations = new List<TODAnimation>();
-            //         foreach (var anim in mom.MOS.TODs)
-            //         {
-            //             List<Mesh> animatedMeshes =
-            //                 LibLSDUtil.CreateMeshesFromTMD(mom.TMD, _shader, _vramController.VRAMTexture);
-            //             TODAnimation animationObj = new TODAnimation(animatedMeshes, anim);
-            //             momAnimations.Add(animationObj);
-            //         }
-            //
-            //         MOMData momData = new MOMData(mom, momTmd, momAnimations);
-            //         Moms.Add(momData);
-            //     }
-            // }
+            return new LBDDocument(lbd, tileTmd, tileLayout, entities);
         }
     }
 }
