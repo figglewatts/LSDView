@@ -96,6 +96,7 @@
     <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs" />
     <Compile Include="GUI\Components\ApplicationArea.cs" />
     <Compile Include="GUI\Components\Columns.cs" />
+    <Compile Include="GUI\Components\ContextMenu.cs" />
     <Compile Include="GUI\Components\FileDialog.cs" />
     <Compile Include="GUI\Components\FramebufferArea.cs" />
     <Compile Include="GUI\Components\GenericDialog.cs" />

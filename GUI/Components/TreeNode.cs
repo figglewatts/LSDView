@@ -11,7 +11,11 @@ namespace LSDView.GUI.Components
         public ImGuiTreeNodeFlags Flags;
         public Action<TreeNode> OnSelect;
 
-        public TreeNode(string text, IEnumerable<TreeNode> children = null, Action<TreeNode> onSelect = null)
+        public TreeNode(string text,
+            IEnumerable<TreeNode> children = null,
+            Action<TreeNode> onSelect = null,
+            ContextMenu contextMenu = null)
+            : base(contextMenu)
         {
             if (children != null)
             {
@@ -68,6 +72,8 @@ namespace LSDView.GUI.Components
                 OnSelect?.Invoke(this);
                 internalOnSelect();
             }
+
+            _contextMenu?.Render();
 
             if (show)
             {

@@ -11,8 +11,9 @@ namespace LSDView.GUI.Components
         public MeshListTreeNode(string text,
             List<Mesh> meshes,
             IEnumerable<TreeNode> children = null,
-            Action<TreeNode> onSelect = null) :
-            base(text, children, onSelect)
+            Action<TreeNode> onSelect = null,
+            ContextMenu contextMenu = null) :
+            base(text, children, onSelect, contextMenu)
         {
             Meshes = meshes;
         }

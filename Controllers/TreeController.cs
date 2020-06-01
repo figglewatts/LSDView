@@ -73,7 +73,11 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
         {
-            return new MeshListTreeNode(name, new List<Mesh> {timDoc.TextureMesh});
+            return new MeshListTreeNode(name, new List<Mesh> {timDoc.TextureMesh}, contextMenu: new ContextMenu(
+                new Dictionary<string, Action>
+                {
+                    {"Export as TIM", () => { }}
+                }));
         }
 
         private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)

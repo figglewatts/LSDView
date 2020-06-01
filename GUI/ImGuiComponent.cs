@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using ImGuiNET;
+using LSDView.GUI.Components;
 
 namespace LSDView.GUI
 {
@@ -9,18 +10,20 @@ namespace LSDView.GUI
         public bool Show = true;
 
         protected readonly List<ImGuiComponent> _children;
+        protected ContextMenu _contextMenu;
 
         private static int ModalCount = 0;
         private readonly Dictionary<string, Modal> _modals;
         private readonly Queue<string> _modalsToCreate;
         private readonly Queue<string> _modalsToDestroy;
 
-        protected ImGuiComponent()
+        protected ImGuiComponent(ContextMenu contextMenu = null)
         {
             _children = new List<ImGuiComponent>();
             _modals = new Dictionary<string, Modal>();
             _modalsToCreate = new Queue<string>();
             _modalsToDestroy = new Queue<string>();
+            _contextMenu = contextMenu;
         }
 
         public void Render()
