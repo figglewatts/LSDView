@@ -18,7 +18,6 @@ namespace LSDView.GUI.Components
             if (_lastDimension != region)
             {
                 _framebuffer.Resize((int)region.X, (int)region.Y);
-                Console.WriteLine("Resizing");
                 _lastDimension = region;
             }
 

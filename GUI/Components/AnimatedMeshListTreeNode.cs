@@ -18,7 +18,8 @@ namespace LSDView.GUI.Components
             int animation,
             AnimationController animationController,
             IEnumerable<TreeNode> children = null,
-            Action<TreeNode> onSelect = null) : base(text, meshes, children, onSelect)
+            Action<TreeNode> onSelect = null,
+            ContextMenu contextMenu = null) : base(text, meshes, children, onSelect, contextMenu)
         {
             _animation = animation;
             _animationController = animationController;

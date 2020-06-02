@@ -23,6 +23,9 @@ namespace LSDView
     {
         public static MainWindow Instance = null;
 
+        public Action NextUpdateActions;
+        public Action NextGuiRender;
+
         private const int WINDOW_WIDTH = 800;
         private const int WINDOW_HEIGHT = 600;
         private const string WINDOW_TITLE = "LSDView";
@@ -34,6 +37,11 @@ namespace LSDView
         private readonly Camera _cam;
         private Matrix4 _proj;
         private readonly Framebuffer _fbo;
+
+        // ui
+        private FileDialog _exportFileDialog;
+
+        // --------------
 
         // controllers
         private TreeController _treeController;
@@ -47,6 +55,7 @@ namespace LSDView
         private TIXController _tixController;
         private FileOpenController _fileOpenController;
         private AnimationController _animationController;
+        private ExportController _exportController;
 
         // --------------
 
@@ -80,13 +89,17 @@ namespace LSDView
 
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
+            _guiComponents.Add(_exportFileDialog);
         }
 
         private void createControllers()
         {
             _configController = new ConfigController();
+            _exportFileDialog =
+                new FileDialog(_configController.Config.StreamingAssetsPath, FileDialog.DialogType.Save);
+            _exportController = new ExportController(_exportFileDialog);
             _animationController = new AnimationController();
-            _treeController = new TreeController(_animationController);
+            _treeController = new TreeController(_animationController, _exportController);
             _vramController = new VRAMController();
             _cameraController = new CameraController(_cam);
             _tmdController = new TMDController(_treeController, _vramController);
@@ -131,6 +144,9 @@ namespace LSDView
         {
             HandleInput();
 
+            NextUpdateActions?.Invoke();
+            NextUpdateActions = null;
+
             _cameraController.Update();
             _animationController.Update(e.Time);
         }
@@ -145,6 +161,9 @@ namespace LSDView
             {
                 component.Render();
             }
+
+            NextGuiRender?.Invoke();
+            NextGuiRender = null;
 
             ImGuiRenderer.EndFrame();
 

@@ -66,11 +66,8 @@ namespace LSDView.Controllers
         {
             if (!Active || !Ready) return;
 
-            Console.WriteLine("Updating!");
-
             double tickRate = Animation.Header.Resolution * TICK;
-
-            Console.WriteLine(time);
+            
             time += dt;
             if (time > tickRate)
             {
@@ -148,8 +145,6 @@ namespace LSDView.Controllers
         private void handleCoordinatePacket(TODPacket packet)
         {
             TODCoordinatePacketData packetData = packet.Data as TODCoordinatePacketData;
-
-            Console.WriteLine("Coord packet");
 
             Transform objTransform = _objectTable[packet.ObjectID].Transform;
             if (packetData.HasScale)

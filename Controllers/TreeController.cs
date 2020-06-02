@@ -13,14 +13,19 @@ namespace LSDView.Controllers
         public TreeView<MeshListTreeNode> Tree { get; private set; }
 
         private readonly AnimationController _animationController;
+        private readonly ExportController _exportController;
 
-        public TreeController(AnimationController animationController) { _animationController = animationController; }
+        public TreeController(AnimationController animationController, ExportController exportController)
+        {
+            _animationController = animationController;
+            _exportController = exportController;
+        }
 
         public void PopulateTreeWithDocument(IDocument doc, string rootName)
         {
             Tree.Deselect();
             Tree.Nodes.Clear();
-            MeshListTreeNode node = null;
+            MeshListTreeNode node;
             switch (doc.Type)
             {
                 case DocumentType.LBD:
@@ -60,7 +65,20 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<Mesh> {tixDoc.TIMs[0].TextureMesh});
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<Mesh> {tixDoc.TIMs[0].TextureMesh},
+                contextMenu: new ContextMenu(
+                    new Dictionary<string, Action>
+                    {
+                        {
+                            "Export as TIX",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath => { _exportController.ExportOriginal(tixDoc.Document, filePath); },
+                                    ".tix");
+                            }
+                        }
+                    }));
 
             for (int i = 0; i < tixDoc.TIMs.Count; i++)
             {
@@ -76,29 +94,60 @@ namespace LSDView.Controllers
             return new MeshListTreeNode(name, new List<Mesh> {timDoc.TextureMesh}, contextMenu: new ContextMenu(
                 new Dictionary<string, Action>
                 {
-                    {"Export as TIM", () => { }}
+                    {
+                        "Export as TIM",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportOriginal(timDoc.Document, filePath); }, ".tim");
+                        }
+                    }
                 }));
         }
 
         private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, lbdDoc.TileLayout);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, lbdDoc.TileLayout, contextMenu: new ContextMenu(
+                new Dictionary<string, Action>
+                {
+                    {
+                        "Export as LBD",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportOriginal(lbdDoc.Document, filePath); }, ".lbd");
+                        }
+                    }
+                }));
 
             TreeNode tilesNode = createTMDNode("Tiles", lbdDoc.TilesTMD);
             rootNode.AddNode(tilesNode);
 
             if (lbdDoc.Entities != null)
             {
-                TreeNode objectsNode = createMMLNode("Entities", lbdDoc.Entities);
+                TreeNode objectsNode = createMMLNode("Entities", lbdDoc.Entities, lbdDoc.Document.MML.Value);
                 rootNode.AddNode(objectsNode);
             }
 
             return rootNode;
         }
 
-        private TreeNode createMMLNode(string name, List<MOMDocument> entities)
+        private TreeNode createMMLNode(string name, List<MOMDocument> entities, MML mml)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, entities[0].Models.ObjectMeshes);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, entities[0].Models.ObjectMeshes,
+                contextMenu: new ContextMenu(
+                    new Dictionary<string, Action>
+                    {
+                        {
+                            "Export as MML",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath => { _exportController.ExportOriginal(mml, filePath); },
+                                    ".mml");
+                            }
+                        }
+                    }));
 
             for (int i = 0; i < entities.Count; i++)
             {
@@ -111,7 +160,20 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createMOMNode(string name, MOMDocument momDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, momDoc.Models.ObjectMeshes);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, momDoc.Models.ObjectMeshes,
+                contextMenu: new ContextMenu(
+                    new Dictionary<string, Action>
+                    {
+                        {
+                            "Export as MOM",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath => { _exportController.ExportOriginal(momDoc.Document, filePath); },
+                                    ".mom");
+                            }
+                        }
+                    }));
 
             MeshListTreeNode modelsNode = createTMDNode("Models", momDoc.Models);
             rootNode.AddNode(modelsNode);
@@ -127,7 +189,18 @@ namespace LSDView.Controllers
         {
             AnimatedMeshListTreeNode rootNode =
                 new AnimatedMeshListTreeNode(name, entity.Models.ObjectMeshes, entity, 0,
-                    _animationController);
+                    _animationController, contextMenu: new ContextMenu(
+                        new Dictionary<string, Action>
+                        {
+                            {
+                                "Export as MOS",
+                                () =>
+                                {
+                                    _exportController.OpenDialog(
+                                        filePath => { _exportController.ExportOriginal(mos, filePath); }, ".mos");
+                                }
+                            }
+                        }));
 
             for (int i = 0; i < mos.NumberOfTODs; i++)
             {
@@ -142,7 +215,18 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTMDNode(string name, TMDDocument tmdDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, tmdDoc.ObjectMeshes);
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, tmdDoc.ObjectMeshes, contextMenu: new ContextMenu(
+                new Dictionary<string, Action>
+                {
+                    {
+                        "Export as TMD",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportOriginal(tmdDoc.Document, filePath); }, ".tmd");
+                        }
+                    }
+                }));
 
             for (int i = 0; i < tmdDoc.Document.Header.NumObjects; i++)
             {

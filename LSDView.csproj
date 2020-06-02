@@ -57,6 +57,9 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
@@ -72,6 +75,7 @@
     <Compile Include="Controllers\AnimationController.cs" />
     <Compile Include="Controllers\CameraController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\FileOpenController.cs" />
     <Compile Include="Controllers\LBDController.cs" />
     <Compile Include="Controllers\MOMController.cs" />
@@ -119,8 +123,11 @@
     <Compile Include="Models\TMDDocument.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\ImageUtil.cs" />
     <Compile Include="Util\LibLSDUtil.cs" />
     <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\MeshUtil.cs" />
+    <Compile Include="Util\ObjBuilder.cs" />
     <Compile Include="Util\PathUtil.cs" />
   </ItemGroup>
   <ItemGroup>
