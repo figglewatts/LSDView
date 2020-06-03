@@ -12,9 +12,9 @@ namespace LSDView.Models
         public EventHandler OnLoad { get; set; }
         public EventHandler OnUnload { get; set; }
 
-        public List<Mesh> ObjectMeshes { get; }
+        public List<IRenderable> ObjectMeshes { get; }
 
-        public TMDDocument(TMD tmd, List<Mesh> objectMeshes)
+        public TMDDocument(TMD tmd, List<IRenderable> objectMeshes)
         {
             Document = tmd;
             ObjectMeshes = objectMeshes;

@@ -6,10 +6,10 @@ namespace LSDView.GUI.Components
 {
     public class MeshListTreeNode : TreeNode
     {
-        public readonly List<Mesh> Meshes;
+        public readonly List<IRenderable> Meshes;
 
         public MeshListTreeNode(string text,
-            List<Mesh> meshes,
+            List<IRenderable> meshes,
             IEnumerable<TreeNode> children = null,
             Action<TreeNode> onSelect = null,
             ContextMenu contextMenu = null) :

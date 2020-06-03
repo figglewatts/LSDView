@@ -70,12 +70,26 @@ namespace LSDView.Controllers
             }
         }
 
-        public void ExportOBJ(IRenderable mesh, string filePath) { }
+        /// <summary>
+        /// Export a renderable mesh to an OBJ file.
+        /// </summary>
+        /// <param name="mesh">The mesh to export.</param>
+        /// <param name="filePath">The path to export the OBJ file to.</param>
+        public void ExportOBJ(IRenderable mesh, string filePath)
+        {
+            var objFile = MeshUtil.RenderableToObjFile(mesh);
+            File.WriteAllText(filePath, objFile);
+        }
 
-        public void ExportOBJ(List<IRenderable> meshes, string filePath) { }
-
-        public void ExportOBJ(TMD tmd, string filePath) { }
-
-        public void ExportOBJ(TMDObject tmdObject, string filePath) { }
+        /// <summary>
+        /// Export a list of renderable meshes to an OBJ file.
+        /// </summary>
+        /// <param name="meshes">The meshes to export.</param>
+        /// <param name="filePath">The path to export the OBJ file to.</param>
+        public void ExportOBJ(List<IRenderable> meshes, string filePath)
+        {
+            var objFile = MeshUtil.RenderableListToObjFile(meshes);
+            File.WriteAllText(filePath, objFile);
+        }
     }
 }

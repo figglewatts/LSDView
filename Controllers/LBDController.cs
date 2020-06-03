@@ -43,7 +43,7 @@ namespace LSDView.Controllers
         public LBDDocument CreateDocument(LBD lbd)
         {
             TMDDocument tileTmd = _tmdController.CreateDocument(lbd.Tiles);
-            List<Mesh> tileLayout = new List<Mesh>();
+            List<IRenderable> tileLayout = new List<IRenderable>();
 
             int tileNo = 0;
             foreach (LBDTile tile in lbd.TileLayout)

@@ -10,13 +10,13 @@ namespace LSDView.Util
 {
     public static class LibLSDUtil
     {
-        public static List<Mesh> CreateMeshesFromTMD(TMD tmd, Shader shader, Texture2D vram)
+        public static List<IRenderable> CreateMeshesFromTMD(TMD tmd, Shader shader, Texture2D vram)
         {
-            List<Mesh> meshList = new List<Mesh>();
+            List<IRenderable> meshList = new List<IRenderable>();
 
             foreach (var obj in tmd.ObjectTable)
             {
-                Mesh objMesh = MeshFromTMDObject(obj, shader);
+                IRenderable objMesh = MeshFromTMDObject(obj, shader);
                 objMesh.Textures.Add(vram);
                 meshList.Add(objMesh);
             }
@@ -24,7 +24,7 @@ namespace LSDView.Util
             return meshList;
         }
 
-        public static Mesh MeshFromTMDObject(TMDObject obj, Shader shader)
+        public static IRenderable MeshFromTMDObject(TMDObject obj, Shader shader)
         {
             Vec3[] verts = new Vec3[obj.NumVertices];
             List<Vertex> vertList = new List<Vertex>();
@@ -130,7 +130,7 @@ namespace LSDView.Util
             return toReturn;
         }
 
-        public static List<Mesh> CreateLBDTileMesh(LBDTile tile,
+        public static List<IRenderable> CreateLBDTileMesh(LBDTile tile,
             LBDTile[] extraTiles,
             int x,
             int y,
@@ -138,7 +138,7 @@ namespace LSDView.Util
             Shader shader,
             Texture2D vram)
         {
-            List<Mesh> returnMeshList = new List<Mesh>();
+            List<IRenderable> returnMeshList = new List<IRenderable>();
 
             returnMeshList.Add(createSingleLBDTileMesh(tile, x, y, tilesTmd, shader, vram));
 
@@ -155,7 +155,7 @@ namespace LSDView.Util
             return returnMeshList;
         }
 
-        private static Mesh createSingleLBDTileMesh(LBDTile tile,
+        private static IRenderable createSingleLBDTileMesh(LBDTile tile,
             int x,
             int y,
             TMD tilesTmd,
@@ -163,7 +163,7 @@ namespace LSDView.Util
             Texture2D vram)
         {
             TMDObject tileObj = tilesTmd.ObjectTable[tile.TileType];
-            Mesh tileMesh = MeshFromTMDObject(tileObj, shader);
+            IRenderable tileMesh = MeshFromTMDObject(tileObj, shader);
 
             switch (tile.TileDirection)
             {

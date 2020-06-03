@@ -35,7 +35,7 @@ namespace LSDView.Controllers
 
         public TMDDocument CreateDocument(TMD tmd)
         {
-            List<Mesh> objectMeshes = LibLSDUtil.CreateMeshesFromTMD(tmd, _shader, _vramController.VRAMTexture);
+            List<IRenderable> objectMeshes = LibLSDUtil.CreateMeshesFromTMD(tmd, _shader, _vramController.VRAMTexture);
             return new TMDDocument(tmd, objectMeshes);
         }
     }

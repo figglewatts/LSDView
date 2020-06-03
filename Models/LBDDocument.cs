@@ -17,11 +17,11 @@ namespace LSDView.Models
 
         public TMDDocument TilesTMD { get; }
 
-        public List<Mesh> TileLayout { get; }
+        public List<IRenderable> TileLayout { get; }
 
         public List<MOMDocument> Entities { get; }
 
-        public LBDDocument(LBD lbd, TMDDocument tilesTmd, List<Mesh> tileLayout, List<MOMDocument> entities)
+        public LBDDocument(LBD lbd, TMDDocument tilesTmd, List<IRenderable> tileLayout, List<MOMDocument> entities)
         {
             Document = lbd;
             TilesTMD = tilesTmd;

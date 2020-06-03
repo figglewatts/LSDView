@@ -150,7 +150,7 @@ namespace LSDView.Util
 
             foreach (var vert in mesh.Verts.Vertices)
             {
-                objString.Vertex(vert.Position);
+                objString.Vertex(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix));
             }
 
             foreach (var vert in mesh.Verts.Vertices)
@@ -164,12 +164,15 @@ namespace LSDView.Util
             }
 
             ObjFaceBuilder faceBuilder = new ObjFaceBuilder();
-            for (int i = 0; i < mesh.Verts.Length; i += 3)
+            for (int i = 0; i < mesh.Verts.Indices.Length; i += 3)
             {
-                int objIndex = mesh.Verts.Indices[i] + 1;
-                faceBuilder.Vertex(objIndex, objIndex, objIndex);
-                faceBuilder.Vertex(objIndex + 1, objIndex + 1, objIndex + 1);
-                faceBuilder.Vertex(objIndex + 2, objIndex + 2, objIndex + 2);
+                // plus 1 here as OBJ is not zero-indexed
+                int idx1 = mesh.Verts.Indices[i] + 1;
+                int idx2 = mesh.Verts.Indices[i + 1] + 1;
+                int idx3 = mesh.Verts.Indices[i + 2] + 1;
+                faceBuilder.Vertex(idx1, idx1, idx1);
+                faceBuilder.Vertex(idx2, idx2, idx2);
+                faceBuilder.Vertex(idx3, idx3, idx3);
                 objString.Face(faceBuilder.Build());
                 faceBuilder.Clear();
             }
@@ -198,7 +201,7 @@ namespace LSDView.Util
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
-                    positions.Add(vert.Position);
+                    positions.Add(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix));
                     normals.Add(vert.Normal);
                     uvs.Add(vert.TexCoord);
                 }

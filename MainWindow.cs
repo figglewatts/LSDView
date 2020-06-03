@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using IconFonts;
 using ImGuiNET;
 using JsonAnything.GUI.GUIComponents;
@@ -64,6 +65,8 @@ namespace LSDView
             GraphicsContextFlags.Default)
         {
             Instance = this;
+
+            Icon = new Icon(typeof(MainWindow), "appicon.ico");
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);

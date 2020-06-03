@@ -13,7 +13,7 @@ namespace LSDView.GUI.Components
         protected readonly AnimationController _animationController;
 
         public AnimatedMeshListTreeNode(string text,
-            List<Mesh> meshes,
+            List<IRenderable> meshes,
             MOMDocument entity,
             int animation,
             AnimationController animationController,

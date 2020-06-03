@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using libLSD.Formats;
 using LSDView.Graphics;
 using LSDView.GUI.Components;
@@ -65,7 +66,7 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<Mesh> {tixDoc.TIMs[0].TextureMesh},
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<IRenderable> {tixDoc.TIMs[0].TextureMesh},
                 contextMenu: new ContextMenu(
                     new Dictionary<string, Action>
                     {
@@ -76,6 +77,17 @@ namespace LSDView.Controllers
                                 _exportController.OpenDialog(
                                     filePath => { _exportController.ExportOriginal(tixDoc.Document, filePath); },
                                     ".tix");
+                            }
+                        },
+                        {
+                            "Export as PNGs",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath =>
+                                    {
+                                        _exportController.ExportImages(tixDoc.Document, filePath, ImageFormat.Png);
+                                    }, ".png");
                             }
                         }
                     }));
@@ -91,7 +103,7 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
         {
-            return new MeshListTreeNode(name, new List<Mesh> {timDoc.TextureMesh}, contextMenu: new ContextMenu(
+            return new MeshListTreeNode(name, new List<IRenderable> {timDoc.TextureMesh}, contextMenu: new ContextMenu(
                 new Dictionary<string, Action>
                 {
                     {
@@ -100,6 +112,17 @@ namespace LSDView.Controllers
                         {
                             _exportController.OpenDialog(
                                 filePath => { _exportController.ExportOriginal(timDoc.Document, filePath); }, ".tim");
+                        }
+                    },
+                    {
+                        "Export as PNG",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath =>
+                                {
+                                    _exportController.ExportImage(timDoc.Document, filePath, ImageFormat.Png);
+                                }, ".png");
                         }
                     }
                 }));
@@ -116,6 +139,14 @@ namespace LSDView.Controllers
                         {
                             _exportController.OpenDialog(
                                 filePath => { _exportController.ExportOriginal(lbdDoc.Document, filePath); }, ".lbd");
+                        }
+                    },
+                    {
+                        "Export as OBJ",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportOBJ(lbdDoc.TileLayout, filePath); }, ".obj");
                         }
                     }
                 }));
@@ -225,13 +256,34 @@ namespace LSDView.Controllers
                             _exportController.OpenDialog(
                                 filePath => { _exportController.ExportOriginal(tmdDoc.Document, filePath); }, ".tmd");
                         }
+                    },
+                    {
+                        "Export as OBJ",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportOBJ(tmdDoc.ObjectMeshes, filePath); }, ".obj");
+                        }
                     }
                 }));
 
             for (int i = 0; i < tmdDoc.Document.Header.NumObjects; i++)
             {
+                IRenderable objMesh = tmdDoc.ObjectMeshes[i];
                 MeshListTreeNode objNode =
-                    new MeshListTreeNode($"Object {i}", new List<Mesh> {tmdDoc.ObjectMeshes[i]});
+                    new MeshListTreeNode($"Object {i}", new List<IRenderable> {objMesh},
+                        contextMenu: new ContextMenu(
+                            new Dictionary<string, Action>
+                            {
+                                {
+                                    "Export as OBJ",
+                                    () =>
+                                    {
+                                        _exportController.OpenDialog(
+                                            filePath => { _exportController.ExportOBJ(objMesh, filePath); }, ".obj");
+                                    }
+                                }
+                            }));
                 rootNode.AddNode(objNode);
             }
 
