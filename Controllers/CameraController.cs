@@ -27,7 +27,7 @@ namespace LSDView.Controllers
             var mouseState = Mouse.GetCursorState();
 
             if (mouseState.IsButtonDown(MouseButton.Left)) arcBallRotation(mouseState);
-            if (mouseState.IsButtonDown(MouseButton.Middle)) middleMousePanning(mouseState);
+            if (mouseState.IsButtonDown(MouseButton.Right)) panning(mouseState);
             scrollZooming(mouseState);
 
             _lastMouseState = mouseState;
@@ -54,7 +54,7 @@ namespace LSDView.Controllers
                 _arcBallTarget, _arcBallDistance);
         }
 
-        private void middleMousePanning(MouseState state)
+        private void panning(MouseState state)
         {
             var delta = dragDelta(state);
             var translationVec = _cam.Transform.Right * delta.X + _cam.Transform.Up * delta.Y;
