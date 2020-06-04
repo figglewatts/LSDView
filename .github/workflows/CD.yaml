@@ -1,0 +1,39 @@
+name: CD
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  buildAndPush:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+        name: Checkout Code
+      - name: Extract tag name
+        run: |
+          echo "::set-env name=GIT_TAG::$(git tag --sort=-creatordate | head -n 1)"
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.0.0
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-version: '5.x'
+      - name: Restore NuGet packages
+        run: nuget restore
+      - name: Build solution
+        run: msbuild LSDView.sln /p:Configuration=Release
+      - name: Zip build
+        run: Compress-Archive -Path bin/Release/* -DestinationPath LSDView.zip
+      - name: Get Release
+        id: get-release
+        uses: bruceadams/get-release@v1
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get-release.outputs.upload_url }}
+          asset_path: LSDView.zip
+          asset_name: LSDView.zip
+          asset_content_type: application/zip

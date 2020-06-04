@@ -155,6 +155,9 @@
     <Shaders Include="Shaders/**" />
     <EmbeddedResource Include="appicon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include=".github\workflows\CD.yaml" />
+  </ItemGroup>
   <Target Name="AfterBuild">
     <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts" />
     <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders" />
