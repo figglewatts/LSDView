@@ -6,6 +6,12 @@ Data file viewer for LSD Dream Emulator.
 ## User guide
 LSDView can load and view many files from PlayStation 1 game 'LSD: Dream Emulator'
 
+### On the first launch
+When you first run LSDView you should set the path to where your LSD data is.
+To do this, go to 'File', then 'Set StreamingAssets Path'. A dialog will pop
+up. Paste the path to your LSD data here. If you have LSD Revamped, this is
+is `{path-to-lsd-revamped}/LSDR_Data/StreamingAssets/original`.
+
 ### Formats
 Currently supported file formats are:
 - TMD (PlayStation models)
