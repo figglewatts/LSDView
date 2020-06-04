@@ -1,11 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSDView", "LSDView.csproj", "{920CF448-BB6D-4BAF-91E7-E70737437B3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "libLSD", "..\libLSD\libLSD\libLSD.csproj", "{E72E41F2-66C0-4D18-9C4B-6DF5ABDDD858}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSDView", "LSDView.csproj", "{0138A340-4992-44EC-9BF6-4812B41A9C4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,19 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{920CF448-BB6D-4BAF-91E7-E70737437B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{920CF448-BB6D-4BAF-91E7-E70737437B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{920CF448-BB6D-4BAF-91E7-E70737437B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{920CF448-BB6D-4BAF-91E7-E70737437B3B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E72E41F2-66C0-4D18-9C4B-6DF5ABDDD858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E72E41F2-66C0-4D18-9C4B-6DF5ABDDD858}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E72E41F2-66C0-4D18-9C4B-6DF5ABDDD858}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E72E41F2-66C0-4D18-9C4B-6DF5ABDDD858}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {75AC4831-ED4E-41D2-8BD6-01EAC4E08D85}
+		{0138A340-4992-44EC-9BF6-4812B41A9C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0138A340-4992-44EC-9BF6-4812B41A9C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0138A340-4992-44EC-9BF6-4812B41A9C4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0138A340-4992-44EC-9BF6-4812B41A9C4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
