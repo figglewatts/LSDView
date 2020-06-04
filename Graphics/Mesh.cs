@@ -12,14 +12,14 @@ namespace LSDView.Graphics
 
         public VertexArray Verts => _verts;
 
-        public Shader Shader { get; set; }
+        public Material Material { get; set; }
         public Transform Transform { get; set; }
         public List<Texture2D> Textures { get; set; }
 
         public Mesh(Vertex[] vertices, int[] indices, Shader shader)
         {
             _verts = new VertexArray(vertices, indices);
-            Shader = shader;
+            Material = new Material(shader);
             Transform = new Transform();
             Textures = new List<Texture2D>();
         }
@@ -63,12 +63,12 @@ namespace LSDView.Graphics
         {
             _verts.Bind();
             BindTextures();
-            Shader.Bind();
-            Shader.Uniform("Projection", false, projection);
-            Shader.Uniform("View", false, view);
-            Shader.Uniform("Model", false, Transform.Matrix);
+            Material.Bind();
+            Material.Shader.Uniform("Projection", false, projection);
+            Material.Shader.Uniform("View", false, view);
+            Material.Shader.Uniform("Model", false, Transform.Matrix);
             GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
-            Shader.Unbind();
+            Material.Unbind();
             UnbindTextures();
             _verts.Unbind();
         }

@@ -8,8 +8,10 @@ namespace LSDView.Graphics
     {
         Transform Transform { get; set; }
         List<Texture2D> Textures { get; set; }
-        Shader Shader { get; set; }
+        Material Material { get; set; }
         VertexArray Verts { get; }
+        
+        
 
         void Render(Matrix4 viewMatrix, Matrix4 projectionMatrix);
     }

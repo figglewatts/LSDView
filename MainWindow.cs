@@ -27,6 +27,10 @@ namespace LSDView
         public Action NextUpdateActions;
         public Action NextGuiRender;
 
+        public Matrix4 ProjectionMatrix => _proj;
+        public Camera Camera => _cam;
+        public Vector2 Dimensions => new Vector2(Width, Height);
+
         private const int WINDOW_WIDTH = 800;
         private const int WINDOW_HEIGHT = 600;
         private const string WINDOW_TITLE = "LSDView";
@@ -75,6 +79,9 @@ namespace LSDView
             _cam.Transform.Translate(new Vector3(0, 0, -3));
             _fbo = new Framebuffer(WINDOW_WIDTH, WINDOW_HEIGHT, FramebufferTarget.Framebuffer);
 
+            _proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(60f),
+                (float)_fbo.Width / _fbo.Height, 0.1f, 100f);
+
             ImGuiRenderer.Init();
             _guiComponents = new List<ImGuiComponent>();
 
@@ -82,7 +89,7 @@ namespace LSDView
 
             ApplicationArea area = new ApplicationArea();
 
-            TreeView<MeshListTreeNode> outlineView = new TreeView<MeshListTreeNode>();
+            TreeView<TreeNode> outlineView = new TreeView<TreeNode>();
             _treeController.SetTree(outlineView);
 
             area.AddChild(new Columns(2, new List<ImGuiComponent>

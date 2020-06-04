@@ -1,163 +1,165 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0138A340-4992-44EC-9BF6-4812B41A9C4A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LSDView</RootNamespace>
+    <AssemblyName>LSDView</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="libLSD, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>packages\libLSD.0.0.3\lib\net461\libLSD.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="mscorlib" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
+      <HintPath>packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\AnimationController.cs" />
+    <Compile Include="Controllers\CameraController.cs" />
+    <Compile Include="Controllers\ConfigController.cs" />
+    <Compile Include="Controllers\ExportController.cs" />
+    <Compile Include="Controllers\FileOpenController.cs" />
+    <Compile Include="Controllers\LBDController.cs" />
+    <Compile Include="Controllers\MOMController.cs" />
+    <Compile Include="Controllers\TIMController.cs" />
+    <Compile Include="Controllers\TIXController.cs" />
+    <Compile Include="Controllers\TMDController.cs" />
+    <Compile Include="Controllers\TreeController.cs" />
+    <Compile Include="Controllers\VRAMController.cs" />
+    <Compile Include="Fonts\IconsFontAwesome5.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="Graphics\Framebuffer.cs" />
+    <Compile Include="Graphics\GLBuffer.cs" />
+    <Compile Include="Graphics\IBindable.cs" />
+    <Compile Include="Graphics\IDisposable.cs" />
+    <Compile Include="Graphics\IRenderable.cs" />
+    <Compile Include="Graphics\Material.cs" />
+    <Compile Include="Graphics\Mesh.cs" />
+    <Compile Include="Graphics\Shader.cs" />
+    <Compile Include="Graphics\Texture2D.cs" />
+    <Compile Include="Graphics\Vertex.cs" />
+    <Compile Include="Graphics\VertexArray.cs" />
+    <Compile Include="Graphics\VertexAttrib.cs" />
+    <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs" />
+    <Compile Include="GUI\Components\ApplicationArea.cs" />
+    <Compile Include="GUI\Components\Columns.cs" />
+    <Compile Include="GUI\Components\ContextMenu.cs" />
+    <Compile Include="GUI\Components\FileDialog.cs" />
+    <Compile Include="GUI\Components\FramebufferArea.cs" />
+    <Compile Include="GUI\Components\GenericDialog.cs" />
+    <Compile Include="GUI\Components\InfoDialog.cs" />
+    <Compile Include="GUI\Components\LBDTileTreeNode.cs" />
+    <Compile Include="GUI\Components\MeshListTreeNode.cs" />
+    <Compile Include="GUI\Components\TitleBar.cs" />
+    <Compile Include="GUI\Components\TreeNode.cs" />
+    <Compile Include="GUI\Components\TreeView.cs" />
+    <Compile Include="GUI\ImGuiComponent.cs" />
+    <Compile Include="GUI\ImGuiRenderer.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="Math\Transform.cs" />
+    <Compile Include="Models\AbstractDocument.cs" />
+    <Compile Include="Models\IDocument.cs" />
+    <Compile Include="Models\LBDDocument.cs" />
+    <Compile Include="Models\LSDViewConfig.cs" />
+    <Compile Include="Models\MOMDocument.cs" />
+    <Compile Include="Models\TIMDocument.cs" />
+    <Compile Include="Models\TIXDocument.cs" />
+    <Compile Include="Models\TMDDocument.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\ImageUtil.cs" />
+    <Compile Include="Util\LibLSDUtil.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\MeshUtil.cs" />
+    <Compile Include="Util\ObjBuilder.cs" />
+    <Compile Include="Util\PathUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{0138A340-4992-44EC-9BF6-4812B41A9C4A}</ProjectGuid>
-        <OutputType>WinExe</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>LSDView</RootNamespace>
-        <AssemblyName>LSDView</AssemblyName>
-        <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-        <PlatformTarget>AnyCPU</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="ImGui.NET, Version=1.75.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>packages\ImGui.NET.1.75.0\lib\netstandard2.0\ImGui.NET.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="libLSD, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>packages\libLSD.0.0.3\lib\net461\libLSD.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="mscorlib"/>
-        <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-            <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="OpenTK, Version=3.2.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4">
-            <HintPath>packages\OpenTK.3.2\lib\net20\OpenTK.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="System"/>
-        <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-            <HintPath>packages\System.Buffers.4.4.0\lib\netstandard2.0\System.Buffers.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
-        <Reference Include="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-            <HintPath>C:\WINDOWS\Microsoft.Net\assembly\GAC_MSIL\System.Drawing\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Drawing.dll</HintPath>
-        </Reference>
-        <Reference Include="System.Numerics"/>
-        <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-            <HintPath>packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-            <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.4.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
-            <Private>True</Private>
-        </Reference>
-        <Reference Include="System.Xml"/>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Controllers\AnimationController.cs"/>
-        <Compile Include="Controllers\CameraController.cs"/>
-        <Compile Include="Controllers\ConfigController.cs"/>
-        <Compile Include="Controllers\ExportController.cs"/>
-        <Compile Include="Controllers\FileOpenController.cs"/>
-        <Compile Include="Controllers\LBDController.cs"/>
-        <Compile Include="Controllers\MOMController.cs"/>
-        <Compile Include="Controllers\TIMController.cs"/>
-        <Compile Include="Controllers\TIXController.cs"/>
-        <Compile Include="Controllers\TMDController.cs"/>
-        <Compile Include="Controllers\TreeController.cs"/>
-        <Compile Include="Controllers\VRAMController.cs"/>
-        <Compile Include="Fonts\IconsFontAwesome5.cs"/>
-        <Compile Include="Graphics\Camera.cs"/>
-        <Compile Include="Graphics\Framebuffer.cs"/>
-        <Compile Include="Graphics\GLBuffer.cs"/>
-        <Compile Include="Graphics\IBindable.cs"/>
-        <Compile Include="Graphics\IDisposable.cs"/>
-        <Compile Include="Graphics\IRenderable.cs"/>
-        <Compile Include="Graphics\Mesh.cs"/>
-        <Compile Include="Graphics\Shader.cs"/>
-        <Compile Include="Graphics\Texture2D.cs"/>
-        <Compile Include="Graphics\Vertex.cs"/>
-        <Compile Include="Graphics\VertexArray.cs"/>
-        <Compile Include="Graphics\VertexAttrib.cs"/>
-        <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs"/>
-        <Compile Include="GUI\Components\ApplicationArea.cs"/>
-        <Compile Include="GUI\Components\Columns.cs"/>
-        <Compile Include="GUI\Components\ContextMenu.cs"/>
-        <Compile Include="GUI\Components\FileDialog.cs"/>
-        <Compile Include="GUI\Components\FramebufferArea.cs"/>
-        <Compile Include="GUI\Components\GenericDialog.cs"/>
-        <Compile Include="GUI\Components\InfoDialog.cs"/>
-        <Compile Include="GUI\Components\MeshListTreeNode.cs"/>
-        <Compile Include="GUI\Components\TitleBar.cs"/>
-        <Compile Include="GUI\Components\TreeNode.cs"/>
-        <Compile Include="GUI\Components\TreeView.cs"/>
-        <Compile Include="GUI\ImGuiComponent.cs"/>
-        <Compile Include="GUI\ImGuiRenderer.cs"/>
-        <Compile Include="MainWindow.cs"/>
-        <Compile Include="Math\Transform.cs"/>
-        <Compile Include="Models\AbstractDocument.cs"/>
-        <Compile Include="Models\IDocument.cs"/>
-        <Compile Include="Models\LBDDocument.cs"/>
-        <Compile Include="Models\LSDViewConfig.cs"/>
-        <Compile Include="Models\MOMDocument.cs"/>
-        <Compile Include="Models\TIMDocument.cs"/>
-        <Compile Include="Models\TIXDocument.cs"/>
-        <Compile Include="Models\TMDDocument.cs"/>
-        <Compile Include="Program.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Util\ImageUtil.cs"/>
-        <Compile Include="Util\LibLSDUtil.cs"/>
-        <Compile Include="Util\Logger.cs"/>
-        <Compile Include="Util\MeshUtil.cs"/>
-        <Compile Include="Util\ObjBuilder.cs"/>
-        <Compile Include="Util\PathUtil.cs"/>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="OpenTK.dll.config"/>
-        <None Include="packages.config"/>
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
-    <Import Project="packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')"/>
-    <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-        <PropertyGroup>
-            <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
-        </PropertyGroup>
-        <Error Condition="!Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets'))"/>
-    </Target>
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+    <Error Condition="!Exists('packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.75.0\build\net40\ImGui.NET.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
                  Other similar extension points exist, see Microsoft.Common.targets.
             <Target Name="BeforeBuild">
             </Target>
             <Target Name="AfterBuild">
             </Target>
             -->
-    <ItemGroup>
-        <Shaders Include="Shaders/**"/>
-        <EmbeddedResource Include="appicon.ico"/>
-    </ItemGroup>
-    <Target Name="AfterBuild">
-        <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts"/>
-        <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders"/>
-    </Target>
-    <PropertyGroup>
-        <ApplicationIcon>appicon.ico</ApplicationIcon>
-    </PropertyGroup>
+  <ItemGroup>
+    <Shaders Include="Shaders/**" />
+    <EmbeddedResource Include="appicon.ico" />
+  </ItemGroup>
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts" />
+    <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders" />
+  </Target>
+  <PropertyGroup>
+    <ApplicationIcon>appicon.ico</ApplicationIcon>
+  </PropertyGroup>
 </Project>

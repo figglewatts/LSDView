@@ -144,8 +144,12 @@ namespace LSDView.GUI.GUIComponents
         {
             if (ImGui.MenuItem("About LSDView"))
             {
-                createModal("Test modal", new InfoDialog(InfoDialog.DialogType.Info, "Test message"),
-                    new Vector2(200, 200));
+                createModal("About", new InfoDialog(InfoDialog.DialogType.Info, @"LSDView
+LSD: Dream Emulator data viewer
+https://github.com/Figglewatts/LSDView
+
+Made by Figglewatts, 2020"),
+                    new Vector2(300, 100));
             }
 
             if (ImGui.MenuItem("Recenter view"))

@@ -11,7 +11,7 @@ namespace LSDView.Controllers
 {
     public class TreeController
     {
-        public TreeView<MeshListTreeNode> Tree { get; private set; }
+        public TreeView<TreeNode> Tree { get; private set; }
 
         private readonly AnimationController _animationController;
         private readonly ExportController _exportController;
@@ -62,7 +62,7 @@ namespace LSDView.Controllers
             }
         }
 
-        public void SetTree(TreeView<MeshListTreeNode> tree) { Tree = tree; }
+        public void SetTree(TreeView<TreeNode> tree) { Tree = tree; }
 
         private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
         {
@@ -153,6 +153,39 @@ namespace LSDView.Controllers
 
             TreeNode tilesNode = createTMDNode("Tiles", lbdDoc.TilesTMD);
             rootNode.AddNode(tilesNode);
+
+            TreeNode tileInfoNode = new TreeNode("Tile info");
+            rootNode.AddNode(tileInfoNode);
+            int tileNo = 0;
+            int i = 0;
+            foreach (LBDTile tile in lbdDoc.Document.TileLayout)
+            {
+                if (tile.DrawTile)
+                {
+                    int x = tileNo / lbdDoc.Document.Header.TileWidth;
+                    int y = tileNo % lbdDoc.Document.Header.TileWidth;
+                    var tileMesh = lbdDoc.TileLayout[i];
+                    LBDTileTreeNode tileNode =
+                        new LBDTileTreeNode($"({x}, {y})", tileMesh, tile, lbdDoc.TileLayout);
+                    tileInfoNode.AddNode(tileNode);
+                    LBDTile currentTile = tile;
+                    int j = 0;
+                    while (currentTile.ExtraTileIndex >= 0 && j <= 1)
+                    {
+                        LBDTile extraTile = lbdDoc.Document.ExtraTiles[currentTile.ExtraTileIndex];
+                        tileMesh = lbdDoc.TileLayout[i + j + 1];
+                        tileNode =
+                            new LBDTileTreeNode($"({x}, {y}) extra", tileMesh, tile, lbdDoc.TileLayout);
+                        tileInfoNode.AddNode(tileNode);
+                        currentTile = extraTile;
+                        j++;
+                    }
+
+                    i += j + 1;
+                }
+
+                tileNo++;
+            }
 
             if (lbdDoc.Entities != null)
             {

@@ -17,6 +17,9 @@ namespace LSDView.Graphics
             Vector3 newForward = Vector3.Normalize(pos - Transform.Position);
             Vector3 rotAxis = Vector3.Cross(forward, newForward);
             float angle = Vector3.CalculateAngle(forward, newForward);
+            var rotQuat = Quaternion.FromAxisAngle(rotAxis, angle);
+
+            // rotate to face the pos
             Transform.Rotate(angle, rotAxis, false);
         }
 

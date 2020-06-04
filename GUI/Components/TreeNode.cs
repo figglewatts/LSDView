@@ -73,6 +73,13 @@ namespace LSDView.GUI.Components
                 internalOnSelect();
             }
 
+            if (_tooltip != null && ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                _tooltip();
+                ImGui.EndTooltip();
+            }
+
             _contextMenu?.Render();
 
             if (show)
