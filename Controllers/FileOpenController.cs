@@ -30,6 +30,7 @@ namespace LSDView.Controllers
         public void OpenFile(string filePath)
         {
             _configController.AddRecentFile(filePath);
+            Logger.Log()(LogLevel.INFO, $"Loading file from: {filePath}");
             var ext = Path.GetExtension(filePath)?.ToLowerInvariant();
             switch (ext)
             {

@@ -13,6 +13,12 @@ jobs:
       - name: Extract tag name
         run: |
           echo "::set-env name=GIT_TAG::$(git tag --sort=-creatordate | head -n 1)"
+      - name: Inject version number
+        uses: cschleiden/replace-tokens@v1.0
+        with:
+          files: Version.cs
+        env:
+          VERSION: ${{ env.GIT_TAG }}
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.0
       - name: Setup NuGet

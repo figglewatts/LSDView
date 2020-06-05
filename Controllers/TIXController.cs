@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
 using LSDView.Models;
+using LSDView.Util;
 
 namespace LSDView.Controllers
 {
@@ -18,11 +19,15 @@ namespace LSDView.Controllers
 
         public void LoadTIX(string tixPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading TIX from: {tixPath}");
+
             TIX tix;
             using (BinaryReader br = new BinaryReader(File.Open(tixPath, FileMode.Open)))
             {
                 tix = new TIX(br);
             }
+
+            Logger.Log()(LogLevel.INFO, "Successfully loaded TIX");
 
             TIXDocument document = CreateDocument(tix);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(tixPath));

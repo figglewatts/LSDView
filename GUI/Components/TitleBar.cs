@@ -144,7 +144,7 @@ namespace LSDView.GUI.GUIComponents
         {
             if (ImGui.MenuItem("About LSDView"))
             {
-                createModal("About", new InfoDialog(InfoDialog.DialogType.Info, @"LSDView
+                createModal("About", new InfoDialog(InfoDialog.DialogType.Info, $@"LSDView {Version.String}
 LSD: Dream Emulator data viewer
 https://github.com/Figglewatts/LSDView
 

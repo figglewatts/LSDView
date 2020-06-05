@@ -33,6 +33,8 @@ namespace LSDView.Controllers
         /// <param name="filePath">The path to write the file to.</param>
         public void ExportOriginal(IWriteable original, string filePath)
         {
+            Logger.Log()(LogLevel.INFO, $"Exporting original to: {filePath}");
+
             using (BinaryWriter bw = new BinaryWriter(File.Open(filePath, FileMode.Create)))
             {
                 original.Write(bw);
@@ -47,6 +49,8 @@ namespace LSDView.Controllers
         /// <param name="format">The image format to export to.</param>
         public void ExportImage(TIM tim, string filePath, ImageFormat format)
         {
+            Logger.Log()(LogLevel.INFO, $"Exporting image ({format}) to: {filePath}");
+
             var image = LibLSDUtil.GetImageDataFromTIM(tim, flip: false);
             Bitmap bmp = ImageUtil.ImageDataToBitmap(image.data, image.width, image.height);
             bmp.Save(filePath, format);
@@ -60,6 +64,8 @@ namespace LSDView.Controllers
         /// <param name="format">The image format to export to.</param>
         public void ExportImages(TIX tix, string filePath, ImageFormat format)
         {
+            Logger.Log()(LogLevel.INFO, $"Exporting images ({format}) in TIX to: {filePath}");
+
             var allTims = tix.AllTIMs;
             for (int i = 0; i < allTims.Count; i++)
             {
@@ -77,6 +83,8 @@ namespace LSDView.Controllers
         /// <param name="filePath">The path to export the OBJ file to.</param>
         public void ExportOBJ(IRenderable mesh, string filePath)
         {
+            Logger.Log()(LogLevel.INFO, $"Exporting mesh to: {filePath}");
+
             var objFile = MeshUtil.RenderableToObjFile(mesh);
             File.WriteAllText(filePath, objFile);
         }
@@ -88,6 +96,8 @@ namespace LSDView.Controllers
         /// <param name="filePath">The path to export the OBJ file to.</param>
         public void ExportOBJ(List<IRenderable> meshes, string filePath)
         {
+            Logger.Log()(LogLevel.INFO, $"Exporting meshes to: {filePath}");
+
             var objFile = MeshUtil.RenderableListToObjFile(meshes);
             File.WriteAllText(filePath, objFile);
         }

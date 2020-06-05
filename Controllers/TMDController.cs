@@ -23,11 +23,15 @@ namespace LSDView.Controllers
 
         public void LoadTMD(string tmdPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading TMD from: {tmdPath}");
+
             TMD tmd;
             using (BinaryReader br = new BinaryReader(File.Open(tmdPath, FileMode.Open)))
             {
                 tmd = new TMD(br);
             }
+
+            Logger.Log()(LogLevel.INFO, "Successfully loaded TMD");
 
             TMDDocument document = CreateDocument(tmd);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(tmdPath));

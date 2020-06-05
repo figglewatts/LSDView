@@ -41,6 +41,7 @@
       <HintPath>packages\libLSD.0.0.3\lib\net461\libLSD.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="mscorlib" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
       <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -83,6 +84,7 @@
     <Compile Include="Controllers\TIXController.cs" />
     <Compile Include="Controllers\TMDController.cs" />
     <Compile Include="Controllers\TreeController.cs" />
+    <Compile Include="Controllers\UpdateCheckerController.cs" />
     <Compile Include="Controllers\VRAMController.cs" />
     <Compile Include="Fonts\IconsFontAwesome5.cs" />
     <Compile Include="Graphics\Camera.cs" />
@@ -108,6 +110,7 @@
     <Compile Include="GUI\Components\InfoDialog.cs" />
     <Compile Include="GUI\Components\LBDTileTreeNode.cs" />
     <Compile Include="GUI\Components\MeshListTreeNode.cs" />
+    <Compile Include="GUI\Components\Modal.cs" />
     <Compile Include="GUI\Components\TitleBar.cs" />
     <Compile Include="GUI\Components\TreeNode.cs" />
     <Compile Include="GUI\Components\TreeView.cs" />
@@ -131,6 +134,7 @@
     <Compile Include="Util\MeshUtil.cs" />
     <Compile Include="Util\ObjBuilder.cs" />
     <Compile Include="Util\PathUtil.cs" />
+    <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />

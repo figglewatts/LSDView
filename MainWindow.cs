@@ -45,6 +45,7 @@ namespace LSDView
 
         // ui
         private FileDialog _exportFileDialog;
+        private Modal _updateAvailableModal;
 
         // --------------
 
@@ -61,6 +62,7 @@ namespace LSDView
         private FileOpenController _fileOpenController;
         private AnimationController _animationController;
         private ExportController _exportController;
+        private UpdateCheckerController _updateCheckerController;
 
         // --------------
 
@@ -85,6 +87,9 @@ namespace LSDView
             ImGuiRenderer.Init();
             _guiComponents = new List<ImGuiComponent>();
 
+            _updateAvailableModal = new Modal("New update available!",
+                "Download at https://github.com/Figglewatts/LSDView/releases/latest");
+
             createControllers();
 
             ApplicationArea area = new ApplicationArea();
@@ -100,6 +105,7 @@ namespace LSDView
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
             _guiComponents.Add(_exportFileDialog);
+            _guiComponents.Add(_updateAvailableModal);
         }
 
         private void createControllers()
@@ -120,6 +126,7 @@ namespace LSDView
             _fileOpenController =
                 new FileOpenController(_lbdController, _tmdController, _momController, _timController, _tixController,
                     _configController);
+            _updateCheckerController = new UpdateCheckerController(_updateAvailableModal);
         }
 
         protected override void OnResize(EventArgs e)

@@ -3,6 +3,7 @@ using libLSD.Formats;
 using LSDView.controller;
 using LSDView.Graphics;
 using LSDView.Models;
+using LSDView.Util;
 
 namespace LSDView.Controllers
 {
@@ -23,11 +24,15 @@ namespace LSDView.Controllers
 
         public void LoadMOM(string momPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading MOM from: {momPath}");
+
             MOM mom;
             using (BinaryReader br = new BinaryReader(File.Open(momPath, FileMode.Open)))
             {
                 mom = new MOM(br);
             }
+
+            Logger.Log()(LogLevel.INFO, "Successfully loaded MOM");
 
             MOMDocument document = CreateDocument(mom);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(momPath));

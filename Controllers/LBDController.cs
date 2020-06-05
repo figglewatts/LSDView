@@ -30,11 +30,15 @@ namespace LSDView.Controllers
 
         public void LoadLBD(string lbdPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading LBD from: {lbdPath}");
+
             LBD lbd;
             using (BinaryReader br = new BinaryReader(File.Open(lbdPath, FileMode.Open)))
             {
                 lbd = new LBD(br);
             }
+
+            Logger.Log()(LogLevel.INFO, "Successfully loaded LBD");
 
             LBDDocument document = CreateDocument(lbd);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(lbdPath));

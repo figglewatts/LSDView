@@ -19,11 +19,15 @@ namespace LSDView.Controllers
 
         public void LoadTIM(string timPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading TIM from: {timPath}");
+            
             TIM tim;
             using (BinaryReader br = new BinaryReader(File.Open(timPath, FileMode.Open)))
             {
                 tim = new TIM(br);
             }
+            
+            Logger.Log()(LogLevel.INFO, $"Successfully loaded TIM");
 
             TIMDocument document = CreateDocument(tim);
             _treeController.PopulateTreeWithDocument(document, Path.GetFileName(timPath));

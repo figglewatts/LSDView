@@ -17,11 +17,15 @@ namespace LSDView.controller
 
         public void LoadTIXIntoVRAM(string tixPath)
         {
+            Logger.Log()(LogLevel.INFO, $"Loading TIX from {tixPath} into virtual VRAM");
+
             TIX tix;
             using (BinaryReader br = new BinaryReader(File.Open(tixPath, FileMode.Open)))
             {
                 tix = new TIX(br);
             }
+
+            Logger.Log()(LogLevel.INFO, $"Successfully loaded TIX");
 
             foreach (var chunk in tix.Chunks)
             {
