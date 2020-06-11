@@ -60,7 +60,7 @@ namespace LSDView.GUI
                 var modalName = _modalsToCreate.Dequeue();
                 var modal = _modals[modalName];
                 ImGui.SetNextWindowSize(modal.InitialSize);
-                ImGui.OpenPopup(modalName);
+                ImGui.OpenPopup(modal.Id);
             }
 
             while (_modalsToDestroy.Count > 0)
@@ -70,7 +70,7 @@ namespace LSDView.GUI
 
             foreach (KeyValuePair<string, Modal> kv in _modals)
             {
-                if (ImGui.BeginPopupModal(kv.Key, ref kv.Value.Active))
+                if (ImGui.BeginPopupModal(kv.Value.Id, ref kv.Value.Active))
                 {
                     kv.Value.Component.Render();
                     ImGui.EndPopup();
@@ -87,18 +87,26 @@ namespace LSDView.GUI
         {
             string actualName = $"{name}##{ModalCount++}";
 
-            _modals[actualName] = new Modal(component, size);
-            _modalsToCreate.Enqueue(actualName);
+            _modals[name] = new Modal(actualName, component, size);
+            _modalsToCreate.Enqueue(name);
+        }
+
+        protected void destroyModal(string name)
+        {
+            if (!_modals.ContainsKey(name)) return;
+            _modalsToDestroy.Enqueue(name);
         }
 
         internal class Modal
         {
+            public readonly string Id;
             public bool Active = true;
             public readonly ImGuiComponent Component;
             public readonly Vector2 InitialSize;
 
-            public Modal(ImGuiComponent component, Vector2 initialSize)
+            public Modal(string id, ImGuiComponent component, Vector2 initialSize)
             {
+                Id = id;
                 Component = component;
                 InitialSize = initialSize;
             }

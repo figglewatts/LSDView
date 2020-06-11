@@ -45,7 +45,7 @@ namespace LSDView.GUI
 
             ImGuiIOPtr io = ImGui.GetIO();
             io.Fonts.AddFontDefault();
-            
+
             io.KeyMap[(int)ImGuiKey.Tab] = (int)Key.Tab;
             io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Key.Left;
             io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Key.Right;
@@ -132,6 +132,8 @@ namespace LSDView.GUI
         private static void updateInput()
         {
             ImGuiIOPtr io = ImGui.GetIO();
+
+            if (!MainWindow.Instance.Visible || !MainWindow.Instance.Focused) return;
 
             MouseState mouse = Mouse.GetCursorState();
             KeyboardState keyboard = Keyboard.GetState();

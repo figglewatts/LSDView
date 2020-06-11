@@ -129,6 +129,7 @@ namespace LSDView.GUI.GUIComponents
             {
                 _configController.Config.StreamingAssetsPath = _streamingAssetsPathFieldValue;
                 _configController.Save();
+                destroyModal("Set StreamingAssets path...");
             }
         }
 

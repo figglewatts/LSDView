@@ -16,13 +16,13 @@ namespace LSDView.Controllers
 
         private const float MIN_ARCBALL_DISTANCE = 1f;
         private const float MAX_ARCBALL_DISTANCE = 80f;
-        private const float PAN_SPEED = 0.05f;
+        private const float PAN_SPEED = 0.02f;
 
         public CameraController(Camera cam) { _cam = cam; }
 
         public void Update()
         {
-            if (!MainWindow.Instance.Focused) return;
+            if (!MainWindow.Instance.Visible || !MainWindow.Instance.Focused) return;
 
             var mouseState = Mouse.GetCursorState();
 

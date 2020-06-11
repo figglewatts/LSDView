@@ -199,13 +199,13 @@ namespace LSDView
 
         protected override void OnKeyPress(KeyPressEventArgs e)
         {
-            if (!Focused) return;
+            if (!Focused || !Visible) return;
             ImGuiRenderer.AddKeyChar(e.KeyChar);
         }
 
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
-            if (!Focused) return;
+            if (!Focused || !Visible) return;
             ImGuiRenderer.UpdateMousePos(e.X, e.Y);
         }
 
