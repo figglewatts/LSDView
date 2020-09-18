@@ -82,6 +82,42 @@ namespace LSDView.Graphics
             Unbind();
         }
 
+        public float[] GetData()
+        {
+            if (PixelType != PixelType.Float)
+            {
+                throw new NotSupportedException(
+                    "Unable to get pixel data for texture with pixel type not equal to 'Float'");
+            }
+
+            if (Format != PixelFormat.Rgba)
+            {
+                throw new NotSupportedException("Unable to get pixel data for texture with non-RGBA format");
+            }
+
+            float[] tex = new float[Width * Height * 4];
+            Bind();
+            GL.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.Float, tex);
+            Unbind();
+
+            // flip the texture data
+            float[] flippedTex = new float[Width * Height * 4];
+            int i = 0;
+            for (int y = Height - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    flippedTex[i] = tex[y * (Width * 4) + (x * 4)];
+                    flippedTex[i + 1] = tex[y * (Width * 4) + (x * 4) + 1];
+                    flippedTex[i + 2] = tex[y * (Width * 4) + (x * 4) + 2];
+                    flippedTex[i + 3] = tex[y * (Width * 4) + (x * 4) + 3];
+                    i += 4;
+                }
+            }
+
+            return flippedTex;
+        }
+
         public void Clear()
         {
             GL.ClearTexImage(_handle, 0, PixelFormat.Rgba, PixelType.Float, new float[] {1, 1, 1, 1});

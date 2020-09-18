@@ -116,7 +116,7 @@ namespace LSDView
             _exportController = new ExportController(_exportFileDialog);
             _animationController = new AnimationController();
             _treeController = new TreeController(_animationController, _exportController);
-            _vramController = new VRAMController();
+            _vramController = new VRAMController(_exportController);
             _cameraController = new CameraController(_cam);
             _tmdController = new TMDController(_treeController, _vramController);
             _momController = new MOMController(_treeController, _vramController, _tmdController);

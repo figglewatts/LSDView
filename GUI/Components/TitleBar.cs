@@ -139,6 +139,14 @@ namespace LSDView.GUI.GUIComponents
             {
                 _openVramOpenDialog = true;
             }
+
+            if (!_vramController.VRAMLoaded) return;
+
+            ImGui.Separator();
+            if (ImGui.MenuItem("Export VRAM..."))
+            {
+                _vramController.ExportLoadedVRAM();
+            }
         }
 
         private void renderHelpMenu()

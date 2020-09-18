@@ -38,6 +38,18 @@ texture set.
 If you load a TIX file from a different level you can emulate the glitch texture set.
 Try it out!
 
+### Exporting models
+You can export 3D models from LSDView to OBJ format. This includes the LBD level tiles
+themselves. These exported models contain UVs into a combined texture atlas 
+for the entire level.
+
+This texture atlas can be exported from the 'VRAM' menu after loading VRAM.
+Simply click on the 'VRAM' menu, then click 'Export VRAM...'. If you use this
+exported image as the texture for any OBJ files exported from LSDView, then
+the textures should be applied correctly. There may be some errors for polygons
+that use vertex colouring as the OBJ file format does not support storage of
+vertex colour information.
+
 ## Development guide
 1. Clone the repo
 2. Run a NuGet restore

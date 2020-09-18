@@ -101,5 +101,18 @@ namespace LSDView.Controllers
             var objFile = MeshUtil.RenderableListToObjFile(meshes);
             File.WriteAllText(filePath, objFile);
         }
+
+        /// <summary>
+        /// Export the VRAM texture to a file.
+        /// </summary>
+        /// <param name="vramTexture">The VRAM texture.</param>
+        /// <param name="filePath">The path to export the VRAM to.</param>
+        /// <param name="format">The format of the image file.</param>
+        public void ExportVRAM(Texture2D vramTexture, string filePath, ImageFormat format)
+        {
+            float[] imageData = vramTexture.GetData();
+            Bitmap bmp = ImageUtil.ImageDataToBitmap(imageData, vramTexture.Width, vramTexture.Height);
+            bmp.Save(filePath, format);
+        }
     }
 }

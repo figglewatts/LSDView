@@ -1,5 +1,7 @@
+using System.Drawing.Imaging;
 using System.IO;
 using libLSD.Formats;
+using LSDView.Controllers;
 using LSDView.Graphics;
 using LSDView.Util;
 using OpenTK.Graphics;
@@ -13,7 +15,16 @@ namespace LSDView.controller
         public const int VRAM_WIDTH = 2056;
         public const int VRAM_HEIGHT = 512;
 
-        public VRAMController() { VRAMTexture = Texture2D.Fill(Color4.White, VRAM_WIDTH, VRAM_HEIGHT); }
+        public bool VRAMLoaded { get; private set; }
+
+        private ExportController _exportController;
+
+        public VRAMController(ExportController exportController)
+        {
+            VRAMTexture = Texture2D.Fill(Color4.White, VRAM_WIDTH, VRAM_HEIGHT);
+            _exportController = exportController;
+            VRAMLoaded = false;
+        }
 
         public void LoadTIXIntoVRAM(string tixPath)
         {
@@ -39,6 +50,20 @@ namespace LSDView.controller
                     VRAMTexture.SubImage(image.data, actualXPos, actualYPos, image.width, image.height);
                 }
             }
+
+            VRAMLoaded = true;
+        }
+
+        public void ExportLoadedVRAM()
+        {
+            if (!VRAMLoaded)
+            {
+                Logger.Log()(LogLevel.WARN, "Unable to export VRAM, not currently loaded");
+                return;
+            }
+
+            _exportController.OpenDialog(
+                (filePath => { _exportController.ExportVRAM(VRAMTexture, filePath, ImageFormat.Png); }), ".png");
         }
 
         public void ClearVRAM() { VRAMTexture.Clear(); }
