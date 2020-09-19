@@ -16,7 +16,12 @@ namespace LSDView.Controllers
     {
         private readonly FileDialog _fileExportDialog;
 
-        public ExportController(FileDialog fileExportDialog) { _fileExportDialog = fileExportDialog; }
+        public ExportController(FileDialog fileExportDialog, ConfigController configController)
+        {
+            _fileExportDialog = fileExportDialog;
+            configController.Config.OnStreamingAssetsPathChange += () =>
+                _fileExportDialog.InitialDir = configController.Config.StreamingAssetsPath;
+        }
 
         public void OpenDialog(Action<string> onSubmit, string fileSaveType)
         {

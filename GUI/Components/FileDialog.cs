@@ -28,6 +28,8 @@ namespace LSDView.GUI.GUIComponents
             }
         }
 
+        public string InitialDir { get => _initialDir; set => _initialDir = value; }
+
         private string _fileSaveType = "";
         private string[] _fileSearchPattern = new string[0];
         private bool _open = true;
@@ -61,12 +63,15 @@ namespace LSDView.GUI.GUIComponents
             setFileSearchPattern(fileSearchPattern);
             _fileSaveType = fileSaveType;
             FilePath = _initialDir;
+            _currentDir = _initialDir;
             invalidateFileList();
             ImGui.OpenPopup(Type == DialogType.Open
                 ? $"Open file...##{GetHashCode()}"
                 : $"Save file...##{GetHashCode()}");
             _open = true;
         }
+
+        public bool CurrentDirectoryExists() { return Directory.Exists(_currentDir); }
 
         protected override void renderSelf()
         {
@@ -192,11 +197,14 @@ namespace LSDView.GUI.GUIComponents
             ImGui.PushItemWidth(-40);
             bool modified = false;
             modified = ImGui.InputText("##current-dir", ref _currentDir, 2048);
-            //modified = ImGuiNETExtensions.InputText("##current-dir", ref _currentDir);
-            ImGui.SameLine();
-            if (ImGui.Button("Up", new Vector2(30, 0)))
+
+            if (CurrentDirectoryExists())
             {
-                goToParentDir();
+                ImGui.SameLine();
+                if (ImGui.Button("Up", new Vector2(30, 0)))
+                {
+                    goToParentDir();
+                }
             }
 
             if (modified)
@@ -211,7 +219,7 @@ namespace LSDView.GUI.GUIComponents
             if (Type == DialogType.Save) _selectedFile = -1;
 
             ImGui.BeginChild("fileSelect", new Vector2(-1, -24), true, ImGuiWindowFlags.None);
-            if (!Directory.Exists(_currentDir))
+            if (!CurrentDirectoryExists())
             {
                 ImGui.Text("Directory does not exist!");
             }
@@ -275,6 +283,8 @@ namespace LSDView.GUI.GUIComponents
 
         private void renderBottomBar()
         {
+            if (!CurrentDirectoryExists()) return;
+
             if (Type == DialogType.Save)
             {
                 ImGui.PushItemWidth(-48 - (_fileSaveType.Length * 7) - 16);

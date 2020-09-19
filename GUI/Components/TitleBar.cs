@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using ImGuiNET;
 using LSDView.controller;
@@ -34,6 +35,17 @@ namespace LSDView.GUI.GUIComponents
             _fileOpenController = fileOpenController;
             _vramController = vramController;
             _cameraController = cameraController;
+
+            _configController.Config.OnStreamingAssetsPathChange += () =>
+                _openDialog.InitialDir = _configController.Config.StreamingAssetsPath;
+            _configController.Config.OnStreamingAssetsPathChange += () =>
+                _openVramDialog.InitialDir = _configController.Config.StreamingAssetsPath;
+        }
+
+        public void OpenSetStreamingAssetsPath()
+        {
+            createModal("Set StreamingAssets path...", new GenericDialog(setStreamingAssetsPathDialog),
+                new Vector2(500, 85));
         }
 
         protected override void renderSelf()
@@ -91,11 +103,19 @@ namespace LSDView.GUI.GUIComponents
                     string fileToOpen = null;
                     foreach (var recentFile in _configController.Config.RecentFiles)
                     {
-                        var relPath = PathUtil.MakeRelative(recentFile, _configController.Config.StreamingAssetsPath);
-                        if (ImGui.MenuItem(relPath))
+                        try
                         {
-                            fileToOpen = recentFile;
-                            break;
+                            var relPath = PathUtil.MakeRelative(recentFile,
+                                _configController.Config.StreamingAssetsPath);
+                            if (ImGui.MenuItem(relPath))
+                            {
+                                fileToOpen = recentFile;
+                                break;
+                            }
+                        }
+                        catch (UriFormatException e)
+                        {
+                            Logger.Log()(LogLevel.WARN, $"Invalid recent file: '{recentFile}', invalid URI");
                         }
                     }
 
@@ -113,8 +133,7 @@ namespace LSDView.GUI.GUIComponents
 
             if (ImGui.MenuItem("Set StreamingAssets path"))
             {
-                createModal("Set StreamingAssets path...", new GenericDialog(setStreamingAssetsPathDialog),
-                    new Vector2(500, 85));
+                OpenSetStreamingAssetsPath();
             }
         }
 

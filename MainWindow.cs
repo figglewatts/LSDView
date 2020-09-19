@@ -113,7 +113,7 @@ namespace LSDView
             _configController = new ConfigController();
             _exportFileDialog =
                 new FileDialog(_configController.Config.StreamingAssetsPath, FileDialog.DialogType.Save);
-            _exportController = new ExportController(_exportFileDialog);
+            _exportController = new ExportController(_exportFileDialog, _configController);
             _animationController = new AnimationController();
             _treeController = new TreeController(_animationController, _exportController);
             _vramController = new VRAMController(_exportController);
