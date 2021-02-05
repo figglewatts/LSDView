@@ -107,6 +107,34 @@ namespace LSDView.Controllers
             File.WriteAllText(filePath, objFile);
         }
 
+
+
+        /// <summary>
+        /// Export a renderable mesh to an PLY file.
+        /// </summary>
+        /// <param name="mesh">The mesh to export.</param>
+        /// <param name="filePath">The path to export the PLY file to.</param>
+        public void ExportPLY(IRenderable mesh, string filePath)
+        {
+            Logger.Log()(LogLevel.INFO, $"Exporting mesh to: {filePath}");
+
+            var plyFile = MeshUtil.RenderableToPlyFile(mesh);
+            File.WriteAllText(filePath, plyFile);
+        }
+
+        /// <summary>
+        /// Export a list of renderable meshes to an PLY file.
+        /// </summary>
+        /// <param name="meshes">The meshes to export.</param>
+        /// <param name="filePath">The path to export the PLY file to.</param>
+        public void ExportPLY(List<IRenderable> meshes, string filePath)
+        {
+            Logger.Log()(LogLevel.INFO, $"Exporting meshes to: {filePath}");
+
+            var plyFile = MeshUtil.RenderableListToPlyFile(meshes);
+            File.WriteAllText(filePath, plyFile);
+        }
+
         /// <summary>
         /// Export the VRAM texture to a file.
         /// </summary>

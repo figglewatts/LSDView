@@ -118,6 +118,7 @@
     <Compile Include="GUI\ImGuiRenderer.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="Math\Transform.cs" />
+    <Compile Include="Math\Convert.cs" />
     <Compile Include="Models\AbstractDocument.cs" />
     <Compile Include="Models\IDocument.cs" />
     <Compile Include="Models\LBDDocument.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Util\MeshUtil.cs" />
     <Compile Include="Util\ObjBuilder.cs" />
     <Compile Include="Util\PathUtil.cs" />
+    <Compile Include="Util\PlyBuilder.cs" />
     <Compile Include="Version.cs" />
   </ItemGroup>
   <ItemGroup>
