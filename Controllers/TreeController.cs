@@ -148,6 +148,14 @@ namespace LSDView.Controllers
                             _exportController.OpenDialog(
                                 filePath => { _exportController.ExportOBJ(lbdDoc.TileLayout, filePath); }, ".obj");
                         }
+                    },
+                    {
+                        "Export as PLY",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportPLY(lbdDoc.TileLayout, filePath); }, ".ply");
+                        }
                     }
                 }));
 
@@ -297,7 +305,15 @@ namespace LSDView.Controllers
                             _exportController.OpenDialog(
                                 filePath => { _exportController.ExportOBJ(tmdDoc.ObjectMeshes, filePath); }, ".obj");
                         }
-                    }
+                    },
+                    {
+                        "Export as PLY",
+                        () =>
+                        {
+                            _exportController.OpenDialog(
+                                filePath => { _exportController.ExportPLY(tmdDoc.ObjectMeshes, filePath); }, ".ply");
+                        }
+                    },
                 }));
 
             for (int i = 0; i < tmdDoc.Document.Header.NumObjects; i++)
@@ -314,6 +330,14 @@ namespace LSDView.Controllers
                                     {
                                         _exportController.OpenDialog(
                                             filePath => { _exportController.ExportOBJ(objMesh, filePath); }, ".obj");
+                                    }
+                                },
+                                {
+                                    "Export as PLY",
+                                    () =>
+                                    {
+                                        _exportController.OpenDialog(
+                                            filePath => { _exportController.ExportPLY(objMesh, filePath); }, ".ply");
                                     }
                                 }
                             }));
