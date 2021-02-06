@@ -55,5 +55,5 @@ vertex colour information.
 2. Run a NuGet restore
 3. You're good to go
 
-
 Make sure to follow the standard C# coding conventions seen [here.](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)
+Additionally, Line lengths must not exceed 120 characters in length.
