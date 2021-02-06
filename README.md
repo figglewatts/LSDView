@@ -54,3 +54,6 @@ vertex colour information.
 1. Clone the repo
 2. Run a NuGet restore
 3. You're good to go
+
+
+Make sure to follow the standard C# coding conventions seen [here.](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions)

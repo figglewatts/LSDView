@@ -257,10 +257,16 @@ namespace LSDView.Util
             PlyBuilder plyString = new PlyBuilder();
             plyString.WriteHeader(vertCount, triCount);
 
+            // Multply the transform matrix by -90 along x to Fix PLY Co-ord Space
+            Matrix4 RotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
+
             // Vertex Elements
             foreach (var vert in mesh.Verts.Vertices)
             {
-                plyString.BuildVertexElement(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix), vert.Normal, vert.TexCoord, vert.Color);
+                plyString.BuildVertexElement(
+                    Vector3.TransformPosition(vert.Position,
+                    mesh.Transform.Matrix * RotateX90),
+                    vert.Normal, vert.TexCoord, vert.Color);
             }
 
             // Face Indices
@@ -290,16 +296,22 @@ namespace LSDView.Util
             PlyBuilder plyString = new PlyBuilder();
             plyString.WriteHeader(vertCount, triCount);
 
+            // Multply the transform matrix by -90 along x to Fix PLY Co-ord Space
+            Matrix4 RotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
+
             // Vertex Elements
             foreach (var mesh in meshes)
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
-                    plyString.BuildVertexElement(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix), vert.Normal, vert.TexCoord, vert.Color);
+                    plyString.BuildVertexElement(
+                        Vector3.TransformPosition(vert.Position,
+                        mesh.Transform.Matrix * RotateX90),
+                        vert.Normal, vert.TexCoord, vert.Color);
                 }
             }
 
-               //Face Indices
+            // Face Indices
             int faceBase = 0;
             foreach (var mesh in meshes)
             {
