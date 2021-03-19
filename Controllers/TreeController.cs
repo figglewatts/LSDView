@@ -66,7 +66,8 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<IRenderable> {tixDoc.TIMs[0].TextureMesh},
+            MeshListTreeNode rootNode = new MeshListTreeNode(name,
+                new List<IRenderable> {tixDoc.TIMs[0].TextureMeshes[0]},
                 contextMenu: new ContextMenu(
                     new Dictionary<string, Action>
                     {
@@ -103,29 +104,58 @@ namespace LSDView.Controllers
 
         private MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
         {
-            return new MeshListTreeNode(name, new List<IRenderable> {timDoc.TextureMesh}, contextMenu: new ContextMenu(
-                new Dictionary<string, Action>
-                {
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<IRenderable> {timDoc.TextureMeshes[0]},
+                contextMenu: new ContextMenu(
+                    new Dictionary<string, Action>
                     {
-                        "Export as TIM",
-                        () =>
                         {
-                            _exportController.OpenDialog(
-                                filePath => { _exportController.ExportOriginal(timDoc.Document, filePath); }, ".tim");
+                            "Export as TIM",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath => { _exportController.ExportOriginal(timDoc.Document, filePath); },
+                                    ".tim");
+                            }
+                        },
+                        {
+                            "Export as PNG",
+                            () =>
+                            {
+                                _exportController.OpenDialog(
+                                    filePath =>
+                                    {
+                                        _exportController.ExportImage(timDoc.Document, 0, filePath, ImageFormat.Png);
+                                    }, ".png");
+                            }
                         }
-                    },
-                    {
-                        "Export as PNG",
-                        () =>
+                    }));
+
+            int i = 0;
+            foreach (var mesh in timDoc.TextureMeshes)
+            {
+                int clutIndex = i;
+                MeshListTreeNode clutNode = new MeshListTreeNode($"CLUT {clutIndex}", new List<IRenderable> {mesh},
+                    contextMenu: new ContextMenu(
+                        new Dictionary<string, Action>
                         {
-                            _exportController.OpenDialog(
-                                filePath =>
+                            {
+                                "Export as PNG",
+                                () =>
                                 {
-                                    _exportController.ExportImage(timDoc.Document, filePath, ImageFormat.Png);
-                                }, ".png");
-                        }
-                    }
-                }));
+                                    _exportController.OpenDialog(
+                                        filePath =>
+                                        {
+                                            _exportController.ExportImage(timDoc.Document, clutIndex, filePath,
+                                                ImageFormat.Png);
+                                        }, ".png");
+                                }
+                            }
+                        }));
+                i++;
+                rootNode.AddNode(clutNode);
+            }
+
+            return rootNode;
         }
 
         private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)

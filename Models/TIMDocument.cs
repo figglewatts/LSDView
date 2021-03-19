@@ -11,12 +11,12 @@ namespace LSDView.Models
         public EventHandler OnLoad { get; set; }
         public EventHandler OnUnload { get; set; }
 
-        public Mesh TextureMesh { get; }
+        public Mesh[] TextureMeshes { get; }
 
-        public TIMDocument(TIM tim, Mesh textureMesh)
+        public TIMDocument(TIM tim, Mesh[] textureMeshes)
         {
             Document = tim;
-            TextureMesh = textureMesh;
+            TextureMeshes = textureMeshes;
         }
     }
 }

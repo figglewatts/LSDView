@@ -20,13 +20,13 @@ namespace LSDView.Controllers
         public void LoadTIM(string timPath)
         {
             Logger.Log()(LogLevel.INFO, $"Loading TIM from: {timPath}");
-            
+
             TIM tim;
             using (BinaryReader br = new BinaryReader(File.Open(timPath, FileMode.Open)))
             {
                 tim = new TIM(br);
             }
-            
+
             Logger.Log()(LogLevel.INFO, $"Successfully loaded TIM");
 
             TIMDocument document = CreateDocument(tim);
@@ -35,11 +35,19 @@ namespace LSDView.Controllers
 
         public TIMDocument CreateDocument(TIM tim)
         {
-            Mesh textureMesh = Mesh.CreateQuad(_shader);
-            var img = LibLSDUtil.GetImageDataFromTIM(tim);
-            textureMesh.Textures.Add(new Texture2D(img.width, img.height, img.data));
+            // 1 if not using CLUT, otherwise number of CLUTs
+            int numMeshes = tim.ColorLookup?.NumberOfCLUTs ?? 1;
+            Mesh[] timMeshes = new Mesh[numMeshes];
 
-            return new TIMDocument(tim, textureMesh);
+            for (int i = 0; i < numMeshes; i++)
+            {
+                var img = LibLSDUtil.GetImageDataFromTIM(tim, clutIndex: i);
+                Mesh textureMesh = Mesh.CreateQuad(_shader);
+                textureMesh.Textures.Add(new Texture2D(img.width, img.height, img.data));
+                timMeshes[i] = textureMesh;
+            }
+
+            return new TIMDocument(tim, timMeshes);
         }
     }
 }
