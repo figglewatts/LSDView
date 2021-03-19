@@ -38,7 +38,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="libLSD, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>packages\libLSD.0.0.3\lib\net461\libLSD.dll</HintPath>
+      <HintPath>packages\libLSD.0.0.5\lib\net461\libLSD.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />

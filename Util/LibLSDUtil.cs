@@ -194,9 +194,11 @@ namespace LSDView.Util
             return tileMesh;
         }
 
-        public static (float[] data, int width, int height) GetImageDataFromTIM(TIM tim, bool flip = true)
+        public static (float[] data, int width, int height) GetImageDataFromTIM(TIM tim,
+            int clutIndex = 0,
+            bool flip = true)
         {
-            IColor[,] imageColors = tim.GetImage();
+            IColor[,] imageColors = tim.GetImage(clutIndex);
             int width = imageColors.GetLength(1);
             int height = imageColors.GetLength(0);
             float[] imageData = ImageColorsToData(imageColors, width, height, flip);

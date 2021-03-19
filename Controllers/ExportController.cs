@@ -50,13 +50,14 @@ namespace LSDView.Controllers
         /// Export a TIM file to a common image format.
         /// </summary>
         /// <param name="tim">The TIM file.</param>
+        /// <param name="clutIndex">The index of the CLUT to export with.</param>
         /// <param name="filePath">The file path to export to.</param>
         /// <param name="format">The image format to export to.</param>
-        public void ExportImage(TIM tim, string filePath, ImageFormat format)
+        public void ExportImage(TIM tim, int clutIndex, string filePath, ImageFormat format)
         {
             Logger.Log()(LogLevel.INFO, $"Exporting image ({format}) to: {filePath}");
 
-            var image = LibLSDUtil.GetImageDataFromTIM(tim, flip: false);
+            var image = LibLSDUtil.GetImageDataFromTIM(tim, clutIndex, flip: false);
             Bitmap bmp = ImageUtil.ImageDataToBitmap(image.data, image.width, image.height);
             bmp.Save(filePath, format);
         }
@@ -77,7 +78,7 @@ namespace LSDView.Controllers
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var ext = Path.GetExtension(filePath);
                 var dir = Path.GetDirectoryName(filePath);
-                ExportImage(allTims[i], Path.Combine(dir, $"{fileName}-{i}{ext}"), format);
+                ExportImage(allTims[i], 0, Path.Combine(dir, $"{fileName}-{i}{ext}"), format);
             }
         }
 
@@ -106,7 +107,6 @@ namespace LSDView.Controllers
             var objFile = MeshUtil.RenderableListToObjFile(meshes);
             File.WriteAllText(filePath, objFile);
         }
-
 
 
         /// <summary>
