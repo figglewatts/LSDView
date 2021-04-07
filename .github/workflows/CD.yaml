@@ -2,7 +2,7 @@ name: CD
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   buildAndPush:
@@ -12,11 +12,11 @@ jobs:
         name: Checkout Code
       - name: Extract tag name
         run: |
-          echo "GIT_TAG=$(git tag --sort=-creatordate | head -n 1)" >> $GITHUB_ENV
+          echo "GIT_TAG=$(git tag --sort=-creatordate | head -n 1)" >> $env:GITHUB_ENV
       - name: Inject version number
         uses: cschleiden/replace-tokens@v1.0
         with:
-          files: Version.cs
+          files: "**"
         env:
           VERSION: ${{ env.GIT_TAG }}
       - name: Add msbuild to PATH
