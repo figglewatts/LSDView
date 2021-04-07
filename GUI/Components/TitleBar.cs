@@ -21,7 +21,7 @@ namespace LSDView.GUI.GUIComponents
         private readonly ConfigController _configController;
         private readonly CameraController _cameraController;
 
-        private string _streamingAssetsPathFieldValue;
+        private string _gameDataPathFieldValue;
 
         public MainMenuBar(FileOpenController fileOpenController,
             VRAMController vramController,
@@ -29,22 +29,22 @@ namespace LSDView.GUI.GUIComponents
             CameraController cameraController)
         {
             _configController = configController;
-            _streamingAssetsPathFieldValue = _configController.Config.StreamingAssetsPath;
-            _openDialog = new FileDialog(_configController.Config.StreamingAssetsPath, FileDialog.DialogType.Open);
-            _openVramDialog = new FileDialog(_configController.Config.StreamingAssetsPath, FileDialog.DialogType.Open);
+            _gameDataPathFieldValue = _configController.Config.GameDataPath;
+            _openDialog = new FileDialog(_configController.Config.GameDataPath, FileDialog.DialogType.Open);
+            _openVramDialog = new FileDialog(_configController.Config.GameDataPath, FileDialog.DialogType.Open);
             _fileOpenController = fileOpenController;
             _vramController = vramController;
             _cameraController = cameraController;
 
-            _configController.Config.OnStreamingAssetsPathChange += () =>
-                _openDialog.InitialDir = _configController.Config.StreamingAssetsPath;
-            _configController.Config.OnStreamingAssetsPathChange += () =>
-                _openVramDialog.InitialDir = _configController.Config.StreamingAssetsPath;
+            _configController.Config.OnGameDataPathChange += () =>
+                _openDialog.InitialDir = _configController.Config.GameDataPath;
+            _configController.Config.OnGameDataPathChange += () =>
+                _openVramDialog.InitialDir = _configController.Config.GameDataPath;
         }
 
-        public void OpenSetStreamingAssetsPath()
+        public void OpenSetGameDataPath()
         {
-            createModal("Set StreamingAssets path...", new GenericDialog(setStreamingAssetsPathDialog),
+            createModal("Set game data path...", new GenericDialog(setGameDataPathDialog),
                 new Vector2(500, 85));
         }
 
@@ -106,7 +106,7 @@ namespace LSDView.GUI.GUIComponents
                         try
                         {
                             var relPath = PathUtil.MakeRelative(recentFile,
-                                _configController.Config.StreamingAssetsPath);
+                                _configController.Config.GameDataPath);
                             if (ImGui.MenuItem(relPath))
                             {
                                 fileToOpen = recentFile;
@@ -131,24 +131,24 @@ namespace LSDView.GUI.GUIComponents
 
             ImGui.Separator();
 
-            if (ImGui.MenuItem("Set StreamingAssets path"))
+            if (ImGui.MenuItem("Set game data path..."))
             {
-                OpenSetStreamingAssetsPath();
+                OpenSetGameDataPath();
             }
         }
 
-        private void setStreamingAssetsPathDialog()
+        private void setGameDataPathDialog()
         {
             ImGui.PushItemWidth(-1);
-            ImGui.InputText("##streamingassets", ref _streamingAssetsPathFieldValue, 1024);
+            ImGui.InputText("##gamedata", ref _gameDataPathFieldValue, 1024);
             ImGui.PopItemWidth();
             ImGui.Spacing();
             ImGui.SameLine(ImGui.GetWindowWidth() - 30);
             if (ImGui.Button("Ok"))
             {
-                _configController.Config.StreamingAssetsPath = _streamingAssetsPathFieldValue;
+                _configController.Config.GameDataPath = _gameDataPathFieldValue;
                 _configController.Save();
-                destroyModal("Set StreamingAssets path...");
+                destroyModal("Set game data path...");
             }
         }
 

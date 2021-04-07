@@ -19,8 +19,8 @@ namespace LSDView.Controllers
         public ExportController(FileDialog fileExportDialog, ConfigController configController)
         {
             _fileExportDialog = fileExportDialog;
-            configController.Config.OnStreamingAssetsPathChange += () =>
-                _fileExportDialog.InitialDir = configController.Config.StreamingAssetsPath;
+            configController.Config.OnGameDataPathChange += () =>
+                _fileExportDialog.InitialDir = configController.Config.GameDataPath;
         }
 
         public void OpenDialog(Action<string> onSubmit, string fileSaveType)
