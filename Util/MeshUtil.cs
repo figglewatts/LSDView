@@ -148,9 +148,12 @@ namespace LSDView.Util
             ObjBuilder objString = new ObjBuilder();
             WriteOBJHeader(objString, vertCount, triCount);
 
+            // fix OBJ export transformation
+            Matrix4 rotateX180 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-180));
+
             foreach (var vert in mesh.Verts.Vertices)
             {
-                objString.Vertex(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix));
+                objString.Vertex(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix * rotateX180));
             }
 
             foreach (var vert in mesh.Verts.Vertices)
@@ -197,11 +200,14 @@ namespace LSDView.Util
             List<Vector3> normals = new List<Vector3>();
             List<Vector2> uvs = new List<Vector2>();
 
+            // fix OBJ export transformation
+            Matrix4 rotateX180 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-180));
+
             foreach (var mesh in meshes)
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
-                    positions.Add(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix));
+                    positions.Add(Vector3.TransformPosition(vert.Position, mesh.Transform.Matrix * rotateX180));
                     normals.Add(vert.Normal);
                     uvs.Add(vert.TexCoord);
                 }
@@ -232,8 +238,8 @@ namespace LSDView.Util
                 for (int i = 0; i < mesh.Verts.Length; i += 3)
                 {
                     int objIndex1 = faceBase + mesh.Verts.Indices[i] + 1;
-                    int objIndex2 = faceBase + mesh.Verts.Indices[i + 2] + 1;
-                    int objIndex3 = faceBase + mesh.Verts.Indices[i + 1] + 1;
+                    int objIndex2 = faceBase + mesh.Verts.Indices[i + 1] + 1;
+                    int objIndex3 = faceBase + mesh.Verts.Indices[i + 2] + 1;
                     faceBuilder.Vertex(objIndex1, objIndex1, objIndex1);
                     faceBuilder.Vertex(objIndex2, objIndex2, objIndex2);
                     faceBuilder.Vertex(objIndex3, objIndex3, objIndex3);
@@ -258,14 +264,14 @@ namespace LSDView.Util
             plyString.WriteHeader(vertCount, triCount);
 
             // Multply the transform matrix by -90 along x to Fix PLY Co-ord Space
-            Matrix4 RotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
+            Matrix4 rotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
 
             // Vertex Elements
             foreach (var vert in mesh.Verts.Vertices)
             {
                 plyString.BuildVertexElement(
                     Vector3.TransformPosition(vert.Position,
-                    mesh.Transform.Matrix * RotateX90),
+                        mesh.Transform.Matrix * rotateX90),
                     vert.Normal, vert.TexCoord, vert.Color);
             }
 
@@ -277,7 +283,6 @@ namespace LSDView.Util
                 int idx3 = mesh.Verts.Indices[i + 2];
                 plyString.BuildFaceElement(idx1, idx2, idx3);
             }
-
 
 
             return plyString.ToString();
@@ -297,7 +302,7 @@ namespace LSDView.Util
             plyString.WriteHeader(vertCount, triCount);
 
             // Multply the transform matrix by -90 along x to Fix PLY Co-ord Space
-            Matrix4 RotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
+            Matrix4 rotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
 
             // Vertex Elements
             foreach (var mesh in meshes)
@@ -306,7 +311,7 @@ namespace LSDView.Util
                 {
                     plyString.BuildVertexElement(
                         Vector3.TransformPosition(vert.Position,
-                        mesh.Transform.Matrix * RotateX90),
+                            mesh.Transform.Matrix * rotateX90),
                         vert.Normal, vert.TexCoord, vert.Color);
                 }
             }
@@ -322,11 +327,12 @@ namespace LSDView.Util
                     int idx3 = faceBase + mesh.Verts.Indices[i + 2];
                     plyString.BuildFaceElement(idx1, idx2, idx3);
                 }
+
                 faceBase += mesh.Verts.Vertices.Length;
             }
+
             return plyString.ToString();
         }
-
 
 
         private static void WriteOBJHeader(ObjBuilder builder, int verts, int faces)
@@ -336,7 +342,5 @@ namespace LSDView.Util
             builder.Comment($"Vertices: {verts}");
             builder.Comment($"Faces: {faces}");
         }
-
-
     }
 }

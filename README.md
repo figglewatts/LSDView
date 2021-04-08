@@ -56,6 +56,17 @@ click 'Export VRAM...'. If you use this exported image as the texture for any OB
 textures should be applied correctly. There may be some errors for polygons that use vertex colouring as the OBJ file
 format does not support storage of vertex colour information.
 
+#### OBJ export shading issue (Blender)
+
+If you export as OBJ and you get shading errors that look like this:
+![Shading issues](img/strange-shading.png)
+
+Then you can fix this in Blender by pressing this button under 'Object data properties' (with the object selected):
+![Split normals](img/split-normals.png)
+
+And the shading should now look normal:
+![Fixed shading](img/correct-shading.png)
+
 ## Development guide
 
 1. Clone the repo

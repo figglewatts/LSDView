@@ -111,7 +111,7 @@
     <Compile Include="GUI\Components\LBDTileTreeNode.cs" />
     <Compile Include="GUI\Components\MeshListTreeNode.cs" />
     <Compile Include="GUI\Components\Modal.cs" />
-    <Compile Include="GUI\Components\TitleBar.cs" />
+    <Compile Include="GUI\Components\MainMenuBar.cs" />
     <Compile Include="GUI\Components\TreeNode.cs" />
     <Compile Include="GUI\Components\TreeView.cs" />
     <Compile Include="GUI\ImGuiComponent.cs" />

@@ -102,6 +102,12 @@ namespace LSDView
 
             var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController, _cameraController);
 
+            if (string.IsNullOrWhiteSpace(_configController.Config.GameDataPath))
+            {
+                // show the set game data path dialog if it hasn't yet been set
+                menuBar.OpenSetGameDataPath();
+            }
+
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
             _guiComponents.Add(_exportFileDialog);
