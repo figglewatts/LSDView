@@ -1,28 +1,27 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using IconFonts;
-using ImGuiNET;
-using JsonAnything.GUI.GUIComponents;
-using LSDView.controller;
+using Autofac;
+using LSDView.Controller;
 using LSDView.Controllers;
+using LSDView.Controllers.GUI;
 using LSDView.Graphics;
 using LSDView.GUI;
 using LSDView.GUI.Components;
 using LSDView.GUI.GUIComponents;
-using LSDView.Util;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.ES30;
 using OpenTK.Input;
+using Serilog;
 using FramebufferTarget = OpenTK.Graphics.OpenGL4.FramebufferTarget;
 using Vector2 = System.Numerics.Vector2;
 
 namespace LSDView
 {
-    public class MainWindow : GameWindow
+    public class GuiApplication : GameWindow
     {
-        public static MainWindow Instance = null;
+        public static GuiApplication Instance = null;
 
         public Action NextUpdateActions;
         public Action NextGuiRender;
@@ -44,7 +43,7 @@ namespace LSDView
         private readonly Framebuffer _fbo;
 
         // ui
-        private FileDialog _exportFileDialog;
+        private FileDialog _fileExportDialog;
         private Modal _updateAvailableModal;
 
         // --------------
@@ -54,30 +53,29 @@ namespace LSDView
         private VRAMController _vramController;
         private CameraController _cameraController;
         private ConfigController _configController;
-        private LBDController _lbdController;
-        private TMDController _tmdController;
-        private MOMController _momController;
-        private TIMController _timController;
-        private TIXController _tixController;
         private FileOpenController _fileOpenController;
         private AnimationController _animationController;
-        private ExportController _exportController;
+        private GUIExportController _exportController;
         private UpdateCheckerController _updateCheckerController;
 
         // --------------
 
-        public MainWindow() : base(WINDOW_WIDTH, WINDOW_HEIGHT, GraphicsMode.Default, WINDOW_TITLE,
+        public GuiApplication(ILifetimeScope scope) : base(WINDOW_WIDTH, WINDOW_HEIGHT, GraphicsMode.Default,
+            WINDOW_TITLE,
             GameWindowFlags.Default, DisplayDevice.Default, GL_MAJOR_VERSION, GL_MINOR_VERSION,
             GraphicsContextFlags.Default)
         {
             Instance = this;
 
-            Icon = new Icon(typeof(MainWindow), "appicon.ico");
+            createControllers(scope);
+
+            Icon = new Icon(typeof(GuiApplication), "appicon.ico");
 
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
 
             _cam = new Camera();
+            _cameraController.ProvideCamera(_cam);
             _cam.Transform.Translate(new Vector3(0, 0, -3));
             _fbo = new Framebuffer(WINDOW_WIDTH, WINDOW_HEIGHT, FramebufferTarget.Framebuffer);
 
@@ -85,12 +83,8 @@ namespace LSDView
                 (float)_fbo.Width / _fbo.Height, 0.1f, 100f);
 
             ImGuiRenderer.Init();
+
             _guiComponents = new List<ImGuiComponent>();
-
-            _updateAvailableModal = new Modal("New update available!",
-                "Download at https://github.com/Figglewatts/LSDView/releases/latest");
-
-            createControllers();
 
             ApplicationArea area = new ApplicationArea();
 
@@ -98,9 +92,10 @@ namespace LSDView
             _treeController.SetTree(outlineView);
 
             area.AddChild(new Columns(2, new List<ImGuiComponent>
-                {outlineView, new FramebufferArea(_fbo)}, new[] {250f, -1}));
+                { outlineView, new FramebufferArea(_fbo) }, new[] { 250f, -1 }));
 
-            var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController, _cameraController);
+            var menuBar = new MainMenuBar(_fileOpenController, _vramController, _configController, _cameraController,
+                _exportController);
 
             if (string.IsNullOrWhiteSpace(_configController.Config.GameDataPath))
             {
@@ -108,31 +103,35 @@ namespace LSDView
                 menuBar.OpenSetGameDataPath();
             }
 
+            _updateAvailableModal = new Modal("New update available!",
+                "Download at https://github.com/Figglewatts/LSDView/releases/latest");
+
+            _fileExportDialog = new FileDialog(_configController.Config.GameDataPath, FileDialog.DialogType.Save);
+            _configController.Config.OnGameDataPathChange += () =>
+                _fileExportDialog.InitialDir = _configController.Config.GameDataPath;
+            _exportController.ProvideFileExportDialog(_fileExportDialog);
+
             _guiComponents.Add(area);
             _guiComponents.Add(menuBar);
-            _guiComponents.Add(_exportFileDialog);
+            _guiComponents.Add(_fileExportDialog);
             _guiComponents.Add(_updateAvailableModal);
+
+            if (_updateCheckerController.IsUpdateAvailable())
+            {
+                _updateAvailableModal.ShowModal();
+            }
         }
 
-        private void createControllers()
+        private void createControllers(ILifetimeScope scope)
         {
-            _configController = new ConfigController();
-            _exportFileDialog =
-                new FileDialog(_configController.Config.GameDataPath, FileDialog.DialogType.Save);
-            _exportController = new ExportController(_exportFileDialog, _configController);
-            _animationController = new AnimationController();
-            _treeController = new TreeController(_animationController, _exportController);
-            _vramController = new VRAMController(_exportController);
-            _cameraController = new CameraController(_cam);
-            _tmdController = new TMDController(_treeController, _vramController);
-            _momController = new MOMController(_treeController, _vramController, _tmdController);
-            _lbdController = new LBDController(_treeController, _vramController, _tmdController, _momController);
-            _timController = new TIMController(_treeController);
-            _tixController = new TIXController(_treeController, _timController);
-            _fileOpenController =
-                new FileOpenController(_lbdController, _tmdController, _momController, _timController, _tixController,
-                    _configController);
-            _updateCheckerController = new UpdateCheckerController(_updateAvailableModal);
+            _configController = scope.Resolve<ConfigController>();
+            _exportController = scope.Resolve<GUIExportController>();
+            _animationController = scope.Resolve<AnimationController>();
+            _treeController = scope.Resolve<TreeController>();
+            _vramController = scope.Resolve<VRAMController>();
+            _cameraController = scope.Resolve<CameraController>();
+            _fileOpenController = scope.Resolve<FileOpenController>();
+            _updateCheckerController = scope.Resolve<UpdateCheckerController>();
         }
 
         protected override void OnResize(EventArgs e)
@@ -146,19 +145,7 @@ namespace LSDView
             CursorVisible = true;
             GL.ClearColor(0.2f, 0.2f, 0.2f, 1);
 
-            Logger.Log()(LogLevel.INFO, "Initialized LSDView");
-
-            var io = ImGui.GetIO();
-
-            ImFontConfig cfg = new ImFontConfig
-            {
-                MergeMode = 1,
-                PixelSnapH = 1,
-                GlyphOffset = new Vector2(1, 1),
-                GlyphMinAdvanceX = 20,
-            };
-            ImGuiRenderer.AddFontFromFileTTF("Fonts/fa-solid-900.ttf", 16, cfg,
-                new[] {(char)FontAwesome5.IconMin, (char)FontAwesome5.IconMax, (char)0});
+            Log.Information("Initialized LSDView");
         }
 
         protected override void OnUnload(EventArgs e) { ImGuiRenderer.Shutdown(); }

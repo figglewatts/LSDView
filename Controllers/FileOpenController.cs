@@ -1,23 +1,26 @@
 using System.IO;
-using LSDView.Util;
+using libLSD.Formats;
+using LSDView.Controllers.Interface;
+using LSDView.Models;
+using Serilog;
 
 namespace LSDView.Controllers
 {
-    public class FileOpenController
+    public class FileOpenController : IFileOpenController
     {
-        private readonly LBDController _lbdController;
-        private readonly TMDController _tmdController;
-        private readonly MOMController _momController;
-        private readonly TIMController _timController;
-        private readonly TIXController _tixController;
-        private readonly ConfigController _configController;
+        protected readonly IFileFormatController<LBD, LBDDocument> _lbdController;
+        protected readonly IFileFormatController<TMD, TMDDocument> _tmdController;
+        protected readonly IFileFormatController<MOM, MOMDocument> _momController;
+        protected readonly IFileFormatController<TIM, TIMDocument> _timController;
+        protected readonly IFileFormatController<TIX, TIXDocument> _tixController;
+        protected readonly IConfigController _configController;
 
-        public FileOpenController(LBDController lbdController,
-            TMDController tmdController,
-            MOMController momController,
-            TIMController timController,
-            TIXController tixController,
-            ConfigController configController)
+        public FileOpenController(IFileFormatController<LBD, LBDDocument> lbdController,
+            IFileFormatController<TMD, TMDDocument> tmdController,
+            IFileFormatController<MOM, MOMDocument> momController,
+            IFileFormatController<TIM, TIMDocument> timController,
+            IFileFormatController<TIX, TIXDocument> tixController,
+            IConfigController configController)
         {
             _lbdController = lbdController;
             _tmdController = tmdController;
@@ -30,27 +33,27 @@ namespace LSDView.Controllers
         public void OpenFile(string filePath)
         {
             _configController.AddRecentFile(filePath);
-            Logger.Log()(LogLevel.INFO, $"Loading file from: {filePath}");
+            Log.Information($"Loading file from: {filePath}");
             var ext = Path.GetExtension(filePath)?.ToLowerInvariant();
             switch (ext)
             {
                 case ".lbd":
-                    _lbdController.LoadLBD(filePath);
+                    _lbdController.Load(filePath);
                     break;
                 case ".tmd":
-                    _tmdController.LoadTMD(filePath);
+                    _tmdController.Load(filePath);
                     break;
                 case ".mom":
-                    _momController.LoadMOM(filePath);
+                    _momController.Load(filePath);
                     break;
                 case ".tim":
-                    _timController.LoadTIM(filePath);
+                    _timController.Load(filePath);
                     break;
                 case ".tix":
-                    _tixController.LoadTIX(filePath);
+                    _tixController.Load(filePath);
                     break;
                 default:
-                    Logger.Log()(LogLevel.WARN, $"Unable to open file {filePath}, unsupported type.");
+                    Log.Error($"Unable to open file {filePath}, unsupported type.");
                     break;
             }
         }

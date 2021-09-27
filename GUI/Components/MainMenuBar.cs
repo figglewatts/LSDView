@@ -1,10 +1,12 @@
 using System;
-using System.Numerics;
+using System.Drawing.Imaging;
 using ImGuiNET;
-using LSDView.controller;
-using LSDView.Controllers;
+using LSDView.Controllers.GUI;
+using LSDView.Controllers.Interface;
 using LSDView.GUI.Components;
 using LSDView.Util;
+using OpenTK;
+using Serilog;
 
 namespace LSDView.GUI.GUIComponents
 {
@@ -16,17 +18,19 @@ namespace LSDView.GUI.GUIComponents
         private bool _openFileOpenDialog = false;
         private bool _openVramOpenDialog = false;
 
-        private readonly FileOpenController _fileOpenController;
-        private readonly VRAMController _vramController;
-        private readonly ConfigController _configController;
-        private readonly CameraController _cameraController;
+        private readonly IFileOpenController _fileOpenController;
+        private readonly IVRAMController _vramController;
+        private readonly IConfigController _configController;
+        private readonly ICameraController _cameraController;
+        private readonly GUIExportController _exportController;
 
         private string _gameDataPathFieldValue;
 
-        public MainMenuBar(FileOpenController fileOpenController,
-            VRAMController vramController,
-            ConfigController configController,
-            CameraController cameraController)
+        public MainMenuBar(IFileOpenController fileOpenController,
+            IVRAMController vramController,
+            IConfigController configController,
+            ICameraController cameraController,
+            GUIExportController exportController)
         {
             _configController = configController;
             _gameDataPathFieldValue = _configController.Config.GameDataPath;
@@ -35,6 +39,7 @@ namespace LSDView.GUI.GUIComponents
             _fileOpenController = fileOpenController;
             _vramController = vramController;
             _cameraController = cameraController;
+            _exportController = exportController;
 
             _configController.Config.OnGameDataPathChange += () =>
                 _openDialog.InitialDir = _configController.Config.GameDataPath;
@@ -75,13 +80,13 @@ namespace LSDView.GUI.GUIComponents
 
             if (_openFileOpenDialog)
             {
-                _openDialog.Show(path => _fileOpenController.OpenFile(path), ".lbd|.tix|.mom|.tmd|.tim");
+                _openDialog.ShowDialog(path => _fileOpenController.OpenFile(path), ".lbd|.tix|.mom|.tmd|.tim");
                 _openFileOpenDialog = false;
             }
 
             if (_openVramOpenDialog)
             {
-                _openVramDialog.Show(path => _vramController.LoadTIXIntoVRAM(path), ".tix");
+                _openVramDialog.ShowDialog(path => _vramController.LoadTIXIntoVRAM(path), ".tix");
                 _openVramOpenDialog = false;
             }
 
@@ -115,7 +120,7 @@ namespace LSDView.GUI.GUIComponents
                         }
                         catch (UriFormatException e)
                         {
-                            Logger.Log()(LogLevel.WARN, $"Invalid recent file: '{recentFile}', invalid URI");
+                            Log.Warning($"Invalid recent file: '{recentFile}', invalid URI: {e}");
                         }
                     }
 
@@ -164,7 +169,12 @@ namespace LSDView.GUI.GUIComponents
             ImGui.Separator();
             if (ImGui.MenuItem("Export VRAM..."))
             {
-                _vramController.ExportLoadedVRAM();
+                _exportController.OpenDialog(
+                    filePath =>
+                    {
+                        _exportController.ExportImages(_vramController.Tix, filePath, separate: false, ImageFormat.Png);
+                    },
+                    ".png");
             }
         }
 

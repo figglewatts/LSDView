@@ -6,7 +6,7 @@ namespace LSDView.Util
 {
     public class ObjBuilder
     {
-        private StringBuilder _builder;
+        private readonly StringBuilder _builder;
 
         public ObjBuilder() { _builder = new StringBuilder(); }
 

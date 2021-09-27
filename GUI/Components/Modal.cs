@@ -1,5 +1,5 @@
-using System.Numerics;
 using LSDView.GUI.GUIComponents;
+using OpenTK;
 
 namespace LSDView.GUI.Components
 {
@@ -14,7 +14,7 @@ namespace LSDView.GUI.Components
             Content = content;
         }
 
-        public void Show()
+        public void ShowModal()
         {
             createModal(Name, new InfoDialog(InfoDialog.DialogType.Info, Content), new Vector2(500, 50));
         }

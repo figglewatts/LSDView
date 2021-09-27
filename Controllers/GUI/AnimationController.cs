@@ -1,14 +1,14 @@
-using System;
 using System.Collections.Generic;
 using libLSD.Formats;
 using libLSD.Formats.Packets;
+using LSDView.Controllers.Interface;
 using LSDView.Math;
 using LSDView.Models;
 using OpenTK;
 
-namespace LSDView.Controllers
+namespace LSDView.Controllers.GUI
 {
-    public class AnimationController
+    public class AnimationController : IAnimationController
     {
         private TOD _animation;
 
@@ -28,11 +28,11 @@ namespace LSDView.Controllers
 
         public const double TICK = 1d / 60;
 
-        private double time = 0;
+        protected double time = 0;
 
-        private readonly Dictionary<int, AnimationObjectTableEntry> _objectTable;
+        protected readonly Dictionary<int, AnimationObjectTableEntry> _objectTable;
 
-        internal class AnimationObjectTableEntry
+        protected class AnimationObjectTableEntry
         {
             public int TmdID;
             public readonly Transform Transform;
@@ -44,7 +44,7 @@ namespace LSDView.Controllers
             }
         }
 
-        private bool Ready => Animation.Header.ID != 0 && Focus != null;
+        protected bool Ready => Animation.Header.ID != 0 && Focus != null;
 
         public AnimationController()
         {
@@ -67,7 +67,7 @@ namespace LSDView.Controllers
             if (!Active || !Ready) return;
 
             double tickRate = Animation.Header.Resolution * TICK;
-            
+
             time += dt;
             if (time > tickRate)
             {
@@ -79,7 +79,7 @@ namespace LSDView.Controllers
             }
         }
 
-        private void processFrame(int frameNumber)
+        protected void processFrame(int frameNumber)
         {
             if (frameNumber >= Animation.Header.NumberOfFrames - 1)
             {
@@ -111,7 +111,7 @@ namespace LSDView.Controllers
             }
         }
 
-        private void handleObjectControlPacket(TODPacket packet)
+        protected void handleObjectControlPacket(TODPacket packet)
         {
             TODObjectControlPacketData packetData = packet.Data as TODObjectControlPacketData;
             if (packetData.ObjectControl == TODObjectControlPacketData.ObjectControlType.Create)
@@ -124,7 +124,7 @@ namespace LSDView.Controllers
             }
         }
 
-        private void handleObjectIDPacket(TODPacket packet)
+        protected void handleObjectIDPacket(TODPacket packet)
         {
             TODObjectIDPacketData packetData = packet.Data as TODObjectIDPacketData;
             if (packet.PacketType == TODPacket.PacketTypes.TMDDataID)
@@ -142,7 +142,7 @@ namespace LSDView.Controllers
             }
         }
 
-        private void handleCoordinatePacket(TODPacket packet)
+        protected void handleCoordinatePacket(TODPacket packet)
         {
             TODCoordinatePacketData packetData = packet.Data as TODCoordinatePacketData;
 

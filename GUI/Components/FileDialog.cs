@@ -55,7 +55,7 @@ namespace LSDView.GUI.GUIComponents
             updateFilesInCurrentDir();
         }
 
-        public void Show(Action<string> onDialogAccept,
+        public void ShowDialog(Action<string> onDialogAccept,
             string fileSearchPattern = "",
             string fileSaveType = "")
         {

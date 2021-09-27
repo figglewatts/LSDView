@@ -1,36 +1,31 @@
 using System.IO;
 using libLSD.Formats;
+using LSDView.Controllers.Interface;
 using LSDView.Graphics;
 using LSDView.Models;
 using LSDView.Util;
 
-namespace LSDView.Controllers
+namespace LSDView.Controllers.GUI
 {
-    public class TIMController
+    public class GUITIMController : IFileFormatController<TIM, TIMDocument>
     {
-        private readonly TreeController _treeController;
-        private readonly Shader _shader;
+        protected readonly ITreeController _treeController;
+        protected readonly Shader _shader;
 
-        public TIMController(TreeController treeController)
+        public GUITIMController(ITreeController treeController)
         {
             _treeController = treeController;
             _shader = new Shader("texture", "Shaders/texture");
         }
 
-        public void LoadTIM(string timPath)
+        public TIM Load(string timPath)
         {
-            Logger.Log()(LogLevel.INFO, $"Loading TIM from: {timPath}");
-
-            TIM tim;
-            using (BinaryReader br = new BinaryReader(File.Open(timPath, FileMode.Open)))
-            {
-                tim = new TIM(br);
-            }
-
-            Logger.Log()(LogLevel.INFO, $"Successfully loaded TIM");
+            var tim = LibLSDUtil.LoadTIM(timPath);
 
             TIMDocument document = CreateDocument(tim);
-            _treeController.PopulateTreeWithDocument(document, Path.GetFileName(timPath));
+            _treeController.PopulateWithDocument(document, Path.GetFileName(timPath));
+
+            return tim;
         }
 
         public TIMDocument CreateDocument(TIM tim)
@@ -43,7 +38,8 @@ namespace LSDView.Controllers
             {
                 var img = LibLSDUtil.GetImageDataFromTIM(tim, clutIndex: i);
                 Mesh textureMesh = Mesh.CreateQuad(_shader);
-                textureMesh.Textures.Add(new Texture2D(img.width, img.height, img.data));
+                ITexture2D tex = new Texture2D(img.width, img.height, img.data);
+                textureMesh.Textures.Add(tex);
                 timMeshes[i] = textureMesh;
             }
 

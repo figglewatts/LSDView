@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.Graphics
 {
-    public class Texture2D : IDisposable, IBindable
+    public class Texture2D : ITexture2D
     {
         public int Width { get; }
         public int Height { get; }
@@ -120,7 +120,7 @@ namespace LSDView.Graphics
 
         public void Clear()
         {
-            GL.ClearTexImage(_handle, 0, PixelFormat.Rgba, PixelType.Float, new float[] {1, 1, 1, 1});
+            GL.ClearTexImage(_handle, 0, PixelFormat.Rgba, PixelType.Float, new float[] { 1, 1, 1, 1 });
         }
     }
 }

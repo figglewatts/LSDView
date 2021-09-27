@@ -1,10 +1,11 @@
 using System;
 using System.Runtime.InteropServices;
+using IconFonts;
 using ImGuiNET;
-using LSDView.Util;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
+using Serilog;
 
 namespace LSDView.GUI
 {
@@ -67,6 +68,9 @@ namespace LSDView.GUI
             io.KeyMap[(int)ImGuiKey.Z] = (int)Key.Z;
 
             io.DisplayFramebufferScale = System.Numerics.Vector2.One;
+
+            AddFontFromFileTTF("Fonts/fa-solid-900.ttf", 16,
+                new[] { (char)FontAwesome5.IconMin, (char)FontAwesome5.IconMax, (char)0 });
         }
 
         public static void BeginFrame(double deltaTime)
@@ -112,19 +116,28 @@ namespace LSDView.GUI
 
         public static void AddFontFromFileTTF(string filename,
             float sizePixels,
-            ImFontConfig config,
             char[] glyphRanges)
         {
-            ImGuiIOPtr io = ImGui.GetIO();
-            config.OversampleH = 1;
-            config.OversampleV = 1;
-            config.RasterizerMultiply = 1;
-
             unsafe
             {
-                fixed (char* glyphs = &glyphRanges[0])
+                ImFontConfigPtr nativeConfig = ImGuiNative.ImFontConfig_ImFontConfig();
+                nativeConfig.MergeMode = true;
+                nativeConfig.PixelSnapH = true;
+
+                GCHandle rangeHandle = GCHandle.Alloc(new ushort[]
                 {
-                    io.Fonts.AddFontFromFileTTF(filename, sizePixels, &config, (IntPtr)glyphs);
+                    glyphRanges[0], glyphRanges[1], 0
+                }, GCHandleType.Pinned);
+                try
+                {
+                    ImGui.GetIO().Fonts.AddFontFromFileTTF(filename, sizePixels, nativeConfig,
+                        rangeHandle.AddrOfPinnedObject());
+                    ImGui.GetIO().Fonts.Build();
+                }
+                finally
+                {
+                    ImGuiNative.ImFontConfig_destroy(nativeConfig);
+                    if (rangeHandle.IsAllocated) rangeHandle.Free();
                 }
             }
         }
@@ -133,7 +146,7 @@ namespace LSDView.GUI
         {
             ImGuiIOPtr io = ImGui.GetIO();
 
-            if (!MainWindow.Instance.Visible || !MainWindow.Instance.Focused) return;
+            if (!GuiApplication.Instance.Visible || !GuiApplication.Instance.Focused) return;
 
             MouseState mouse = Mouse.GetCursorState();
             KeyboardState keyboard = Keyboard.GetState();
@@ -374,13 +387,13 @@ namespace LSDView.GUI
             GL.GetShader(handle, ShaderParameter.InfoLogLength, out int logLength);
             if (status == 0)
             {
-                Logger.Log()(LogLevel.ERR, "ERROR: Failed to compile ImGui {0} shader", name);
+                Log.Error("ERROR: Failed to compile ImGui {0} shader", name);
             }
 
             if (logLength > 0)
             {
                 GL.GetShaderInfoLog(handle, out string infoLog);
-                Logger.Log()(LogLevel.ERR, "Shader info log: {0}", infoLog);
+                Log.Error("Shader info log: {0}", infoLog);
             }
         }
 
@@ -390,13 +403,13 @@ namespace LSDView.GUI
             GL.GetProgram(handle, GetProgramParameterName.InfoLogLength, out int logLength);
             if (status == 0)
             {
-                Logger.Log()(LogLevel.ERR, "ERROR: Failed to link ImGui {0} shader program", name);
+                Log.Error("ERROR: Failed to link ImGui {0} shader program", name);
             }
 
             if (logLength > 0)
             {
                 GL.GetProgramInfoLog(handle, out string infoLog);
-                Logger.Log()(LogLevel.ERR, "Program info log: {0}", infoLog);
+                Log.Error("Program info log: {0}", infoLog);
             }
         }
 

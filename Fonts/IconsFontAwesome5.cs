@@ -52,7 +52,7 @@ namespace IconFonts
         public const string InfoCircle = "\uf05a";
         public const string Tags = "\uf02c";
         public const string FileAlt = "\uf15c";
-        public const string Equals = "\uf52c";
+        public new const string Equals = "\uf52c";
         public const string Directions = "\uf5eb";
         public const string FileInvoice = "\uf570";
         public const string Search = "\uf002";

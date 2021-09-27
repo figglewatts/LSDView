@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using libLSD.Formats;
-using libLSD.Formats.Packets;
-using libLSD.Types;
+using System.Linq;
 using LSDView.Graphics;
 using OpenTK;
 
@@ -9,137 +7,6 @@ namespace LSDView.Util
 {
     public static class MeshUtil
     {
-        public static string TMDToOBJFile(TMD tmd)
-        {
-            int vertCount = (int)tmd.NumberOfVertices;
-            int faceCount = 0;
-            foreach (var tmdObj in tmd.ObjectTable)
-            {
-                faceCount += (int)tmdObj.NumPrimitives;
-            }
-
-            ObjBuilder obj = new ObjBuilder();
-            WriteOBJHeader(obj, vertCount, faceCount);
-
-            List<Vector3> positions = new List<Vector3>();
-            List<Vector3> normals = new List<Vector3>();
-
-            foreach (var tmdObj in tmd.ObjectTable)
-            {
-                foreach (Vec3 vert in tmdObj.Vertices)
-                {
-                    positions.Add(new Vector3(vert.X, vert.Y, vert.Z));
-                }
-
-                foreach (var norm in tmdObj.Normals)
-                {
-                    normals.Add(new Vector3(norm.X, norm.Y, norm.Z));
-                }
-            }
-
-            foreach (var pos in positions)
-            {
-                obj.Vertex(pos);
-            }
-
-            foreach (var norm in normals)
-            {
-                obj.Normal(norm);
-            }
-
-            foreach (var tmdObj in tmd.ObjectTable)
-            {
-                foreach (var prim in tmdObj.Primitives)
-                {
-                    if (prim.PacketData is ITMDTexturedPrimitivePacket uvPacket)
-                    {
-                        for (int j = 0; j < prim.PacketData.Vertices.Length; j++)
-                        {
-                            int uvIndex = j * 2;
-                            obj.UV(new Vector2(uvPacket.UVs[uvIndex] / 255f, uvPacket.UVs[uvIndex + 1] / 255f));
-                        }
-                    }
-                }
-            }
-
-            ObjFaceBuilder faceBuilder = new ObjFaceBuilder();
-            int indexBase = 0;
-            for (int i = 0; i < tmd.Header.NumObjects; i++)
-            {
-                obj.Group($"Object {i}");
-
-                int uvCount = 1;
-                foreach (var prim in tmd.ObjectTable[i].Primitives)
-                {
-                    ITMDPrimitivePacket primitivePacket = prim.PacketData;
-                    ITMDTexturedPrimitivePacket texPrimitivePacket = prim.PacketData as ITMDTexturedPrimitivePacket;
-                    ITMDLitPrimitivePacket litPrimitivePacket = prim.PacketData as ITMDLitPrimitivePacket;
-
-                    int[] indices = new int[primitivePacket.Vertices.Length];
-                    for (int vert = 0; vert < primitivePacket.Vertices.Length; vert++)
-                    {
-                        int v = indexBase + primitivePacket.Vertices[vert] + 1;
-                        indices[vert] = v;
-                        int? t = null;
-                        int? n = null;
-
-                        if (texPrimitivePacket != null)
-                        {
-                            t = uvCount++;
-                        }
-
-                        if (litPrimitivePacket != null)
-                        {
-                            n = litPrimitivePacket.Normals[vert] + 1;
-                        }
-                    }
-
-                    bool isQuad = (prim.Options & TMDPrimitivePacket.OptionsFlags.Quad) != 0;
-                    bool isDoubleSided = (prim.Flags & TMDPrimitivePacket.PrimitiveFlags.DoubleSided) != 0;
-
-                    faceBuilder.Vertex(indices[1]);
-                    faceBuilder.Vertex(indices[0]);
-                    faceBuilder.Vertex(indices[2]);
-                    obj.Face(faceBuilder.Build());
-                    faceBuilder.Clear();
-
-                    if (isQuad)
-                    {
-                        faceBuilder.Vertex(indices[1]);
-                        faceBuilder.Vertex(indices[2]);
-                        faceBuilder.Vertex(indices[3]);
-                        obj.Face(faceBuilder.Build());
-                        faceBuilder.Clear();
-                    }
-
-                    if (isDoubleSided)
-                    {
-                        obj.Comment("DOuble sided!");
-                        faceBuilder.Vertex(indices[0]);
-                        faceBuilder.Vertex(indices[1]);
-                        faceBuilder.Vertex(indices[2]);
-                        obj.Face(faceBuilder.Build());
-                        faceBuilder.Clear();
-
-                        if (isQuad)
-                        {
-                            faceBuilder.Vertex(indices[2]);
-                            faceBuilder.Vertex(indices[1]);
-                            faceBuilder.Vertex(indices[3]);
-                            obj.Face(faceBuilder.Build());
-                            faceBuilder.Clear();
-                        }
-                    }
-
-                    faceBuilder.Clear();
-                }
-
-                indexBase += tmd.ObjectTable[i].Vertices.Length;
-            }
-
-            return obj.ToString();
-        }
-
         public static string RenderableToObjFile(IRenderable mesh)
         {
             int vertCount = mesh.Verts.Vertices.Length;
@@ -183,11 +50,12 @@ namespace LSDView.Util
             return objString.ToString();
         }
 
-        public static string RenderableListToObjFile(List<IRenderable> meshes)
+        public static string RenderableListToObjFile(IEnumerable<IRenderable> meshes, bool combine = false)
         {
             int vertCount = 0;
             int triCount = 0;
-            foreach (var mesh in meshes)
+            IEnumerable<IRenderable> renderables = meshes as IRenderable[] ?? meshes.ToArray();
+            foreach (var mesh in renderables)
             {
                 vertCount += mesh.Verts.Vertices.Length;
                 triCount += mesh.Verts.Tris;
@@ -203,7 +71,7 @@ namespace LSDView.Util
             // fix OBJ export transformation
             Matrix4 rotateX180 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-180));
 
-            foreach (var mesh in meshes)
+            foreach (var mesh in renderables)
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
@@ -230,9 +98,10 @@ namespace LSDView.Util
 
             int faceBase = 0;
             int meshNumber = 0;
-            foreach (var mesh in meshes)
+            foreach (var mesh in renderables)
             {
-                objString.Group($"Mesh {meshNumber}");
+                // if we're not combining the meshes then we need to make groups for each
+                if (!combine) objString.Group($"Mesh {meshNumber}");
 
                 ObjFaceBuilder faceBuilder = new ObjFaceBuilder();
                 for (int i = 0; i < mesh.Verts.Length; i += 3)
@@ -288,11 +157,12 @@ namespace LSDView.Util
             return plyString.ToString();
         }
 
-        public static string RenderableListToPlyFile(List<IRenderable> meshes)
+        public static string RenderableListToPlyFile(IEnumerable<IRenderable> meshes)
         {
             int vertCount = 0;
             int triCount = 0;
-            foreach (var mesh in meshes)
+            IEnumerable<IRenderable> renderables = meshes as IRenderable[] ?? meshes.ToArray();
+            foreach (var mesh in renderables)
             {
                 vertCount += mesh.Verts.Vertices.Length;
                 triCount += mesh.Verts.Tris;
@@ -305,7 +175,7 @@ namespace LSDView.Util
             Matrix4 rotateX90 = Matrix4.CreateRotationX(MathHelper.DegreesToRadians(-90));
 
             // Vertex Elements
-            foreach (var mesh in meshes)
+            foreach (var mesh in renderables)
             {
                 foreach (var vert in mesh.Verts.Vertices)
                 {
@@ -318,7 +188,7 @@ namespace LSDView.Util
 
             // Face Indices
             int faceBase = 0;
-            foreach (var mesh in meshes)
+            foreach (var mesh in renderables)
             {
                 for (var i = 0; i < mesh.Verts.Indices.Length; i += 3)
                 {

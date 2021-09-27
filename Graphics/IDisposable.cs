@@ -1,6 +1,6 @@
 namespace LSDView.Graphics
 {
-    interface IDisposable
+    public interface IDisposable
     {
         void Dispose();
     }

@@ -1,27 +1,27 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using LSDView.Math;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.Graphics
 {
-    public class Mesh : IDisposable, IRenderable
+    public class Mesh : IRenderable
     {
-        private readonly VertexArray _verts;
+        protected readonly VertexArray _verts;
 
-        public VertexArray Verts => _verts;
+        public IVertexArray Verts => _verts;
 
         public Material Material { get; set; }
         public Transform Transform { get; set; }
-        public List<Texture2D> Textures { get; set; }
+        public List<ITexture2D> Textures { get; set; }
 
         public Mesh(Vertex[] vertices, int[] indices, Shader shader)
         {
             _verts = new VertexArray(vertices, indices);
             Material = new Material(shader);
             Transform = new Transform();
-            Textures = new List<Texture2D>();
+            Textures = new List<ITexture2D>();
         }
 
         public static Mesh CreateQuad(Shader shader)
@@ -54,7 +54,7 @@ namespace LSDView.Graphics
                     new Vertex(
                         vertPositions[3], null, vertUVs[3])
                 },
-                new[] {1, 0, 2, 2, 0, 3},
+                new[] { 1, 0, 2, 2, 0, 3 },
                 shader
             );
         }
@@ -62,14 +62,14 @@ namespace LSDView.Graphics
         public void Render(Matrix4 view, Matrix4 projection)
         {
             _verts.Bind();
-            BindTextures();
+            bindTextures();
             Material.Bind();
             Material.Shader.Uniform("Projection", false, projection);
             Material.Shader.Uniform("View", false, view);
             Material.Shader.Uniform("Model", false, Transform.Matrix);
-            GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawElements(PrimitiveType.Triangles, _verts.Length, DrawElementsType.UnsignedInt, 0);
             Material.Unbind();
-            UnbindTextures();
+            unbindTextures();
             _verts.Unbind();
         }
 
@@ -77,7 +77,7 @@ namespace LSDView.Graphics
 
         public void ClearTextures()
         {
-            foreach (Texture2D tex in Textures)
+            foreach (ITexture2D tex in Textures)
             {
                 tex.Dispose();
             }
@@ -85,7 +85,29 @@ namespace LSDView.Graphics
             Textures.Clear();
         }
 
-        private void BindTextures()
+        public static Mesh CombineMeshes(Shader shader = null, params IRenderable[] renderables)
+        {
+            var totalVertexCount = renderables.Sum(r => r.Verts.Vertices.Length);
+            var totalIndexCount = renderables.Sum(r => r.Verts.Length);
+
+            var verts = new Vertex[totalVertexCount];
+            var indices = new int[totalIndexCount];
+
+            int vertsRunningCount = 0;
+            int indicesRunningCount = 0;
+            foreach (var renderable in renderables)
+            {
+                renderable.Verts.CopyVertices(verts, vertsRunningCount, renderable.Transform);
+                renderable.Verts.CopyIndices(indices, indicesRunningCount);
+
+                vertsRunningCount += renderable.Verts.Vertices.Length;
+                indicesRunningCount += renderable.Verts.Length;
+            }
+
+            return new Mesh(verts, indices, shader);
+        }
+
+        protected void bindTextures()
         {
             for (int i = 0; i < Textures.Count; i++)
             {
@@ -96,7 +118,7 @@ namespace LSDView.Graphics
             GL.ActiveTexture(TextureUnit.Texture0);
         }
 
-        private void UnbindTextures()
+        protected void unbindTextures()
         {
             for (int i = 0; i < Textures.Count; i++)
             {
