@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')"/>
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -59,8 +59,8 @@
             <HintPath>packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="Microsoft.CSharp"/>
-        <Reference Include="mscorlib"/>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="mscorlib" />
         <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
             <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
             <Private>True</Private>
@@ -85,14 +85,14 @@
             <HintPath>packages\Serilog.Sinks.File.5.0.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="System"/>
+        <Reference Include="System" />
         <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
             <HintPath>packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="System.ComponentModel.Composition"/>
-        <Reference Include="System.Core"/>
-        <Reference Include="System.Data"/>
+        <Reference Include="System.ComponentModel.Composition" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
         <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
             <HintPath>packages\System.Diagnostics.DiagnosticSource.4.7.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
             <Private>True</Private>
@@ -104,7 +104,7 @@
             <HintPath>packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="System.Numerics"/>
+        <Reference Include="System.Numerics" />
         <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
             <HintPath>packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
             <Private>True</Private>
@@ -117,114 +117,114 @@
             <HintPath>packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
             <Private>True</Private>
         </Reference>
-        <Reference Include="System.Xml"/>
+        <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="ApplicationModule.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessExportController.cs"/>
-        <Compile Include="Graphics\IVertexArrayExtensions.cs"/>
-        <Compile Include="HeadlessApplication.cs"/>
-        <Compile Include="Controllers\AbstractExportController.cs"/>
-        <Compile Include="Controllers\ConfigController.cs"/>
-        <Compile Include="Controllers\FileOpenController.cs"/>
-        <Compile Include="Controllers\GUI\AnimationController.cs"/>
-        <Compile Include="Controllers\GUI\CameraController.cs"/>
-        <Compile Include="Controllers\GUI\GUIExportController.cs"/>
-        <Compile Include="Controllers\GUI\GUILBDController.cs"/>
-        <Compile Include="Controllers\GUI\GUIMOMController.cs"/>
-        <Compile Include="Controllers\GUI\GUITIMController.cs"/>
-        <Compile Include="Controllers\GUI\GUITIXController.cs"/>
-        <Compile Include="Controllers\GUI\GUITMDController.cs"/>
-        <Compile Include="Controllers\GUI\TreeController.cs"/>
-        <Compile Include="Controllers\GUI\VRAMController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessConfigController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessLBDController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessMOMController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessTIMController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessTIXController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessTMDController.cs"/>
-        <Compile Include="Controllers\Headless\HeadlessVRAMController.cs"/>
-        <Compile Include="Controllers\Interface\IAnimationController.cs"/>
-        <Compile Include="Controllers\Interface\ICameraController.cs"/>
-        <Compile Include="Controllers\Interface\IConfigController.cs"/>
-        <Compile Include="Controllers\Interface\IExportController.cs"/>
-        <Compile Include="Controllers\Interface\IFileFormatController.cs"/>
-        <Compile Include="Controllers\Interface\IFileOpenController.cs"/>
-        <Compile Include="Controllers\Interface\ITreeController.cs"/>
-        <Compile Include="Controllers\Interface\IUpdateCheckerController.cs"/>
-        <Compile Include="Controllers\Interface\IVRAMController.cs"/>
-        <Compile Include="Controllers\Interface\MeshExportFormat.cs"/>
-        <Compile Include="Controllers\UpdateCheckerController.cs"/>
-        <Compile Include="Fonts\IconsFontAwesome5.cs"/>
-        <Compile Include="Graphics\Camera.cs"/>
-        <Compile Include="Graphics\Framebuffer.cs"/>
-        <Compile Include="Graphics\GLBuffer.cs"/>
-        <Compile Include="Graphics\Headless\HeadlessMesh.cs"/>
-        <Compile Include="Graphics\Headless\HeadlessTexture2D.cs"/>
-        <Compile Include="Graphics\Headless\HeadlessVertexArray.cs"/>
-        <Compile Include="Graphics\IBindable.cs"/>
-        <Compile Include="Graphics\IDisposable.cs"/>
-        <Compile Include="Graphics\IRenderable.cs"/>
-        <Compile Include="Graphics\ITexture2D.cs"/>
-        <Compile Include="Graphics\IVertexArray.cs"/>
-        <Compile Include="Graphics\Material.cs"/>
-        <Compile Include="Graphics\Mesh.cs"/>
-        <Compile Include="Graphics\Shader.cs"/>
-        <Compile Include="Graphics\Texture2D.cs"/>
-        <Compile Include="Graphics\Vertex.cs"/>
-        <Compile Include="Graphics\VertexArray.cs"/>
-        <Compile Include="Graphics\VertexAttrib.cs"/>
-        <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs"/>
-        <Compile Include="GUI\Components\ApplicationArea.cs"/>
-        <Compile Include="GUI\Components\Columns.cs"/>
-        <Compile Include="GUI\Components\ContextMenu.cs"/>
-        <Compile Include="GUI\Components\FileDialog.cs"/>
-        <Compile Include="GUI\Components\FramebufferArea.cs"/>
-        <Compile Include="GUI\Components\GenericDialog.cs"/>
-        <Compile Include="GUI\Components\InfoDialog.cs"/>
-        <Compile Include="GUI\Components\LBDTileTreeNode.cs"/>
-        <Compile Include="GUI\Components\MeshListTreeNode.cs"/>
-        <Compile Include="GUI\Components\Modal.cs"/>
-        <Compile Include="GUI\Components\MainMenuBar.cs"/>
-        <Compile Include="GUI\Components\TreeNode.cs"/>
-        <Compile Include="GUI\Components\TreeView.cs"/>
-        <Compile Include="GUI\ImGuiComponent.cs"/>
-        <Compile Include="GUI\ImGuiRenderer.cs"/>
-        <Compile Include="GuiApplication.cs"/>
-        <Compile Include="Headless\AbstractHeadlessCommand.cs"/>
-        <Compile Include="Headless\ExportLevelCommand.cs"/>
-        <Compile Include="Headless\GlobalOptions.cs"/>
-        <Compile Include="Headless\HeadlessException.cs"/>
-        <Compile Include="Headless\IHeadlessCommand.cs"/>
-        <Compile Include="Math\Transform.cs"/>
-        <Compile Include="Math\Convert.cs"/>
-        <Compile Include="Models\AbstractDocument.cs"/>
-        <Compile Include="Models\Dream.cs"/>
-        <Compile Include="Models\IDocument.cs"/>
-        <Compile Include="Models\LBDDocument.cs"/>
-        <Compile Include="Models\LSDViewConfig.cs"/>
-        <Compile Include="Models\MOMDocument.cs"/>
-        <Compile Include="Models\TIMDocument.cs"/>
-        <Compile Include="Models\TIXDocument.cs"/>
-        <Compile Include="Models\TMDDocument.cs"/>
-        <Compile Include="Program.cs"/>
-        <Compile Include="Properties\AssemblyInfo.cs"/>
-        <Compile Include="Util\ConsoleUtil.cs"/>
-        <Compile Include="Util\ImageUtil.cs"/>
-        <Compile Include="Util\LibLSDUtil.cs"/>
-        <Compile Include="Util\LoggingUtil.cs"/>
-        <Compile Include="Util\MeshUtil.cs"/>
-        <Compile Include="Util\ObjBuilder.cs"/>
-        <Compile Include="Util\PathUtil.cs"/>
-        <Compile Include="Util\PlyBuilder.cs"/>
-        <Compile Include="Version.cs"/>
+        <Compile Include="ApplicationModule.cs" />
+        <Compile Include="Controllers\Headless\HeadlessExportController.cs" />
+        <Compile Include="Graphics\IVertexArrayExtensions.cs" />
+        <Compile Include="HeadlessApplication.cs" />
+        <Compile Include="Controllers\AbstractExportController.cs" />
+        <Compile Include="Controllers\ConfigController.cs" />
+        <Compile Include="Controllers\FileOpenController.cs" />
+        <Compile Include="Controllers\GUI\AnimationController.cs" />
+        <Compile Include="Controllers\GUI\CameraController.cs" />
+        <Compile Include="Controllers\GUI\GUIExportController.cs" />
+        <Compile Include="Controllers\GUI\GUILBDController.cs" />
+        <Compile Include="Controllers\GUI\GUIMOMController.cs" />
+        <Compile Include="Controllers\GUI\GUITIMController.cs" />
+        <Compile Include="Controllers\GUI\GUITIXController.cs" />
+        <Compile Include="Controllers\GUI\GUITMDController.cs" />
+        <Compile Include="Controllers\GUI\TreeController.cs" />
+        <Compile Include="Controllers\GUI\VRAMController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessConfigController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessLBDController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessMOMController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessTIMController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessTIXController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessTMDController.cs" />
+        <Compile Include="Controllers\Headless\HeadlessVRAMController.cs" />
+        <Compile Include="Controllers\Interface\IAnimationController.cs" />
+        <Compile Include="Controllers\Interface\ICameraController.cs" />
+        <Compile Include="Controllers\Interface\IConfigController.cs" />
+        <Compile Include="Controllers\Interface\IExportController.cs" />
+        <Compile Include="Controllers\Interface\IFileFormatController.cs" />
+        <Compile Include="Controllers\Interface\IFileOpenController.cs" />
+        <Compile Include="Controllers\Interface\ITreeController.cs" />
+        <Compile Include="Controllers\Interface\IUpdateCheckerController.cs" />
+        <Compile Include="Controllers\Interface\IVRAMController.cs" />
+        <Compile Include="Controllers\Interface\MeshExportFormat.cs" />
+        <Compile Include="Controllers\UpdateCheckerController.cs" />
+        <Compile Include="Fonts\IconsFontAwesome5.cs" />
+        <Compile Include="Graphics\Camera.cs" />
+        <Compile Include="Graphics\Framebuffer.cs" />
+        <Compile Include="Graphics\GLBuffer.cs" />
+        <Compile Include="Graphics\Headless\HeadlessMesh.cs" />
+        <Compile Include="Graphics\Headless\HeadlessTexture2D.cs" />
+        <Compile Include="Graphics\Headless\HeadlessVertexArray.cs" />
+        <Compile Include="Graphics\IBindable.cs" />
+        <Compile Include="Graphics\IDisposable.cs" />
+        <Compile Include="Graphics\IRenderable.cs" />
+        <Compile Include="Graphics\ITexture2D.cs" />
+        <Compile Include="Graphics\IVertexArray.cs" />
+        <Compile Include="Graphics\Material.cs" />
+        <Compile Include="Graphics\Mesh.cs" />
+        <Compile Include="Graphics\Shader.cs" />
+        <Compile Include="Graphics\Texture2D.cs" />
+        <Compile Include="Graphics\Vertex.cs" />
+        <Compile Include="Graphics\VertexArray.cs" />
+        <Compile Include="Graphics\VertexAttrib.cs" />
+        <Compile Include="GUI\Components\AnimatedMeshListTreeNode.cs" />
+        <Compile Include="GUI\Components\ApplicationArea.cs" />
+        <Compile Include="GUI\Components\Columns.cs" />
+        <Compile Include="GUI\Components\ContextMenu.cs" />
+        <Compile Include="GUI\Components\FileDialog.cs" />
+        <Compile Include="GUI\Components\FramebufferArea.cs" />
+        <Compile Include="GUI\Components\GenericDialog.cs" />
+        <Compile Include="GUI\Components\InfoDialog.cs" />
+        <Compile Include="GUI\Components\LBDTileTreeNode.cs" />
+        <Compile Include="GUI\Components\MeshListTreeNode.cs" />
+        <Compile Include="GUI\Components\Modal.cs" />
+        <Compile Include="GUI\Components\MainMenuBar.cs" />
+        <Compile Include="GUI\Components\TreeNode.cs" />
+        <Compile Include="GUI\Components\TreeView.cs" />
+        <Compile Include="GUI\ImGuiComponent.cs" />
+        <Compile Include="GUI\ImGuiRenderer.cs" />
+        <Compile Include="GuiApplication.cs" />
+        <Compile Include="Headless\AbstractHeadlessCommand.cs" />
+        <Compile Include="Headless\ExportLevelCommand.cs" />
+        <Compile Include="Headless\GlobalOptions.cs" />
+        <Compile Include="Headless\HeadlessException.cs" />
+        <Compile Include="Headless\IHeadlessCommand.cs" />
+        <Compile Include="Math\Transform.cs" />
+        <Compile Include="Math\Convert.cs" />
+        <Compile Include="Models\AbstractDocument.cs" />
+        <Compile Include="Models\Dream.cs" />
+        <Compile Include="Models\IDocument.cs" />
+        <Compile Include="Models\LBDDocument.cs" />
+        <Compile Include="Models\LSDViewConfig.cs" />
+        <Compile Include="Models\MOMDocument.cs" />
+        <Compile Include="Models\TIMDocument.cs" />
+        <Compile Include="Models\TIXDocument.cs" />
+        <Compile Include="Models\TMDDocument.cs" />
+        <Compile Include="Program.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Util\ConsoleUtil.cs" />
+        <Compile Include="Util\ImageUtil.cs" />
+        <Compile Include="Util\LibLSDUtil.cs" />
+        <Compile Include="Util\LoggingUtil.cs" />
+        <Compile Include="Util\MeshUtil.cs" />
+        <Compile Include="Util\ObjBuilder.cs" />
+        <Compile Include="Util\PathUtil.cs" />
+        <Compile Include="Util\PlyBuilder.cs" />
+        <Compile Include="Version.cs" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="App.config"/>
-        <None Include="OpenTK.dll.config"/>
-        <None Include="packages.config"/>
+        <None Include="App.config" />
+        <None Include="OpenTK.dll.config" />
+        <None Include="packages.config" />
     </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
                    Other similar extension points exist, see Microsoft.Common.targets.
               <Target Name="BeforeBuild">
@@ -233,24 +233,25 @@
               </Target>
               -->
     <ItemGroup>
-        <Shaders Include="Shaders/**"/>
-        <EmbeddedResource Include="appicon.ico"/>
+        <Shaders Include="Shaders/**" />
+        <EmbeddedResource Include="appicon.ico" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include=".github\workflows\CD.yaml"/>
+        <Content Include=".github\workflows\CD.yaml" />
+        <Content Include="README.md" />
     </ItemGroup>
     <Target Name="AfterBuild">
-        <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts"/>
-        <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders"/>
+        <Copy SourceFiles="Fonts/fa-solid-900.ttf" DestinationFolder="$(OutDir)/Fonts" />
+        <Copy SourceFiles="@(Shaders)" DestinationFolder="$(OutDir)/Shaders" />
     </Target>
     <PropertyGroup>
         <ApplicationIcon>appicon.ico</ApplicationIcon>
     </PropertyGroup>
-    <Import Project="packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')"/>
+    <Import Project="packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets" Condition="Exists('packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
         <PropertyGroup>
             <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
         </PropertyGroup>
-        <Error Condition="!Exists('packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets'))"/>
+        <Error Condition="!Exists('packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\ImGui.NET.1.78.0\build\net40\ImGui.NET.targets'))" />
     </Target>
 </Project>

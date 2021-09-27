@@ -4,15 +4,24 @@ Data file viewer for LSD Dream Emulator.
 
 ![Screenshot](img/screenshot.png)
 
+## Features
+
+- View/export 3D models
+- View/export levels
+- View animations
+- View/export textures
+- Export 3D models as OBJ or PLY
+- Export textures as PNG
+- Headless mode for converting entire dreams
+
 ## User guide
 
 LSDView can load and view many files from PlayStation 1 game 'LSD: Dream Emulator'
 
 ### On the first launch
 
-When you first run LSDView you should set the path to where your LSD data is. To do this, go to 'File', then 'Set game
-data path'. A dialog will pop up. Paste the path to your LSD data here. If you have LSD Revamped, this is
-is `{path-to-lsd-revamped}/LSDR_Data/StreamingAssets/original`.
+When you first run LSDView you should set the path to where your LSD data is. You will be given a dialog prompting you
+to do this on your first launch of the program.
 
 ### Formats
 
@@ -43,6 +52,14 @@ textures into VRAM. To do this, click on the VRAM menu, then 'Load VRAM', and ch
 file is a different texture set.
 
 If you load a TIX file from a different level you can emulate the glitch texture set. Try it out!
+
+### Headless mode
+
+If you run LSDView in a terminal with command-line arguments, you can use it 'headless' (i.e. without a graphical
+frontend) mode. This is where CPU-intensive tasks can be performed. At the moment there is just one
+command, `exportdream`, which can export an entire dream.
+
+Try it out by opening a terminal and running `LSDView.exe exportdream --help`!
 
 ### Exporting models
 
