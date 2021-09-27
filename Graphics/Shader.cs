@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using LSDView.Util;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using Serilog;
 
 namespace LSDView.Graphics
 {
@@ -67,8 +67,8 @@ namespace LSDView.Graphics
             if (success != 1)
             {
                 string infoLog = GL.GetShaderInfoLog(shader);
-                Logger.Log()(LogLevel.ERR, "Could not compile {0}: {1}", type.ToString(), this.Name);
-                Logger.Log()(LogLevel.ERR, "Info log: {0}", infoLog);
+                Log.Error("Could not compile {0}: {1}", type.ToString(), Name);
+                Log.Error("Info log: {0}", infoLog);
             }
 
             return success == 1;
@@ -80,8 +80,8 @@ namespace LSDView.Graphics
             if (success != 1)
             {
                 string infoLog = GL.GetProgramInfoLog(program);
-                Logger.Log()(LogLevel.ERR, "Could not link program: {0}", this.Name);
-                Logger.Log()(LogLevel.ERR, "Info log: {0}", infoLog);
+                Log.Error("Could not link program: {0}", Name);
+                Log.Error("Info log: {0}", infoLog);
             }
 
             return success == 1;

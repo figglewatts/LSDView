@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using LSDView.Controllers;
+using LSDView.Controllers.Interface;
 using LSDView.Graphics;
 using LSDView.Models;
 
@@ -10,13 +10,13 @@ namespace LSDView.GUI.Components
     {
         protected int _animation { get; }
         protected MOMDocument _entity { get; }
-        protected readonly AnimationController _animationController;
+        protected readonly IAnimationController _animationController;
 
         public AnimatedMeshListTreeNode(string text,
             List<IRenderable> meshes,
             MOMDocument entity,
             int animation,
-            AnimationController animationController,
+            IAnimationController animationController,
             IEnumerable<TreeNode> children = null,
             Action<TreeNode> onSelect = null,
             ContextMenu contextMenu = null) : base(text, meshes, children, onSelect, contextMenu)

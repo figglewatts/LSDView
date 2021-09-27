@@ -1,8 +1,8 @@
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 
 namespace LSDView.Graphics
 {
-    public class VertexArray : IBindable, IDisposable
+    public class VertexArray : IVertexArray, IBindable, IDisposable
     {
         private readonly int _handle;
         private readonly GLBuffer<Vertex> _vertexBuffer;
@@ -35,6 +35,8 @@ namespace LSDView.Graphics
             {
                 attrib.Set();
             }
+
+            Unbind();
         }
 
         public void Bind() { GL.BindVertexArray(_handle); }

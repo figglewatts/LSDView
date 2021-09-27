@@ -1,16 +1,17 @@
 using System.IO;
+using LSDView.Controllers.Interface;
 using LSDView.Models;
-using LSDView.Util;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace LSDView.Controllers
 {
-    public class ConfigController
+    public class ConfigController : IConfigController
     {
-        public LSDViewConfig Config;
+        public LSDViewConfig Config { get; protected set; }
 
-        private const string CONFIG_FILE = "LSDViewConfig.json";
-        private const int MAX_RECENT_FILES = 10;
+        protected const string CONFIG_FILE = "LSDViewConfig.json";
+        protected const int MAX_RECENT_FILES = 10;
 
         public ConfigController()
         {
@@ -20,7 +21,7 @@ namespace LSDView.Controllers
 
         public void Save() { serializeConfig(); }
 
-        public void AddRecentFile(string recentFile)
+        public virtual void AddRecentFile(string recentFile)
         {
             if (Config.RecentFiles.Count + 1 > MAX_RECENT_FILES)
             {
@@ -31,23 +32,23 @@ namespace LSDView.Controllers
             Save();
         }
 
-        private void deserializeConfig()
+        protected void deserializeConfig()
         {
-            Logger.Log()(LogLevel.INFO, "Deserializing LSDViewConfig.json");
+            Log.Information("Deserializing LSDViewConfig.json");
             Config = JsonConvert.DeserializeObject<LSDViewConfig>(File.ReadAllText(CONFIG_FILE));
         }
 
-        private void serializeConfig()
+        protected void serializeConfig()
         {
-            Logger.Log()(LogLevel.INFO, "Serializing LSDViewConfig.json");
+            Log.Information("Serializing LSDViewConfig.json");
             File.WriteAllText(CONFIG_FILE, JsonConvert.SerializeObject(Config));
         }
 
-        private void ensureConfigExists()
+        protected void ensureConfigExists()
         {
             if (!File.Exists(CONFIG_FILE))
             {
-                Logger.Log()(LogLevel.INFO, "LSDViewConfig.json not found - creating anew");
+                Log.Information("LSDViewConfig.json not found - creating anew");
                 Config = new LSDViewConfig();
                 serializeConfig();
             }

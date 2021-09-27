@@ -11,9 +11,9 @@ namespace LSDView.Models
         public EventHandler OnLoad { get; set; }
         public EventHandler OnUnload { get; set; }
 
-        public Mesh[] TextureMeshes { get; }
+        public IRenderable[] TextureMeshes { get; }
 
-        public TIMDocument(TIM tim, Mesh[] textureMeshes)
+        public TIMDocument(TIM tim, IRenderable[] textureMeshes)
         {
             Document = tim;
             TextureMeshes = textureMeshes;

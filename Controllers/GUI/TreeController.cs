@@ -2,27 +2,28 @@ using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using libLSD.Formats;
+using LSDView.Controllers.Interface;
 using LSDView.Graphics;
 using LSDView.GUI.Components;
 using LSDView.Models;
 using OpenTK;
 
-namespace LSDView.Controllers
+namespace LSDView.Controllers.GUI
 {
-    public class TreeController
+    public class TreeController : ITreeController
     {
-        public TreeView<TreeNode> Tree { get; private set; }
+        public TreeView<TreeNode> Tree { get; protected set; }
 
-        private readonly AnimationController _animationController;
-        private readonly ExportController _exportController;
+        protected readonly IAnimationController _animationController;
+        protected readonly GUIExportController _exportController;
 
-        public TreeController(AnimationController animationController, ExportController exportController)
+        public TreeController(IAnimationController animationController, GUIExportController exportController)
         {
             _animationController = animationController;
             _exportController = exportController;
         }
 
-        public void PopulateTreeWithDocument(IDocument doc, string rootName)
+        public void PopulateWithDocument(IDocument doc, string rootName)
         {
             Tree.Deselect();
             Tree.Nodes.Clear();
@@ -64,10 +65,10 @@ namespace LSDView.Controllers
 
         public void SetTree(TreeView<TreeNode> tree) { Tree = tree; }
 
-        private MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
+        protected MeshListTreeNode createTIXNode(string name, TIXDocument tixDoc)
         {
             MeshListTreeNode rootNode = new MeshListTreeNode(name,
-                new List<IRenderable> {tixDoc.TIMs[0].TextureMeshes[0]},
+                new List<IRenderable> { tixDoc.TIMs[0].TextureMeshes[0] },
                 contextMenu: new ContextMenu(
                     new Dictionary<string, Action>
                     {
@@ -87,7 +88,8 @@ namespace LSDView.Controllers
                                 _exportController.OpenDialog(
                                     filePath =>
                                     {
-                                        _exportController.ExportImages(tixDoc.Document, filePath, ImageFormat.Png);
+                                        _exportController.ExportImages(tixDoc.Document, filePath, false,
+                                            ImageFormat.Png);
                                     }, ".png");
                             }
                         }
@@ -102,9 +104,9 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
+        protected MeshListTreeNode createTIMNode(string name, TIMDocument timDoc)
         {
-            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<IRenderable> {timDoc.TextureMeshes[0]},
+            MeshListTreeNode rootNode = new MeshListTreeNode(name, new List<IRenderable> { timDoc.TextureMeshes[0] },
                 contextMenu: new ContextMenu(
                     new Dictionary<string, Action>
                     {
@@ -134,7 +136,7 @@ namespace LSDView.Controllers
             foreach (var mesh in timDoc.TextureMeshes)
             {
                 int clutIndex = i;
-                MeshListTreeNode clutNode = new MeshListTreeNode($"CLUT {clutIndex}", new List<IRenderable> {mesh},
+                MeshListTreeNode clutNode = new MeshListTreeNode($"CLUT {clutIndex}", new List<IRenderable> { mesh },
                     contextMenu: new ContextMenu(
                         new Dictionary<string, Action>
                         {
@@ -158,7 +160,7 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)
+        protected MeshListTreeNode createLBDNode(string name, LBDDocument lbdDoc)
         {
             MeshListTreeNode rootNode = new MeshListTreeNode(name, lbdDoc.TileLayout, contextMenu: new ContextMenu(
                 new Dictionary<string, Action>
@@ -234,7 +236,7 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private TreeNode createMMLNode(string name, List<MOMDocument> entities, MML mml)
+        protected TreeNode createMMLNode(string name, List<MOMDocument> entities, MML mml)
         {
             MeshListTreeNode rootNode = new MeshListTreeNode(name, entities[0].Models.ObjectMeshes,
                 contextMenu: new ContextMenu(
@@ -260,7 +262,7 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private MeshListTreeNode createMOMNode(string name, MOMDocument momDoc)
+        protected MeshListTreeNode createMOMNode(string name, MOMDocument momDoc)
         {
             MeshListTreeNode rootNode = new MeshListTreeNode(name, momDoc.Models.ObjectMeshes,
                 contextMenu: new ContextMenu(
@@ -287,7 +289,7 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private AnimatedMeshListTreeNode createMOSNode(string name, MOS mos, MOMDocument entity)
+        protected AnimatedMeshListTreeNode createMOSNode(string name, MOS mos, MOMDocument entity)
         {
             AnimatedMeshListTreeNode rootNode =
                 new AnimatedMeshListTreeNode(name, entity.Models.ObjectMeshes, entity, 0,
@@ -315,7 +317,7 @@ namespace LSDView.Controllers
             return rootNode;
         }
 
-        private MeshListTreeNode createTMDNode(string name, TMDDocument tmdDoc)
+        protected MeshListTreeNode createTMDNode(string name, TMDDocument tmdDoc)
         {
             MeshListTreeNode rootNode = new MeshListTreeNode(name, tmdDoc.ObjectMeshes, contextMenu: new ContextMenu(
                 new Dictionary<string, Action>
@@ -350,7 +352,7 @@ namespace LSDView.Controllers
             {
                 IRenderable objMesh = tmdDoc.ObjectMeshes[i];
                 MeshListTreeNode objNode =
-                    new MeshListTreeNode($"Object {i}", new List<IRenderable> {objMesh},
+                    new MeshListTreeNode($"Object {i}", new List<IRenderable> { objMesh },
                         contextMenu: new ContextMenu(
                             new Dictionary<string, Action>
                             {

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using LSDView.Math;
 using OpenTK;
 
 namespace LSDView.Graphics
@@ -22,5 +23,12 @@ namespace LSDView.Graphics
             TexCoord = texCoord ?? Vector2.Zero;
             Color = color ?? Vector4.One;
         }
+
+        /// <summary>
+        /// Manually applies a transformation to this vertex's position.
+        /// This should only be used once, as multiple times will keep reapplying the transform.
+        /// </summary>
+        /// <param name="transform">The Transform to apply to this vertex.</param>
+        public void Transform(Transform transform) { Position = (new Vector4(Position, 1) * transform.Matrix).Xyz; }
     }
 }

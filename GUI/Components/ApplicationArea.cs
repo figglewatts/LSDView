@@ -1,8 +1,7 @@
 using System.Numerics;
 using ImGuiNET;
-using LSDView.GUI;
 
-namespace JsonAnything.GUI.GUIComponents
+namespace LSDView.GUI.Components
 {
     public class ApplicationArea : ImGuiComponent
     {
@@ -23,9 +22,6 @@ namespace JsonAnything.GUI.GUIComponents
                 ImGuiWindowFlags.NoSavedSettings |
                 ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoBringToFrontOnFocus))
             {
-                ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags.DefaultOpen | ImGuiTreeNodeFlags.OpenOnDoubleClick |
-                                           ImGuiTreeNodeFlags.OpenOnArrow;
-
                 renderChildren();
 
                 ImGui.End();

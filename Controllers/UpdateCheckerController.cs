@@ -1,27 +1,15 @@
 using System.Net;
-using LSDView.GUI.Components;
-using LSDView.Util;
+using LSDView.Controllers.Interface;
 using Newtonsoft.Json.Linq;
+using Serilog;
 
 namespace LSDView.Controllers
 {
-    public class UpdateCheckerController
+    public class UpdateCheckerController : IUpdateCheckerController
     {
         protected const string UPDATE_API_URL = "https://api.github.com/repos/figglewatts/lsdview/releases/latest";
-        protected readonly bool _updateRequired = false;
-        protected readonly Modal _updateAvailableModal;
 
-        public UpdateCheckerController(Modal updateAvailableModal)
-        {
-            _updateRequired = isUpdateAvailable();
-            _updateAvailableModal = updateAvailableModal;
-            if (_updateRequired)
-            {
-                _updateAvailableModal.Show();
-            }
-        }
-
-        private bool isUpdateAvailable()
+        public bool IsUpdateAvailable()
         {
             // if we're developing locally, always return false
             if (Version.String.Equals("#{VERSION}#")) return false;
@@ -38,7 +26,7 @@ namespace LSDView.Controllers
                 }
                 catch (WebException exception)
                 {
-                    Logger.Log()(LogLevel.WARN, $"Unable to check for update: {exception}");
+                    Log.Warning($"Unable to check for update: {exception}");
                     return false;
                 }
             }

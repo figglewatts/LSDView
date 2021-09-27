@@ -4,14 +4,13 @@ using OpenTK;
 
 namespace LSDView.Graphics
 {
-    public interface IRenderable
+    public interface IRenderable : IDisposable
     {
-        Transform Transform { get; set; }
-        List<Texture2D> Textures { get; set; }
-        Material Material { get; set; }
-        VertexArray Verts { get; }
-        
-        
+        Transform Transform { get; }
+        List<ITexture2D> Textures { get; }
+        Material Material { get; }
+        IVertexArray Verts { get; }
+
 
         void Render(Matrix4 viewMatrix, Matrix4 projectionMatrix);
     }

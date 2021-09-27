@@ -7,20 +7,20 @@ namespace LSDView.Models
     [JsonObject]
     public class LSDViewConfig
     {
-        public string StreamingAssetsPath
+        public string GameDataPath
         {
-            get => _streamingAssetsPath;
+            get => _gameDataPath;
             set
             {
-                _streamingAssetsPath = value;
-                OnStreamingAssetsPathChange?.Invoke();
+                _gameDataPath = value;
+                OnGameDataPathChange?.Invoke();
             }
         }
 
         public List<string> RecentFiles = new List<string>();
 
-        [JsonIgnore] public Action OnStreamingAssetsPathChange;
+        [JsonIgnore] public Action OnGameDataPathChange;
 
-        private string _streamingAssetsPath = "";
+        private string _gameDataPath = "";
     }
 }

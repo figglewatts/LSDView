@@ -17,7 +17,6 @@ namespace LSDView.Graphics
             Vector3 newForward = Vector3.Normalize(pos - Transform.Position);
             Vector3 rotAxis = Vector3.Cross(forward, newForward);
             float angle = Vector3.CalculateAngle(forward, newForward);
-            var rotQuat = Quaternion.FromAxisAngle(rotAxis, angle);
 
             // rotate to face the pos
             Transform.Rotate(angle, rotAxis, false);
@@ -33,9 +32,9 @@ namespace LSDView.Graphics
         public void ArcBall(float longitude, float latitude, Vector3 target, float distance)
         {
             Transform.Position = Quaternion.FromAxisAngle(Transform.Right, latitude) *
-                                 ((Transform.Position - target).Normalized() * distance) + target;
+                ((Transform.Position - target).Normalized() * distance) + target;
             Transform.Position = Quaternion.FromAxisAngle(Transform.Up, longitude) *
-                                 ((Transform.Position - target).Normalized() * distance) + target;
+                ((Transform.Position - target).Normalized() * distance) + target;
             LookAt(target);
         }
     }

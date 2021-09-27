@@ -1,25 +1,25 @@
 using System.Collections.Generic;
 using System.IO;
 using libLSD.Formats;
-using LSDView.controller;
+using LSDView.Controllers.Interface;
 using LSDView.Graphics;
 using LSDView.Models;
 using LSDView.Util;
 
-namespace LSDView.Controllers
+namespace LSDView.Controllers.GUI
 {
-    public class LBDController
+    public class GUILBDController : IFileFormatController<LBD, LBDDocument>
     {
-        private readonly TreeController _treeController;
-        private readonly VRAMController _vramController;
-        private readonly TMDController _tmdController;
-        private readonly MOMController _momController;
-        private readonly Shader _shader;
+        protected readonly ITreeController _treeController;
+        protected readonly IVRAMController _vramController;
+        protected readonly IFileFormatController<TMD, TMDDocument> _tmdController;
+        protected readonly IFileFormatController<MOM, MOMDocument> _momController;
+        protected readonly Shader _shader;
 
-        public LBDController(TreeController treeController,
-            VRAMController vramController,
-            TMDController tmdController,
-            MOMController momController)
+        public GUILBDController(ITreeController treeController,
+            IVRAMController vramController,
+            IFileFormatController<TMD, TMDDocument> tmdController,
+            IFileFormatController<MOM, MOMDocument> momController)
         {
             _treeController = treeController;
             _vramController = vramController;
@@ -28,20 +28,14 @@ namespace LSDView.Controllers
             _shader = new Shader("basic", "Shaders/basic");
         }
 
-        public void LoadLBD(string lbdPath)
+        public LBD Load(string lbdPath)
         {
-            Logger.Log()(LogLevel.INFO, $"Loading LBD from: {lbdPath}");
-
-            LBD lbd;
-            using (BinaryReader br = new BinaryReader(File.Open(lbdPath, FileMode.Open)))
-            {
-                lbd = new LBD(br);
-            }
-
-            Logger.Log()(LogLevel.INFO, "Successfully loaded LBD");
+            var lbd = LibLSDUtil.LoadLBD(lbdPath);
 
             LBDDocument document = CreateDocument(lbd);
-            _treeController.PopulateTreeWithDocument(document, Path.GetFileName(lbdPath));
+            _treeController.PopulateWithDocument(document, Path.GetFileName(lbdPath));
+
+            return lbd;
         }
 
         public LBDDocument CreateDocument(LBD lbd)
@@ -58,7 +52,7 @@ namespace LSDView.Controllers
                 if (tile.DrawTile)
                 {
                     tileLayout.AddRange(LibLSDUtil.CreateLBDTileMesh(tile, lbd.ExtraTiles, x, y, lbd.Tiles, _shader,
-                        _vramController.VRAMTexture));
+                        _vramController.VRAM, headless: false));
                 }
 
                 tileNo++;

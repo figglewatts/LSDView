@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using ImGuiNET;
 using LSDView.GUI.Components;
+using OpenTK;
 
 namespace LSDView.GUI
 {
@@ -59,7 +59,7 @@ namespace LSDView.GUI
             {
                 var modalName = _modalsToCreate.Dequeue();
                 var modal = _modals[modalName];
-                ImGui.SetNextWindowSize(modal.InitialSize);
+                ImGui.SetNextWindowSize(new System.Numerics.Vector2(modal.InitialSize.X, modal.InitialSize.Y));
                 ImGui.OpenPopup(modal.Id);
             }
 
